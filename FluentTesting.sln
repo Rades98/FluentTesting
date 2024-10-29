@@ -10,7 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentTesting.Elasticsearch
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevOps", "DevOps", "{4A1576DE-D871-42B3-BC26-DFCC0AD9C62D}"
 	ProjectSection(SolutionItems) = preProject
-		mkdocs.yaml = mkdocs.yaml
+		mkdocs.yml = mkdocs.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentTesting", "src\FluentTesting\FluentTesting.csproj", "{E0139960-9B29-451D-8CCE-7AC51783B78F}"
@@ -94,15 +94,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipelines", "Pipelines", "{81FF9CE9-FCC0-4E37-87B2-3B36DB7A7D4B}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\mkdocs-deply.yml = .github\workflows\mkdocs-deply.yml
-		.github\workflows\publish.yaml = .github\workflows\publish.yaml
-		.github\workflows\pr.yaml = .github\workflows\pr.yaml
-		.github\workflows\test.yaml = .github\workflows\test.yaml
+		.github\workflows\pr.yml = .github\workflows\pr.yml
+		.github\workflows\publish.yml = .github\workflows\publish.yml
+		.github\workflows\test.yml = .github\workflows\test.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Labeler", "Labeler", "{3EC9EF79-0819-42DE-8668-6D74C53F8A3D}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\label.yaml = .github\workflows\label.yaml
 		.github\labeler.yaml = .github\labeler.yaml
+		.github\workflows\label.yml = .github\workflows\label.yml
 	EndProjectSection
 EndProject
 Global
