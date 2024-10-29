@@ -1,16 +1,18 @@
 ASP:
-  - src/FluentTesting.Asp
+ - src/FluentTesting.Asp/**
 CORE:
-  - src/FluentTesting.Kafka
+ - src/FluentTesting.Kafka/**
 ELASTIC:
-  - src/FluentTesting.Elasticsearch
+ - src/FluentTesting.Elasticsearch/**
 KAFKA:
-  - src/FluentTesting.Kafka
+ - src/FluentTesting.Kafka/**
 MONGO:
-  - src/FluentTesting.Mongo
+ - src/FluentTesting.Mongo/**
 RabbitMQ:
-  - src/FluentTesting.RabbitMq
+ - src/FluentTesting.RabbitMq/**
 Redis:
-  - src/FluentTesting.Redis
+ - src/FluentTesting.Redis/**
 SQL:    
-  - src/FluentTesting.Sql
+ - src/FluentTesting.Sql/**
+DevOps:
+ - .github/**
