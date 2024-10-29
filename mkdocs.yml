@@ -31,7 +31,6 @@ nav:
 plugins:
   - codeinclude 
 
-
 theme:
   name: material
 
