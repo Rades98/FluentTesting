@@ -29,7 +29,7 @@ jobs:
         id: get_version
         run: |
           # Extract version from the .csproj file
-          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" src/FluentTesting/FluentTesting.csproj)
+          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" src/FluentTesting/common.props)
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
       - name: Set Final Version
