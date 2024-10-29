@@ -2,6 +2,12 @@ name: Build and Publish Package
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - develop
+    types:
+      - opened
+      - synchronize
 
 jobs:
   build:
@@ -22,8 +28,26 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release
 
+      - name: Get Version from csproj
+        id: get_version
+        run: |
+          # Extract version from the .csproj file
+          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" YourProject.csproj)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+      - name: Set Final Version
+        id: set_final_version
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            # Append -beta and the commit SHA to the version
+            echo "FINAL_VERSION=${{ env.VERSION }}-beta-${GITHUB_SHA::8}" >> $GITHUB_ENV
+          else
+            # Use the extracted version without changes
+            echo "FINAL_VERSION=${{ env.VERSION }}" >> $GITHUB_ENV
+          fi
+
       - name: Pack
-        run: dotnet pack --configuration Release --output ./output  
+        run: dotnet pack --configuration Release --output ./output /p:PackageVersion=${{ env.FINAL_VERSION }}
 
       - name: Publish to NuGet
         run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
