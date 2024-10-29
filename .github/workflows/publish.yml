@@ -35,7 +35,7 @@ jobs:
       - name: Set Final Version
         id: set_final_version
         run: |
-          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/develop" ]]; then
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.ref }}" == "refs/heads/develop" ]]; then
             # Append -beta and the commit SHA to the version
             echo "FINAL_VERSION=${{ env.VERSION }}-beta-${GITHUB_SHA::8}" >> $GITHUB_ENV
           else
