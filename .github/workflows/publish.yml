@@ -36,7 +36,7 @@ jobs:
       - name: Set Final Version
         id: set_final_version
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request"; then
+          if [[ "${{ github.event_name }}" == "pull_request" then
             # Append -beta and the commit SHA to the version
             FINAL_VERSION="${{ env.VERSION }}-beta-${GITHUB_SHA::8}"
             echo "FINAL_VERSION=${FINAL_VERSION}" >> $GITHUB_ENV
