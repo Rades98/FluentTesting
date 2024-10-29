@@ -36,7 +36,7 @@ jobs:
       - name: Set Final Version
         id: set_final_version
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.ref }}" == "refs/heads/develop" ]]; then
+          if [[ "${{ github.event_name }}" == "pull_request"; then
             # Append -beta and the commit SHA to the version
             FINAL_VERSION="${{ env.VERSION }}-beta-${GITHUB_SHA::8}"
             echo "FINAL_VERSION=${FINAL_VERSION}" >> $GITHUB_ENV
@@ -54,4 +54,4 @@ jobs:
         run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
         
       - name: Publish to GitHub Packages
-        run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.CI_CD }} --source "github" --skip-duplicate
+        run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.CI_CD }} --source "https://nuget.pkg.github.com/Rades98/index.json" --skip-duplicate
