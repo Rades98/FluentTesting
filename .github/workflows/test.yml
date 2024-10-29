@@ -3,8 +3,6 @@ name: Run Tests
 on:
   workflow_dispatch:
   pull_request:
-    branches:
-      - master
   push:
     branches:
       - master
@@ -20,10 +18,10 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0'  # Change to your required .NET version
+          dotnet-version: '8.0'
 
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Run Tests
-        run: dotnet test  # Adjust this command based on your testing framework
+        run: dotnet test
