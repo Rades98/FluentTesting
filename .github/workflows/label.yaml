@@ -1,15 +1,15 @@
-name: Labeler
-on: [pull_request_target]
+# name: Labeler
+# on: [pull_request_target]
 
-jobs:
-  label:
+# jobs:
+#   label:
 
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+#       pull-requests: write
 
-    steps:
-    - uses: actions/labeler@v4
-      with:
-        repo-token: "${{ secrets.CI_CD }}"
+#     steps:
+#     - uses: actions/labeler@v4
+#       with:
+#         repo-token: "${{ secrets.CI_CD }}"
