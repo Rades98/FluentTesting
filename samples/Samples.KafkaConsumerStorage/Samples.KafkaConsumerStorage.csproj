@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Alza.Client.Kafka.MessageHandlerExtensions" Version="4.2.0" />
+    <PackageReference Include="Alza.Platform.Applications.BackgroundWorker" Version="1.10.0" />
+    <PackageReference Include="NEST" Version="7.17.5" />
+    <PackageReference Include="Elasticsearch.Net" Version="7.17.5" />
+  </ItemGroup>
+</Project>

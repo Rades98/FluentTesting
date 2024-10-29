@@ -1,0 +1,18 @@
+{
+"name": "SomeAwesomeAvro",
+  "type": "record",
+  "namespace": "Alza.KafkaTest",
+  "fields": [
+    {
+      "name": "SomeDate",
+      "type": {
+        "type": "int",
+        "logicalType": "date"
+      }
+    },
+    {
+      "name": "SomeString",
+      "type": "string"
+    }
+  ]
+}

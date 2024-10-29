@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <Import Project="common.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\FluentTesting.Common\FluentTesting.Common.csproj" />
+    <ProjectReference Include="..\FluentTesting.Elasticsearch\FluentTesting.Elasticsearch.csproj" />
+    <ProjectReference Include="..\FluentTesting.Kafka\FluentTesting.Kafka.csproj" />
+    <ProjectReference Include="..\FluentTesting.Mongo\FluentTesting.Mongo.csproj" />
+    <ProjectReference Include="..\FluentTesting.Redis\FluentTesting.Redis.csproj" />
+    <ProjectReference Include="..\FluentTesting.Sql\FluentTesting.Sql.csproj" />
+  </ItemGroup>
+
+</Project>

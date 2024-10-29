@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="..\FluentTesting\common.props" />
+
+    <ItemGroup>
+        <ProjectReference Include="..\FluentTesting.Common\FluentTesting.Common.csproj" />
+    </ItemGroup>
+
+</Project>

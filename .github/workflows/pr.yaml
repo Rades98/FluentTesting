@@ -1,0 +1,30 @@
+name: Branch Protection Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  branch-protection:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if branch can merge to main
+        if: github.event.pull_request.base.ref == 'main'
+        run: |
+          if [[ "${GITHUB_HEAD_REF}" != "develop" && "${GITHUB_HEAD_REF}" != hotfix/* ]]; then
+            echo "Invalid branch for merge to main. Only 'develop' or 'hotfix/*' can merge to main."
+            exit 1
+          else
+            echo "Branch is allowed to merge to main."
+          fi
+
+      - name: Check if branch can merge to develop
+        if: github.event.pull_request.base.ref == 'develop'
+        run: |
+          if [[ "${GITHUB_HEAD_REF}" != feature/* && "${GITHUB_HEAD_REF}" != hotfix/* && "${GITHUB_HEAD_REF}" != support/* ]]; then
+            echo "Invalid branch for merge to develop. Only 'feature/*', 'hotfix/*', or 'support/*' can merge to develop."
+            exit 1
+          else
+            echo "Branch is allowed to merge to develop."
+          fi

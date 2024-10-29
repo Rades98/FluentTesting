@@ -1,0 +1,18 @@
+<Project>
+	<PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Version>1.0.0</Version>
+    <Authors>Raduz</Authors>
+    <RepositoryUrl>https://github.com/Rades98/FluentTesting</RepositoryUrl>
+    <Description>
+      FluentTesting package supporting dockerized dependencies
+    </Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\docs\index.md" Pack="true" PackagePath="."></None>
+	</ItemGroup>
+  
+</Project>

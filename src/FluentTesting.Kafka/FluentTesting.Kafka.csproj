@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\FluentTesting\common.props" />
+
+  <ItemGroup>
+    <PackageReference Include="Confluent.Kafka" Version="2.6.0" />
+    <PackageReference Include="Confluent.SchemaRegistry" Version="2.6.0" />
+    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="2.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FluentTesting.Common\FluentTesting.Common.csproj" />
+  </ItemGroup>
+
+</Project>

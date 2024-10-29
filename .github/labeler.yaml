@@ -1,0 +1,16 @@
+ASP:
+  - src/FluentTesting.Asp
+CORE:
+  - src/FluentTesting.Kafka
+ELASTIC:
+  - src/FluentTesting.Elasticsearch
+KAFKA:
+  - src/FluentTesting.Kafka
+MONGO:
+  - src/FluentTesting.Mongo
+RabbitMQ:
+  - src/FluentTesting.RabbitMq
+Redis:
+  - src/FluentTesting.Redis
+SQL:    
+  - src/FluentTesting.Sql

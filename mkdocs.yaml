@@ -1,0 +1,36 @@
+site_name: 'FluentTesting'
+
+nav:
+  - Home: index.md
+  - Mocking: mocking.md
+  - Dotnet: dotnet.md
+  - ASP:
+      - ASP: asp/asp.md
+      - Extensions: asp/aspExtensions.md
+  - Kafka:
+      - Kafka: kafka/kafka.md
+      - AKHQ: kafka/akhq.md
+  - RabbitMq:
+     - RabbitMQ: rabbit/rabbit.md
+     - RabbitMQ Manager: rabbit/rabbitManager.md
+  - MsSql: 
+      - SQL: sql/sql.md
+      - Adminer: sql/adminer.md
+  - Elasticsearch: 
+      - Elastic: elastic/elastic.md
+      - Kibana: elastic/kibana.md
+  - Redis:
+      - Redis: redis/redis.md
+      - RedisInsight: redis/redisInsight.md
+  - Mongo: 
+      - Mongo: mongo/mongo.md
+      - MongoExpress: mongo/mongoExpress.md
+  - Samples: samples.md
+  - FAQ: faq/faq.md
+
+plugins:
+  - codeinclude 
+
+theme:
+  name: material
+
