@@ -101,8 +101,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipelines", "Pipelines", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Labeler", "Labeler", "{3EC9EF79-0819-42DE-8668-6D74C53F8A3D}"
 	ProjectSection(SolutionItems) = preProject
-		.github\labeler.yaml = .github\labeler.yaml
 		.github\workflows\label.yml = .github\workflows\label.yml
+		.github\labeler.yml = .github\labeler.yml
 	EndProjectSection
 EndProject
 Global
