@@ -25,5 +25,8 @@ jobs:
       - name: Pack
         run: dotnet pack --configuration Release --output ./output  
 
-      - name: Publish Package
+      - name: Publish to NuGet
         run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        
+      - name: Publish to GitHub Packages
+        run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.CI_CD }} --source "github" --skip-duplicate
