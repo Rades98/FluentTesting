@@ -17,7 +17,7 @@ on:
 jobs:
   publish-nuget:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/heads/support/') == false
+    if: "startsWith(github.ref, 'refs/heads/feature/')"
 
     steps:
       - name: Checkout code
