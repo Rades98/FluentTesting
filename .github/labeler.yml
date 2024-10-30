@@ -1,7 +1,7 @@
 ASP:
  - src/FluentTesting.Asp/**
 CORE:
- - src/FluentTesting.Kafka/**
+ - src/FluentTesting/**
 ELASTIC:
  - src/FluentTesting.Elasticsearch/**
 KAFKA:
