@@ -12,7 +12,9 @@ RabbitMQ:
  - src/FluentTesting.RabbitMq/**
 Redis:
  - src/FluentTesting.Redis/**
-SQL:    
+SQL:
  - src/FluentTesting.Sql/**
+PostgreSQL:
+ - src/FluentTesting.PostgreSql/** 
 DevOps:
  - .github/**
