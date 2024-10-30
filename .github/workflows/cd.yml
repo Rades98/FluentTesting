@@ -2,8 +2,15 @@ name: Build and Publish Package
 
 on:
   workflow_dispatch:
-  pull_request:
+  workflow_run:
+    workflows: ["ci"]
+    types:
+      - completed
     branches:
+      - develop
+  push:
+    branches:
+      - main
       - develop
 
 jobs:
@@ -28,7 +35,7 @@ jobs:
       - name: Get Version from csproj
         id: get_version
         run: |
-          # Extract version from the .csproj or props file
+          # Extract version from  props file
           VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" src/FluentTesting/common.props)
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "Extracted version: $VERSION"  # Log the extracted version
@@ -37,14 +44,19 @@ jobs:
         id: set_final_version
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            # Append -beta and the commit SHA to the version
+            # Append -pr and the commit SHA to the version for pull requests
+            FINAL_VERSION="${{ env.VERSION }}-pr-${GITHUB_SHA::8}"
+            echo "FINAL_VERSION=${FINAL_VERSION}" >> $GITHUB_ENV
+            echo "Final version set for PR: $FINAL_VERSION"  # Log the final version for PR
+          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            # Append -beta and the commit SHA to the version for pushes to develop
             FINAL_VERSION="${{ env.VERSION }}-beta-${GITHUB_SHA::8}"
             echo "FINAL_VERSION=${FINAL_VERSION}" >> $GITHUB_ENV
             echo "Final version set for beta: $FINAL_VERSION"  # Log the final version for beta
           else
-            # Use the extracted version without changes
+            # Use the extracted version without changes for main
             echo "FINAL_VERSION=${{ env.VERSION }}" >> $GITHUB_ENV
-            echo "Final version set (no beta): ${VERSION}"  # Log the final version without beta
+            echo "Final version set (release): ${VERSION}"  # Log the final version without beta
           fi
 
       - name: Pack
