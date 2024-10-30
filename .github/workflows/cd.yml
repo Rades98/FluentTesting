@@ -1,9 +1,9 @@
-name: Publish Package
+name: CD
 
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["ci"]
+    workflows: ["CI"]
     types:
       - completed
     branches:
