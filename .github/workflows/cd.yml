@@ -7,7 +7,7 @@ on:
     branches:
       - develop
     types:
-      - completed  # Ensure CD waits for CI completion and success
+      - completed
 
   push:
     branches:
