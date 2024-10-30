@@ -28,3 +28,14 @@ jobs:
           else
             echo "Branch is allowed to merge to develop."
           fi
+  label:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Apply Labels
+        uses: actions/labeler@v4
+        with:
+          repo-token: "${{ secrets.CI_CD }}"
