@@ -15,7 +15,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event == 'workflow_run' }} # Only run if triggered by CI completion
+    needs: workflow_run 
 
     steps:
       - name: Checkout code
