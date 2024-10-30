@@ -17,7 +17,7 @@ on:
 jobs:
   publish-nuget:
     runs-on: ubuntu-latest
-    if: "!(github.event_name == 'pull_request' && startsWith(github.head_ref, 'support/'))"
+    if: "!(github.base_ref == 'develop' && startsWith(github.head_ref, 'support/'))"
 
     steps:
       - name: Checkout code
