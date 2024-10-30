@@ -10,9 +10,8 @@ on:
 
 jobs:
   build:
-    needs: CI 
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_run' || github.event_name == 'push' }}
+    needs: CI  # Ensure this job runs after the CI job completes
 
     steps:
       - name: Checkout code
@@ -33,9 +32,14 @@ jobs:
       - name: Set Final Version
         id: set_final_version
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_run" && "${{ github.ref }}" == "refs/heads/develop" ]]; then
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.base_ref }}" == "develop" ]]; then
+            # Append -pr<commitId> to the version for PRs to develop
+            FINAL_VERSION="${{ env.VERSION }}-pr-${GITHUB_SHA::8}"
+          elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            # Append -beta<commitId> to the version for pushes to develop
             FINAL_VERSION="${{ env.VERSION }}-beta-${GITHUB_SHA::8}"
           elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
+            # Use the extracted version without changes for pushes to main
             FINAL_VERSION="${{ env.VERSION }}"
           fi
           echo "FINAL_VERSION=${FINAL_VERSION}" >> $GITHUB_ENV
