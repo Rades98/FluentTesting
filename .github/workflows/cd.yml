@@ -63,7 +63,7 @@ jobs:
           done
 
       - name: Publish to NuGet
-        if: ${{ env.FINAL_VERSION != '' }}
+        if: ${{ env.FINAL_VERSION != '' && !contains(env.FINAL_VERSION, 'pr') }}
         run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: Publish to GitHub Packages
