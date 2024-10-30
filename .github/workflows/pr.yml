@@ -28,6 +28,25 @@ jobs:
           else
             echo "Branch is allowed to merge to develop."
           fi
+
+      - name: Validate Commit Messages
+        run: |
+          invalid_commits=0
+          while IFS= read -r commit; do
+            message="${commit##* }"
+            if [[ ${#message} -le 5 ]]; then
+              echo "Invalid commit message: $message. Must be longer than 5 characters."
+              invalid_commits=$((invalid_commits+1))
+            fi
+          done < <(git log origin/${{ github.event.pull_request.base.ref }}..HEAD --pretty=format:'%H %s')
+
+          if [[ $invalid_commits -gt 0 ]]; then
+            echo "$invalid_commits commit(s) have invalid messages."
+            exit 1
+          else
+            echo "All commit messages are valid."
+          fi
+
   label:
     runs-on: ubuntu-latest
     permissions:
