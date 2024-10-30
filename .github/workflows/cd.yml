@@ -3,18 +3,21 @@ name: CD
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["CI"] #Should run only after CI
+    workflows: ["CI"]
     types:
       - completed
   pull_request:
+    branches:
+      - develop
   push:
     branches:
       - main
       - develop
 
 jobs:
-  build:
+  publish-nuget:
     runs-on: ubuntu-latest
+    if: "startsWith(github.ref, 'refs/heads/feature/')"
 
     steps:
       - name: Checkout code
@@ -41,15 +44,29 @@ jobs:
             FINAL_VERSION="${{ env.VERSION }}-beta-${GITHUB_SHA::8}"
           elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
             FINAL_VERSION="${{ env.VERSION }}"
+          else
+            FINAL_VERSION=""
           fi
           echo "FINAL_VERSION=${FINAL_VERSION}" >> $GITHUB_ENV
           echo "Final version set: $FINAL_VERSION"
 
-      - name: Pack
-        run: dotnet pack --configuration Release --output ./output /p:PackageVersion=${{ env.FINAL_VERSION }}
+      - name: Check Final Version
+        run: |
+          if [[ -z "${{ env.FINAL_VERSION }}" ]]; then
+            echo "Error: Version number is null. Publish steps will be skipped."
+            exit 1
+          fi
+
+      - name: Pack Projects
+        run: |
+          for project in $(find src -name '*.csproj'); do
+            dotnet pack "$project" --configuration Release --output ./output /p:PackageVersion=${{ env.FINAL_VERSION }}
+          done
 
       - name: Publish to NuGet
+        if: ${{ env.FINAL_VERSION != '' && !contains(env.FINAL_VERSION, 'pr') }}
         run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: Publish to GitHub Packages
+        if: ${{ env.FINAL_VERSION != '' }}
         run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.CI_CD }} --source "https://nuget.pkg.github.com/Rades98/index.json" --skip-duplicate
