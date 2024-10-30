@@ -2,6 +2,10 @@ name: CD
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
   pull_request:
   push:
     branches:
