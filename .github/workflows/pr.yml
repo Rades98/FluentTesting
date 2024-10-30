@@ -1,4 +1,4 @@
-name: Branch Protection Check
+name: PR
 
 on:
   pull_request:
