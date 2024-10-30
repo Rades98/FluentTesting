@@ -1,7 +1,8 @@
 ASP:
  - src/FluentTesting.Asp/**
 CORE:
- - src/FluentTesting.Kafka/**
+ - src/FluentTesting/**
+ - src/FluentTesting.Common/**
 ELASTIC:
  - src/FluentTesting.Elasticsearch/**
 KAFKA:
@@ -12,7 +13,9 @@ RabbitMQ:
  - src/FluentTesting.RabbitMq/**
 Redis:
  - src/FluentTesting.Redis/**
-SQL:    
+SQL:
  - src/FluentTesting.Sql/**
+PostgreSQL:
+ - src/FluentTesting.PostgreSql/** 
 DevOps:
  - .github/**

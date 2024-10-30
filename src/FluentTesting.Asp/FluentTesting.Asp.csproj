@@ -1,18 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+  <Import Project="..\FluentTesting\common.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\FluentTesting.Common\FluentTesting.Common.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions.Json" Version="6.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\FluentTesting.Common\FluentTesting.Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,13 +6,30 @@
     <Version>1.0.0</Version>
     <Authors>Raduz</Authors>
     <RepositoryUrl>https://github.com/Rades98/FluentTesting</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://rades98.github.io/FluentTesting</PackageProjectUrl>
+    <PackageIcon>logo.png</PackageIcon>
     <Description>
-      FluentTesting package supporting dockerized dependencies
+      The FluentTesting focuses on creating a fluent API for integration testing in .NET,
+      aiming to simplify setup and testing of applications using containers.
+      It includes Testcontainers, enabling automated test environments
+      for services like Kafka, Redis, MongoDB, and more.
     </Description>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="..\..\docs\index.md" Pack="true" PackagePath="."></None>
 	</ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
   
 </Project>
