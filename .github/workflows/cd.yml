@@ -55,4 +55,4 @@ jobs:
 
       - name: Publish to GitHub Packages
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        run: dotnet nuget push ./output/*.nupkg --api-key ${{ se
+        run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.CI_CD }} --source "https://nuget.pkg.github.com/Rades98/index.json" --skip-duplicate
