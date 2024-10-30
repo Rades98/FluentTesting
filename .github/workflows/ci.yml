@@ -26,7 +26,7 @@ jobs:
       - name: Run Tests
         run: dotnet test
   sonar:
-    name: Build and analyze
+    name: Sonar analyzis
     runs-on: windows-latest
     steps:
       - name: Set up JDK 17
