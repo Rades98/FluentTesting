@@ -56,8 +56,11 @@ jobs:
             exit 1
           fi
 
-      - name: Pack
-        run: dotnet pack --configuration Release --output ./output /p:PackageVersion=${{ env.FINAL_VERSION }}
+      - name: Pack Projects
+        run: |
+          for project in $(find src -name '*.csproj'); do
+            dotnet pack "$project" --configuration Release --output ./output /p:PackageVersion=${{ env.FINAL_VERSION }}
+          done
 
       - name: Publish to NuGet
         if: ${{ env.FINAL_VERSION != '' }}
