@@ -49,9 +49,7 @@ jobs:
         run: dotnet pack --configuration Release --output ./output /p:PackageVersion=${{ env.FINAL_VERSION }}
 
       - name: Publish to NuGet
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: Publish to GitHub Packages
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.CI_CD }} --source "https://nuget.pkg.github.com/Rades98/index.json" --skip-duplicate
