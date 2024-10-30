@@ -93,15 +93,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FAQ", "FAQ", "{7581D04B-1BE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipelines", "Pipelines", "{81FF9CE9-FCC0-4E37-87B2-3B36DB7A7D4B}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\cd.yml = .github\workflows\cd.yml
+		.github\workflows\ci.yml = .github\workflows\ci.yml
 		.github\workflows\mkdocs-deply.yml = .github\workflows\mkdocs-deply.yml
 		.github\workflows\pr.yml = .github\workflows\pr.yml
-		.github\workflows\publish.yml = .github\workflows\publish.yml
-		.github\workflows\test.yml = .github\workflows\test.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Labeler", "Labeler", "{3EC9EF79-0819-42DE-8668-6D74C53F8A3D}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\label.yml = .github\workflows\label.yml
 		.github\labeler.yml = .github\labeler.yml
 	EndProjectSection
 EndProject
