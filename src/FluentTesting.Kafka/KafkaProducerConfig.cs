@@ -2,15 +2,15 @@
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
 
-namespace Testing.Kafka
+namespace FluentTesting.Kafka
 {
-	/// <summary>
-	/// Kafka producer config
-	/// </summary>
-	public class KafkaProducerConfig : ProducerConfig
-	{
-		public required SchemaRegistryConfig SchemaRegistryConfig { get; set; }
+    /// <summary>
+    /// Kafka producer config
+    /// </summary>
+    public class KafkaProducerConfig : ProducerConfig
+    {
+        public required SchemaRegistryConfig SchemaRegistryConfig { get; set; }
 
-		public required AvroSerializerConfig AvroSerializerConfig { get; set; }
-	}
+        public required AvroSerializerConfig AvroSerializerConfig { get; set; }
+    }
 }

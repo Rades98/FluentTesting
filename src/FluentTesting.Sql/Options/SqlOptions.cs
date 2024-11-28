@@ -1,31 +1,31 @@
-﻿using Testing.Common.Abstraction;
+﻿using FluentTesting.Common.Abstraction;
 
-namespace Testing.Sql.Options
+namespace FluentTesting.Sql.Options
 {
-	/// <summary>
-	/// Sql options
-	/// </summary>
-	public class SqlOptions : IContainerOptions
-	{
-		/// <inheritdoc/>
-		public int? Port { get; set; } = 1433;
+    /// <summary>
+    /// Sql options
+    /// </summary>
+    public class SqlOptions : IContainerOptions
+    {
+        /// <inheritdoc/>
+        public int? Port { get; set; } = 1433;
 
-		/// <inheritdoc/>
-		public bool RunAdminTool { get; set; } = true;
+        /// <inheritdoc/>
+        public bool RunAdminTool { get; set; } = true;
 
-		/// <summary>
-		/// Database
-		/// </summary>
-		public string Database { get; set; } = "master";
+        /// <summary>
+        /// Database
+        /// </summary>
+        public string Database { get; set; } = "master";
 
-		/// <summary>
-		/// Default user name
-		/// </summary>
-		public string DefautUsername { get; } = "sa";
+        /// <summary>
+        /// Default user name
+        /// </summary>
+        public string DefautUsername { get; } = "sa";
 
-		/// <summary>
-		/// Default password
-		/// </summary>
-		public string Password { get; set; } = "Strong(!)Password";
-	}
+        /// <summary>
+        /// Default password
+        /// </summary>
+        public string Password { get; set; } = "Strong(!)Password";
+    }
 }

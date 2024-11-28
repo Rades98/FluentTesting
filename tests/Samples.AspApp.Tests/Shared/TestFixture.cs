@@ -1,9 +1,9 @@
+using FluentTesting.Asp.Authentication;
+using FluentTesting.Asp.Extensions;
+using FluentTesting.Common.Extensions;
+using FluentTesting.Common.Interfaces;
+using FluentTesting.Sql;
 using Testing.Asp;
-using Testing.Asp.Authentication;
-using Testing.Asp.Extensions;
-using Testing.Common.Extensions;
-using Testing.Common.Interfaces;
-using Testing.Sql;
 
 namespace Samples.AspApp.Tests.Shared;
 

@@ -1,83 +1,83 @@
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
+using FluentTesting.Common.Extensions;
+using FluentTesting.Common.Interfaces;
+using FluentTesting.Common.Providers;
+using FluentTesting.Mongo.Container;
+using FluentTesting.Mongo.Options;
 using Microsoft.Extensions.Configuration;
-using Testing.Common.Extensions;
-using Testing.Common.Interfaces;
-using Testing.Common.Providers;
-using Testing.Mongo.Container;
-using Testing.Mongo.Options;
 
-namespace Testing.Mongo;
+namespace FluentTesting.Mongo;
 
 public static class MongoExtensions
 {
-	static readonly MongoDbOptions mongoDbOptions = new();
+    static readonly MongoDbOptions mongoDbOptions = new();
 
-	/// <summary>
-	/// Use MongoDb container with initial seed, configuration and (optional) custom options.
-	/// </summary>
-	public static IApplicationFactoryBuilder UseMongo(
-		this IApplicationFactoryBuilder builder,
-		string seed,
-		Action<ConfigurationBuilder, MongoContainerSettings> configuration,
-		Action<MongoDbOptions>? customOptions = null)
-	{
-		customOptions ??= _ => { };
+    /// <summary>
+    /// Use MongoDb container with initial seed, configuration and (optional) custom options.
+    /// </summary>
+    public static IApplicationFactoryBuilder UseMongo(
+        this IApplicationFactoryBuilder builder,
+        string seed,
+        Action<ConfigurationBuilder, MongoContainerSettings> configuration,
+        Action<MongoDbOptions>? customOptions = null)
+    {
+        customOptions ??= _ => { };
 
-		customOptions.Invoke(mongoDbOptions);
+        customOptions.Invoke(mongoDbOptions);
 
-		var (MongoContainer, MongoClientContainer, MongoNetwork) = CreateMongo(seed, builder.UseProxiedImages);
+        var (MongoContainer, MongoClientContainer, MongoNetwork) = CreateMongo(seed, builder.UseProxiedImages);
 
-		builder.Containers.TryAdd(nameof(MongoContainer), MongoContainer);
+        builder.Containers.TryAdd(nameof(MongoContainer), MongoContainer);
 
-		if (MongoClientContainer is not null)
-		{
-			builder.Containers.TryAdd(nameof(MongoClientContainer), MongoClientContainer);
-		}
+        if (MongoClientContainer is not null)
+        {
+            builder.Containers.TryAdd(nameof(MongoClientContainer), MongoClientContainer);
+        }
 
-		builder.Networks.TryAdd(nameof(MongoNetwork), MongoNetwork);
+        builder.Networks.TryAdd(nameof(MongoNetwork), MongoNetwork);
 
-		builder.Builders.Add(
-			configurationBuilder => configuration.Invoke(
-				configurationBuilder,
-				new MongoContainerSettings(
-						[MongoContainer.Hostname],
-						MongoContainer.GetMappedPublicPort(MongoContainerUtils.MongoDbPort),
-						mongoDbOptions.Username,
-						mongoDbOptions.Password,
-						mongoDbOptions.DatabaseName
-						)
-				)
-			);
+        builder.Builders.Add(
+            configurationBuilder => configuration.Invoke(
+                configurationBuilder,
+                new MongoContainerSettings(
+                        [MongoContainer.Hostname],
+                        MongoContainer.GetMappedPublicPort(MongoContainerUtils.MongoDbPort),
+                        mongoDbOptions.Username,
+                        mongoDbOptions.Password,
+                        mongoDbOptions.DatabaseName
+                        )
+                )
+            );
 
-		return builder;
-	}
+        return builder;
+    }
 
-	/// <summary>
-	/// Creates and runs MongoDb container with specified seed.
-	/// </summary>
-	static (IContainer MongoContainer, IContainer? MongoClientContainer, INetwork MongoNetwork) CreateMongo(string seed, bool useProxiedImages)
-	{
-		var network = NetworkProvider.GetBasicNetwork();
+    /// <summary>
+    /// Creates and runs MongoDb container with specified seed.
+    /// </summary>
+    static (IContainer MongoContainer, IContainer? MongoClientContainer, INetwork MongoNetwork) CreateMongo(string seed, bool useProxiedImages)
+    {
+        var network = NetworkProvider.GetBasicNetwork();
 
-		IContainer? clientContainer = null;
+        IContainer? clientContainer = null;
 
-		var container = MongoContainerUtils.GetMongoContainer(network, mongoDbOptions, useProxiedImages);
+        var container = MongoContainerUtils.GetMongoContainer(network, mongoDbOptions, useProxiedImages);
 
-		var result = container.EnsureContainer(cnt => MongoContainerUtils.ExecMongoScriptAsync(cnt, seed));
+        var result = container.EnsureContainer(cnt => MongoContainerUtils.ExecMongoScriptAsync(cnt, seed));
 
-		if (!string.IsNullOrEmpty(seed) && result.ExitCode != 0)
-		{
-			throw new Exception("Mongo seed failed: " + result.Stderr);
-		}
+        if (!string.IsNullOrEmpty(seed) && result.ExitCode != 0)
+        {
+            throw new Exception("Mongo seed failed: " + result.Stderr);
+        }
 
-		if (System.Diagnostics.Debugger.IsAttached && mongoDbOptions.RunAdminTool)
-		{
-			clientContainer = MongoContainerUtils.GetMongoExpressContainer(network, useProxiedImages);
+        if (System.Diagnostics.Debugger.IsAttached && mongoDbOptions.RunAdminTool)
+        {
+            clientContainer = MongoContainerUtils.GetMongoExpressContainer(network, useProxiedImages);
 
-			clientContainer.EnsureContainer();
-		}
+            clientContainer.EnsureContainer();
+        }
 
-		return (container, clientContainer, network);
-	}
+        return (container, clientContainer, network);
+    }
 }
