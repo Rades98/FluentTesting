@@ -1,8 +1,8 @@
-﻿namespace Testing.Elasticsearch
+﻿namespace FluentTesting.Elasticsearch
 {
-	/// <summary>
-	/// Elasticearch container settings 
-	/// </summary>
-	/// <param name="NodesUrls">Elastic nodes</param>
-	public record ElasticsearchContainerSettings(IEnumerable<string> NodesUrls);
+    /// <summary>
+    /// Elasticearch container settings 
+    /// </summary>
+    /// <param name="NodesUrls">Elastic nodes</param>
+    public record ElasticsearchContainerSettings(IEnumerable<string> NodesUrls);
 }

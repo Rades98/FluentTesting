@@ -1,4 +1,4 @@
-namespace Testing.Mongo;
+namespace FluentTesting.Mongo;
 
 /// <summary>
 /// Mongo container settings
