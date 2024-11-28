@@ -1,9 +1,9 @@
+using FluentTesting.Asp;
 using FluentTesting.Asp.Authentication;
 using FluentTesting.Asp.Extensions;
 using FluentTesting.Common.Extensions;
 using FluentTesting.Common.Interfaces;
 using FluentTesting.Sql;
-using Testing.Asp;
 
 namespace Samples.AspApp.Tests.Shared;
 
@@ -12,32 +12,32 @@ namespace Samples.AspApp.Tests.Shared;
 /// </summary>
 public class TestFixture : ITestFixture
 {
-	public IApplicationFactory ApplicationFactory { get; }
+    public IApplicationFactory ApplicationFactory { get; }
 
-	public string SqlConnectionString { get; private set; } = string.Empty;
+    public string SqlConnectionString { get; private set; } = string.Empty;
 
-	public HttpClient Client { get; }
+    public HttpClient Client { get; }
 
-	public TestFixture()
-	{
-		ApplicationFactory = new AspApplicationFactoryBuilder<Program>()
-			.SetAssertionRegex(@".*Samples\.AspApp\.Tests[\\\/]+(.*?)[\\\/](?:(?![\\\/]).)*$")
-			.RegisterServices((services, configuration) =>
-				{
-					services.RegisterAuth();
-				})
-			.UseSql(SqlSeed, (configuration, sqlSettings) =>
-			{
-				configuration.AddConnectionString("Web", sqlSettings.ConnectionString);
+    public TestFixture()
+    {
+        ApplicationFactory = new AspApplicationFactoryBuilder<Program>()
+            .SetAssertionRegex(@".*Samples\.AspApp\.Tests[\\\/]+(.*?)[\\\/](?:(?![\\\/]).)*$")
+            .RegisterServices((services, configuration) =>
+                {
+                    services.RegisterAuth();
+                })
+            .UseSql(SqlSeed, (configuration, sqlSettings) =>
+            {
+                configuration.AddConnectionString("Web", sqlSettings.ConnectionString);
 
-				SqlConnectionString = sqlSettings.ConnectionString;
-			})
-			.Build();
+                SqlConnectionString = sqlSettings.ConnectionString;
+            })
+            .Build();
 
-		Client = ApplicationFactory.GetClient();
-	}
+        Client = ApplicationFactory.GetClient();
+    }
 
-	private const string SqlSeed = @"
+    private const string SqlSeed = @"
 		CREATE TABLE dbo.SomeTable(
 			Id INT PRIMARY KEY IDENTITY(1,1), 
 			SomeInt INT NOT NULL, 

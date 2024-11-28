@@ -10,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using System.Collections.Concurrent;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
-using Testing.Asp;
 
 namespace FluentTesting.Asp
 {

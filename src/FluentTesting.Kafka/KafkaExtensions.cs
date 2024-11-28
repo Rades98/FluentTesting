@@ -9,10 +9,10 @@ using FluentTesting.Common.Interfaces;
 using FluentTesting.Common.Providers;
 using FluentTesting.Kafka.Containers;
 using FluentTesting.Kafka.Options;
+using FluentTesting.Kafka.SerDes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
-using Testing.Kafka.Serdes;
 
 namespace FluentTesting.Kafka
 {

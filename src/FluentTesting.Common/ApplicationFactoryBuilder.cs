@@ -1,5 +1,6 @@
 ﻿using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
+using FluentTesting.Common.Abstraction;
 using FluentTesting.Common.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -10,7 +11,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using Testing.Common.Abstraction;
 
 namespace FluentTesting.Common
 {
