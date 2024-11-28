@@ -1,15 +1,15 @@
-using Testing.Common.Abstraction;
+using FluentTesting.Common.Abstraction;
 
-namespace Testing.Redis.Options;
+namespace FluentTesting.Redis.Options;
 
 /// <summary>
 /// Redis options
 /// </summary>
 public class RedisOptions : IContainerOptions
 {
-	/// <inheritdoc/>
-	public int? Port { get; set; } = 6001;
+    /// <inheritdoc/>
+    public int? Port { get; set; } = 6001;
 
-	/// <inheritdoc/>
-	public bool RunAdminTool { get; set; } = true;
+    /// <inheritdoc/>
+    public bool RunAdminTool { get; set; } = true;
 }

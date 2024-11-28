@@ -1,9 +1,9 @@
+using FluentTesting.Asp.Extensions;
 using Samples.AspApp.Tests.Shared;
-using Testing.Asp.Extensions;
 
 namespace Samples.AspApp.Tests
 {
-	[Collection("AspTestFixture")]
+    [Collection("AspTestFixture")]
 	public class EndpointTests(TestFixture fixture)
 	{
 		[Fact]

@@ -1,38 +1,38 @@
-﻿using System.Text.RegularExpressions;
-using Testing.Common.Interfaces;
+﻿using FluentTesting.Common.Interfaces;
+using System.Text.RegularExpressions;
 
-namespace Testing.Asp
+namespace FluentTesting.Asp
 {
-	/// <summary>
-	/// ASP Application factory
-	/// </summary>
-	public class AspApplicationFactory(IServiceProvider serviceProvider, HttpClient client, Regex? assertationRegex = null) : IApplicationFactory, IAsyncDisposable
-	{
-		/// <inheritdoc/>
-		private Action DisposeActions = () => { };
+    /// <summary>
+    /// ASP Application factory
+    /// </summary>
+    public class AspApplicationFactory(IServiceProvider serviceProvider, HttpClient client, Regex? assertationRegex = null) : IApplicationFactory, IAsyncDisposable
+    {
+        /// <inheritdoc/>
+        private Action DisposeActions = () => { };
 
-		/// <inheritdoc/>
-		public IServiceProvider Services => serviceProvider;
+        /// <inheritdoc/>
+        public IServiceProvider Services => serviceProvider;
 
-		public Regex? AssertionRegex => assertationRegex;
+        public Regex? AssertionRegex => assertationRegex;
 
-		/// <summary>
-		/// Http client configured with base route of application
-		/// </summary>
-		public HttpClient Client => client;
+        /// <summary>
+        /// Http client configured with base route of application
+        /// </summary>
+        public HttpClient Client => client;
 
-		/// <inheritdoc/>
-		public void AppendDisposeAction(Action disposeAction)
-		{
-			DisposeActions += disposeAction;
-		}
+        /// <inheritdoc/>
+        public void AppendDisposeAction(Action disposeAction)
+        {
+            DisposeActions += disposeAction;
+        }
 
-		/// <inheritdoc/>
-		public ValueTask DisposeAsync()
-		{
-			DisposeActions.Invoke();
+        /// <inheritdoc/>
+        public ValueTask DisposeAsync()
+        {
+            DisposeActions.Invoke();
 
-			return ValueTask.CompletedTask;
-		}
-	}
+            return ValueTask.CompletedTask;
+        }
+    }
 }

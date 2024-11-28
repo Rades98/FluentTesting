@@ -1,8 +1,8 @@
-﻿namespace Testing.Sql
+﻿namespace FluentTesting.Sql
 {
-	/// <summary>
-	/// Sql container settings
-	/// </summary>
-	/// <param name="ConnectionString">connection string</param>
-	public record SqlContainerSettings(string ConnectionString);
+    /// <summary>
+    /// Sql container settings
+    /// </summary>
+    /// <param name="ConnectionString">connection string</param>
+    public record SqlContainerSettings(string ConnectionString);
 }

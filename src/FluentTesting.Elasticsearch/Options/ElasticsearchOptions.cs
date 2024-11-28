@@ -1,18 +1,18 @@
-﻿using Testing.Common.Abstraction;
+﻿using FluentTesting.Common.Abstraction;
 
-namespace Testing.Elasticsearch.Options
+namespace FluentTesting.Elasticsearch.Options
 {
-	public class ElasticsearchOptions : IContainerOptions
-	{
-		/// <inheritdoc/>
-		public bool RunAdminTool { get; set; } = true;
+    public class ElasticsearchOptions : IContainerOptions
+    {
+        /// <inheritdoc/>
+        public bool RunAdminTool { get; set; } = true;
 
-		/// <inheritdoc/>
-		public int? Port { get; set; } = 9200;
+        /// <inheritdoc/>
+        public int? Port { get; set; } = 9200;
 
-		/// <summary>
-		/// Index patterns
-		/// </summary>
-		public string[] IndexPatterns { get; set; } = [];
-	}
+        /// <summary>
+        /// Index patterns
+        /// </summary>
+        public string[] IndexPatterns { get; set; } = [];
+    }
 }

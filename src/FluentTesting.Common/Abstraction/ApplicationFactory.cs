@@ -1,42 +1,42 @@
-﻿using Microsoft.Extensions.Hosting;
-using Testing.Common.Interfaces;
+﻿using FluentTesting.Common.Interfaces;
+using Microsoft.Extensions.Hosting;
 
-namespace Testing.Common.Abstraction
+namespace FluentTesting.Common.Abstraction
 {
-	/// <summary>
-	/// Application factory base object
-	/// </summary>
-	/// <param name="host"></param>
-	public class ApplicationFactory(IHost host) : IApplicationFactory, IAsyncDisposable
-	{
-		private Action DisposeActions = () => { };
+    /// <summary>
+    /// Application factory base object
+    /// </summary>
+    /// <param name="host"></param>
+    public class ApplicationFactory(IHost host) : IApplicationFactory, IAsyncDisposable
+    {
+        private Action DisposeActions = () => { };
 
-		/// <inheritdoc/>
-		public IHost Host { get; } = host;
+        /// <inheritdoc/>
+        public IHost Host { get; } = host;
 
-		/// <inheritdoc/>
-		public IServiceProvider Services => Host.Services;
+        /// <inheritdoc/>
+        public IServiceProvider Services => Host.Services;
 
-		/// <inheritdoc/>
-		public void AppendDisposeAction(Action disposeAction)
-		{
-			DisposeActions += disposeAction;
-		}
+        /// <inheritdoc/>
+        public void AppendDisposeAction(Action disposeAction)
+        {
+            DisposeActions += disposeAction;
+        }
 
-		/// <summary>
-		/// Wait for shutdown
-		/// </summary>
-		/// <param name="token">cancellation token</param>
-		/// <returns></returns>
-		public Task WaitForShutdownAsync(CancellationToken token)
-			=> Host.WaitForShutdownAsync(token);
+        /// <summary>
+        /// Wait for shutdown
+        /// </summary>
+        /// <param name="token">cancellation token</param>
+        /// <returns></returns>
+        public Task WaitForShutdownAsync(CancellationToken token)
+            => Host.WaitForShutdownAsync(token);
 
-		/// <inheritdoc/>
-		public ValueTask DisposeAsync()
-		{
-			DisposeActions.Invoke();
+        /// <inheritdoc/>
+        public ValueTask DisposeAsync()
+        {
+            DisposeActions.Invoke();
 
-			return ValueTask.CompletedTask;
-		}
-	}
+            return ValueTask.CompletedTask;
+        }
+    }
 }

@@ -1,15 +1,15 @@
-﻿namespace Testing.Common.Abstraction
+﻿namespace FluentTesting.Common.Abstraction
 {
-	public interface IContainerOptions
-	{
-		/// <summary>
-		/// Port
-		/// </summary>
-		public int? Port { get; set; }
+    public interface IContainerOptions
+    {
+        /// <summary>
+        /// Port
+        /// </summary>
+        public int? Port { get; set; }
 
-		/// <summary>
-		/// Run admin too - can run in debug mode only
-		/// </summary>
-		public bool RunAdminTool { get; set; }
-	}
+        /// <summary>
+        /// Run admin too - can run in debug mode only
+        /// </summary>
+        public bool RunAdminTool { get; set; }
+    }
 }
