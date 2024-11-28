@@ -39,12 +39,13 @@ jobs:
         id: set_final_version
         run: |
           echo "Extracted version: $VERSION"
+
+          FINAL_VERSION="${{ env.VERSION }}"
+
           if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.base_ref }}" == "develop" ]]; then
             FINAL_VERSION="${{ env.VERSION }}-pr-${GITHUB_SHA::8}"
           elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/develop" ]]; then
             FINAL_VERSION="${{ env.VERSION }}-beta-${GITHUB_SHA::8}"
-          elif [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
-            FINAL_VERSION="${{ env.VERSION }}"
           fi
       
           if [[ -z "$FINAL_VERSION" ]]; then
