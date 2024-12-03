@@ -969,7 +969,7 @@
 with delegate containing <code>ConfigurationBuilder</code> and <code>AzuriteContainerSettings</code>. 
 This will allow you to run elasticsearch in docker and register it within your fixture as follows.
 This extension lives in package: <code>FluentTesting.Azurite</code></p>
-<pre><code class="language-csharp">.UseBlob((configuration, settings) =&gt;
+<pre><code class="language-csharp">.UseAzurite((configuration, settings) =&gt;
 {
     configuration.AddConnectionString(&quot;BlobStorageConnection&quot;, settings.ConnectionString);
 })
