@@ -7,6 +7,9 @@ nav:
   - ASP:
       - ASP: asp/asp.md
       - Extensions: asp/aspExtensions.md
+  - Azurite:
+      - Blob: blob/blob.md
+      - AzureExplorer: blob/azureExplorer.md
   - Kafka:
       - Kafka: kafka/kafka.md
       - AKHQ: kafka/akhq.md
