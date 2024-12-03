@@ -3,7 +3,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>2.1.0</Version>
+		<Version>2.1.1</Version>
 		<Authors>Raduz</Authors>
 		<RepositoryUrl>https://github.com/Rades98/FluentTesting</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
