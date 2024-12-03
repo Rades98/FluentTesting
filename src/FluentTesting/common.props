@@ -1,35 +1,25 @@
 <Project>
 	<PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <Version>2.0.0</Version>
-    <Authors>Raduz</Authors>
-    <RepositoryUrl>https://github.com/Rades98/FluentTesting</RepositoryUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageProjectUrl>https://rades98.github.io/FluentTesting</PackageProjectUrl>
-    <PackageIcon>logo.png</PackageIcon>
-    <Description>
-      The FluentTesting focuses on creating a fluent API for integration testing in .NET,
-      aiming to simplify setup and testing of applications using containers.
-      It includes Testcontainers, enabling automated test environments
-      for services like Kafka, Redis, MongoDB, and more.
-    </Description>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>2.1.0</Version>
+		<Authors>Raduz</Authors>
+		<RepositoryUrl>https://github.com/Rades98/FluentTesting</RepositoryUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageProjectUrl>https://rades98.github.io/FluentTesting</PackageProjectUrl>
+		<PackageIcon>logo.png</PackageIcon>
+		<Description>
+			The FluentTesting focuses on creating a fluent API for integration testing in .NET,
+			aiming to simplify setup and testing of applications using containers.
+			It includes Testcontainers, enabling automated test environments
+			for services like Kafka, Redis, MongoDB, and more.
+		</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\..\docs\index.md" Pack="true" PackagePath="."></None>
+		<None Include="..\..\docs\index.md" Pack="true" PackagePath="index.md"></None>
+		<None Include="..\..\logo.png" Pack="true" PackagePath="logo.png" />
+		<None Include="..\..\README.md" Pack="true" PackagePath="README.md" />
 	</ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\logo.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-  
 </Project>
