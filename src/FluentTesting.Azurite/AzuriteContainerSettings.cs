@@ -1,4 +1,4 @@
 ﻿namespace FluentTesting.Azurite
 {
-    internal record AzuriteContainerSettings(string ConnectionString);
+    public record AzuriteContainerSettings(string ConnectionString);
 }
