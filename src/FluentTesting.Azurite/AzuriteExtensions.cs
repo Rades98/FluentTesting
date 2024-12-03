@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace FluentTesting.Azurite
 {
-    internal static class AzuriteExtensions
+    public static class AzuriteExtensions
     {
         private static readonly AzuriteOptions azuriteOptions = new();
 
