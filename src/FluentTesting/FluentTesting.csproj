@@ -7,6 +7,7 @@
   <Import Project="common.props" />
 
   <ItemGroup>
+    <ProjectReference Include="..\FluentTesting.Azurite\FluentTesting.Azurite.csproj" />
     <ProjectReference Include="..\FluentTesting.Common\FluentTesting.Common.csproj" />
     <ProjectReference Include="..\FluentTesting.Elasticsearch\FluentTesting.Elasticsearch.csproj" />
     <ProjectReference Include="..\FluentTesting.Kafka\FluentTesting.Kafka.csproj" />

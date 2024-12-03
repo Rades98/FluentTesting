@@ -104,6 +104,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Labeler", "Labeler", "{3EC9
 		.github\labeler.yml = .github\labeler.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentTesting.Azurite", "src\FluentTesting.Azurite\FluentTesting.Azurite.csproj", "{A8B12E92-357A-41DA-AA58-EB2DB91F8E38}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blob", "Blob", "{03F496B2-105C-4954-AF81-0AD651B7BD93}"
+	ProjectSection(SolutionItems) = preProject
+		docs\blob\azureExplorer.md = docs\blob\azureExplorer.md
+		docs\blob\blob.md = docs\blob\blob.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -150,6 +158,10 @@ Global
 		{F43FF063-A693-4704-AE59-F459D45478CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F43FF063-A693-4704-AE59-F459D45478CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F43FF063-A693-4704-AE59-F459D45478CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8B12E92-357A-41DA-AA58-EB2DB91F8E38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8B12E92-357A-41DA-AA58-EB2DB91F8E38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8B12E92-357A-41DA-AA58-EB2DB91F8E38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8B12E92-357A-41DA-AA58-EB2DB91F8E38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -169,6 +181,7 @@ Global
 		{7581D04B-1BE6-45B3-9360-67834F2ADC36} = {47A481C2-7244-4338-AD98-C0C1918B6128}
 		{81FF9CE9-FCC0-4E37-87B2-3B36DB7A7D4B} = {4A1576DE-D871-42B3-BC26-DFCC0AD9C62D}
 		{3EC9EF79-0819-42DE-8668-6D74C53F8A3D} = {81FF9CE9-FCC0-4E37-87B2-3B36DB7A7D4B}
+		{03F496B2-105C-4954-AF81-0AD651B7BD93} = {47A481C2-7244-4338-AD98-C0C1918B6128}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {392A17EA-FC23-4AA2-8A94-9423DFBB3088}
