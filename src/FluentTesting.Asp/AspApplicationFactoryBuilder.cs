@@ -24,10 +24,13 @@ namespace FluentTesting.Asp
 
         public bool UseProxiedImages { get; set; } = false;
 
+        public WebSocketClient WebSocketClient => wsClient;
+
         private Action<IServiceCollection, IConfiguration>? services;
         private Action<ConfigurationBuilder>? configurationBuilder;
         private Action<HttpRequestHeaders>? clientHeaders;
         private string environmentName = "IntegrationTests";
+        private WebSocketClient wsClient = null!;
 
         private Regex? assertationRegex = null;
 
@@ -68,6 +71,15 @@ namespace FluentTesting.Asp
             builder.UseTestServer();
         }
 
+        protected override TestServer CreateServer(IWebHostBuilder builder)
+        {
+            var server = base.CreateServer(builder);
+
+            wsClient = server.CreateWebSocketClient();
+
+            return server;
+        }
+
         protected override void ConfigureClient(HttpClient client)
         {
             base.ConfigureClient(client);
@@ -103,7 +115,7 @@ namespace FluentTesting.Asp
         /// <returns></returns>
         public IApplicationFactory Build()
         {
-            return new AspApplicationFactory(Services, CreateDefaultClient(), assertationRegex);
+            return new AspApplicationFactory(Services, CreateDefaultClient(), assertationRegex, wsClient);
         }
 
         /// <summary>
