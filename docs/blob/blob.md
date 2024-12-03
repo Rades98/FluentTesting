@@ -5,7 +5,7 @@ This will allow you to run elasticsearch in docker and register it within your f
 This extension lives in package: `FluentTesting.Azurite`
 
 ```csharp
-.UseBlob((configuration, settings) =>
+.UseAzurite((configuration, settings) =>
 {
     configuration.AddConnectionString("BlobStorageConnection", settings.ConnectionString);
 })
