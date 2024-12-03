@@ -19,3 +19,5 @@ PostgreSQL:
  - src/FluentTesting.PostgreSql/** 
 DevOps:
  - .github/**
+Azurite:
+ - src/FluentTesting.Azurite/**   
