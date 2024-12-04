@@ -150,7 +150,14 @@
         }
 
         private static bool IsSimpleType(Type type)
-            => type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(decimal) || type == typeof(DateTime) || type == typeof(Uri);
+            =>
+                type.IsPrimitive 
+                || type.IsEnum 
+                || type == typeof(string) 
+                || type == typeof(decimal)
+                || type == typeof(DateTime) 
+                || type == typeof(Uri)
+                || type == typeof(TimeSpan);
     }
 
 }
