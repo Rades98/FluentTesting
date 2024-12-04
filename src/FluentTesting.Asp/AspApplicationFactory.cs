@@ -1,5 +1,4 @@
 ﻿using FluentTesting.Common.Interfaces;
-using Microsoft.AspNetCore.TestHost;
 using System.Text.RegularExpressions;
 
 namespace FluentTesting.Asp
@@ -7,7 +6,7 @@ namespace FluentTesting.Asp
     /// <summary>
     /// ASP Application factory
     /// </summary>
-    public class AspApplicationFactory(IServiceProvider serviceProvider, HttpClient client, WebSocketClient wsClient, Regex? assertationRegex = null)
+    public class AspApplicationFactory(IServiceProvider serviceProvider, HttpClient client, Regex? assertationRegex = null)
         : IApplicationFactory, IAsyncDisposable
     {
         /// <inheritdoc/>
@@ -22,8 +21,6 @@ namespace FluentTesting.Asp
         /// Http client configured with base route of application
         /// </summary>
         public HttpClient Client => client;
-
-        public WebSocketClient WebSocketClient => wsClient;
 
         /// <inheritdoc/>
         public void AppendDisposeAction(Action disposeAction)
