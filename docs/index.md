@@ -16,12 +16,10 @@ Library providing testing mechanisms to run application in memory with needed th
 ## Release notes
 
 
-| Version | Task |                    Info                    |
-|---------|:-|:------------------------------------------:|
-| 1.0.0   | |       Beggining of this master piece       |
-| 2.0.0   | |              Fixed namespaces              |
-| 2.1.0   | |   Added azurite - support for Azure blob   |
-| 2.1.2   | |         Fixed azurite - mea culpa          |
-| 2.2.1   | |              Added websocket               |
-| 2.2.2   | | Fixed Configuration binding with Timespans |
-
+| Version | Task | Info |
+|-|:-|:-:|
+| 1.0.0 | | Beggining of this master piece |
+| 2.0.0 | | Fixed namespaces |
+| 2.1.0 | | Added azurite - support for Azure blob |
+| 2.1.2 | | Fixed azurite - mea culpa  |
+| 2.3.0 | | Fixed bullshits around websocket which didnt work and fixed Configuration binding with Timespans|

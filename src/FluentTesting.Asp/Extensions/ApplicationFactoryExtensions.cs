@@ -1,5 +1,4 @@
 ﻿using FluentTesting.Common.Interfaces;
-using Microsoft.AspNetCore.TestHost;
 
 namespace FluentTesting.Asp.Extensions
 {
@@ -23,13 +22,5 @@ namespace FluentTesting.Asp.Extensions
         /// <returns></returns>
         public static HttpClient GetClient(this IApplicationFactory factory)
             => factory.AsAspFactory().Client;
-
-        /// <summary>
-        /// Get websocket client
-        /// </summary>
-        /// <param name="factory">application factory</param>
-        /// <returns></returns>
-        public static WebSocketClient GetWsClient(this IApplicationFactory factory)
-            => factory.AsAspFactory().WebSocketClient;
     }
 }
