@@ -7,7 +7,7 @@ namespace FluentTesting.Asp
     /// <summary>
     /// ASP Application factory
     /// </summary>
-    public class AspApplicationFactory(IServiceProvider serviceProvider, HttpClient client, Regex? assertationRegex = null, WebSocketClient? wsClient = null)
+    public class AspApplicationFactory(IServiceProvider serviceProvider, HttpClient client, WebSocketClient wsClient, Regex? assertationRegex = null)
         : IApplicationFactory, IAsyncDisposable
     {
         /// <inheritdoc/>
