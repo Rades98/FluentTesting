@@ -1,9 +1,11 @@
 ﻿using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using FluentTesting.Common.Interfaces;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.AspNetCore.WebSockets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,13 +26,10 @@ namespace FluentTesting.Asp
 
         public bool UseProxiedImages { get; set; } = false;
 
-        public WebSocketClient WebSocketClient => wsClient;
-
         private Action<IServiceCollection, IConfiguration>? services;
         private Action<ConfigurationBuilder>? configurationBuilder;
         private Action<HttpRequestHeaders>? clientHeaders;
         private string environmentName = "IntegrationTests";
-        private WebSocketClient wsClient = null!;
 
         private Regex? assertationRegex = null;
 
@@ -56,10 +55,16 @@ namespace FluentTesting.Asp
                 configuration = confBuilder.Build();
 
                 builder.AddConfiguration(configuration);
+
             });
 
             builder.ConfigureTestServices(services =>
             {
+                services.AddWebSockets(options =>
+                {
+                    options.AllowedOrigins.Add("*");
+                });
+
                 foreach (var otherServices in AppServices)
                 {
                     otherServices?.Invoke(services, configuration!);
@@ -68,16 +73,12 @@ namespace FluentTesting.Asp
                 this.services?.Invoke(services, configuration!);
             });
 
+            builder.Configure(app =>
+            {
+                app.UseWebSockets();
+            });
+
             builder.UseTestServer();
-        }
-
-        protected override TestServer CreateServer(IWebHostBuilder builder)
-        {
-            var server = base.CreateServer(builder);
-
-            wsClient = server.CreateWebSocketClient();
-
-            return server;
         }
 
         protected override void ConfigureClient(HttpClient client)
@@ -115,7 +116,7 @@ namespace FluentTesting.Asp
         /// <returns></returns>
         public IApplicationFactory Build()
         {
-            return new AspApplicationFactory(Services, CreateDefaultClient(), assertationRegex, wsClient);
+            return new AspApplicationFactory(Services, CreateDefaultClient(), Server.CreateWebSocketClient(), assertationRegex);
         }
 
         /// <summary>
