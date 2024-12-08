@@ -39,23 +39,32 @@ namespace FluentTesting.RabbitMq.Containers
 
                 var userPrefix = $"rabbitmqadmin -u {RabbitMqOptions.UserName} -p {RabbitMqOptions.Password}";
 
-                var execScript = $"{userPrefix} declare queue name={rabbitOpts.QueueName} durable=true";
-
-                results.Add(await container.ExecAsync(["/bin/bash", "-c", execScript]));
+                results.Add(await container.ExecAsync(["/bin/bash", "-c", $"{userPrefix} declare queue name={rabbitOpts.DefaultQueueName} durable=true"]));
+                results.Add(await container.ExecAsync(["/bin/bash", "-c", $"{userPrefix} declare queue name={RabbitMqOptions.AppConsumerQueueName} durable=true"]));
 
                 foreach (var binding in consumerBindings)
                 {
                     results.Add(await container.ExecAsync(["/bin/bash", "-c", $"{userPrefix} declare exchange name={binding.ExchangeName} type={binding.ExchangeType} durable=true"]));
 
+                    if (binding.QueueName is not null)
+                    {
+                        results.Add(await container.ExecAsync(["/bin/bash", "-c", $"{userPrefix} declare queue name={binding.QueueName} durable=true"]));
+                    }
+
                     foreach (var routingKey in binding.RoutingKeys)
                     {
-                        results.Add(await container.ExecAsync(["/bin/bash", "-c", $"{userPrefix} declare binding source={binding.ExchangeName} destination={rabbitOpts.QueueName} routing_key={routingKey}"]));
+                        results.Add(await container.ExecAsync(["/bin/bash", "-c", $"{userPrefix} declare binding source={binding.ExchangeName} destination={binding.QueueName ?? rabbitOpts.DefaultQueueName} routing_key={routingKey}"]));
                     }
                 }
 
                 foreach (var binding in publisherBindings)
                 {
                     results.Add(await container.ExecAsync(["/bin/bash", "-c", $"{userPrefix} declare exchange name={binding.ExchangeName} type={binding.ExchangeType} durable=true auto_delete=false"]));
+
+                    foreach (var routingKey in binding.RoutingKeys)
+                    {
+                        results.Add(await container.ExecAsync(["/bin/bash", "-c", $"{userPrefix} declare binding source={binding.ExchangeName} destination={RabbitMqOptions.AppConsumerQueueName} routing_key={routingKey}"]));
+                    }
                 }
 
                 if (results.Any(x => x.ExitCode != 0))

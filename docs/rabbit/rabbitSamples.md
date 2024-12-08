@@ -26,3 +26,12 @@
 <!--/codeinclude-->
 
 </details>
+
+<details>
+ <summary>Test - publishing message to RabbitMQ which is sucessfully managed by application</summary>
+
+<!--codeinclude-->
+[](../../tests/Samples.Worker.RabbitMq.Tests/RabbitConsumerTests.cs)
+<!--/codeinclude-->
+
+</details>

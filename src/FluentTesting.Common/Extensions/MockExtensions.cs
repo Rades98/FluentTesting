@@ -65,7 +65,7 @@ namespace FluentTesting.Common.Extensions
             {
                 var result = await ((Task<TReturn>)methodCall.Method.Invoke(fixture.GetRealService<TService>(), [t1, t2])!).ConfigureAwait(false);
 
-                cts.CancelAfter(additionalDelay ?? TimeSpan.Zero);
+                cts.CancelAfter(additionalDelay ?? TimeSpan.FromMilliseconds(100));
 
                 return result;
             });

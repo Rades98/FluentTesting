@@ -1,4 +1,4 @@
-name: CI
+name: Build, Test, and Sonar Analysis
 
 on:
   workflow_dispatch:
@@ -21,10 +21,17 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Run Tests
-        run: dotnet test
+      - name: Run Tests with Coverage
+        run: dotnet test --collect:"XPlat Code Coverage" --results-directory TestResults
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage
+          path: TestResults
+
   sonar:
-    name: Sonar analyzis
+    name: Sonar Analysis
     runs-on: windows-latest
     if: "!(github.base_ref == 'develop' && startsWith(github.head_ref, 'support/'))"
 
@@ -34,15 +41,19 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu'
-      - uses: actions/checkout@v4
+
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+
       - name: Cache SonarCloud scanner
         id: cache-sonar-scanner
         uses: actions/cache@v4
@@ -50,18 +61,31 @@ jobs:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
+
       - name: Install SonarCloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+
+      - name: Download coverage report
+        uses: actions/download-artifact@v3
+        with:
+          name: code-coverage
+          path: TestResults
+
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.CI_CD }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Rades98_FluentTesting" /o:"rades98" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          .\.sonar\scanner\dotnet-sonarscanner begin `
+            /k:"Rades98_FluentTesting" `
+            /o:"rades98" `
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
+            /d:sonar.host.url="https://sonarcloud.io" `
+            /d:sonar.cs.opencover.reportsPaths="TestResults/**/coverage.opencover.xml"
           dotnet build
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"

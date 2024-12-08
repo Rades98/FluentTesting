@@ -7,28 +7,36 @@ This will allow you to run RabbitMq in docker and register it within your fixtur
 This extension lives in package: `FluentTesting.RabbitMq`
 
 ```csharp
-.UseRabbitMq((configuration, rabbitSettings) =>
-            {
-                configuration.AddObject("RabbitConnectionOptions", new RabbitConnectionOptions()
-                {
-                    HostName = rabbitSettings.Host,
-                    Password = rabbitSettings.Password,
-                    UserName = rabbitSettings.UserName,
-                });
-            }, opts =>
-            {
-                opts.PublisherBindings = [new Exchange() {
-                    ExchangeName = "test",
-                    RoutingKeys = ["testRoutingKey"]
-                }];
+    .RegisterServices((services, configuration) =>
+        {
+            services.AddSingleton(ConsumptionHandlerMock.Object);
+        })
+    .UseRabbitMq((configuration, rabbitSettings) =>
+    {
+        configuration.AddObject("RabbitConnectionOptions", new RabbitConnectionOptions()
+        {
+            HostName = rabbitSettings.Host,
+            Password = rabbitSettings.Password,
+            UserName = rabbitSettings.UserName,
+        });
+    }, opts =>
+    {
+        opts.PublisherBindings = [new Exchange() {
+            ExchangeName = "test",
+            RoutingKeys = ["testRoutingKey"]
+        }];
 
-                // Since we want to consume aswell (published message from tested app),
-                // we need to add publisher bindings which will be asserter in tests
-                opts.ConsumerBindings = [new Exchange() {
-                    ExchangeName = "test",
-                    RoutingKeys = ["testRoutingKey"]
-                }];
+        opts.ConsumerBindings = [
 
-                opts.QueueName = "testQueue";
-            })
+            new Exchange()
+            {
+                ExchangeName = "consumptionTest",
+                RoutingKeys = ["RabbitMessage"],
+                QueueName = "ConsumptionTestRabbitMessageQueue"
+            }
+        ];
+
+        opts.DefaultQueueName = "testQueue";
+    })
+    .Build();
 ```

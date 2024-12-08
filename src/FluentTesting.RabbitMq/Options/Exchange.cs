@@ -6,6 +6,8 @@
 
         public string ExchangeType { get; set; } = "topic";
 
+        public string? QueueName { get; set; }
+
         public IList<string> RoutingKeys { get; set; } = [];
     }
 }

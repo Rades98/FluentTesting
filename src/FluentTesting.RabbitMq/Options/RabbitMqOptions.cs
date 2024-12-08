@@ -20,9 +20,14 @@ namespace FluentTesting.RabbitMq.Options
         public const string ContainerName = "RabbitMqContainer";
 
         /// <summary>
+        /// 
+        /// </summary>
+        internal const string AppConsumerQueueName = "FluentTestingAssertQueue";
+
+        /// <summary>
         /// QueueName
         /// </summary>
-        public string QueueName { get; set; } = "test";
+        public string DefaultQueueName { get; set; } = "test";
 
         /// <summary>
         /// Consumer settings section name in configuration

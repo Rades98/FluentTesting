@@ -15,7 +15,7 @@ namespace Samples.Worker.RabbitMq.Tests
 
             await Task.Delay(1000);
 
-            var consumed = await fixture.ApplicationFactory.ConsumeRabbitMqMessage("testQueue", cts.Token);
+            var consumed = await fixture.ApplicationFactory.ConsumeRabbitMqMessage(cts.Token);
 
             consumed.Should().NotBeNull();
 

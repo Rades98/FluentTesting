@@ -34,8 +34,8 @@ namespace FluentTesting.RabbitMq
 
 
             rabbitSettings = new RabbitMqContainerSettings(RabbitMqOptions.UserName, RabbitMqOptions.Password,
-                        rabbitOpts.QueueName, "localhost", RabbitMqContainer.GetMappedPublicPort(RabbitMqContainerUtils.RabbitMqPort),
-                        [.. rabbitOpts.ConsumerBindings], [.. rabbitOpts.PublisherBindings], $"{rabbitOpts.QueueName}_dlx");
+                        rabbitOpts.DefaultQueueName, "localhost", RabbitMqContainer.GetMappedPublicPort(RabbitMqContainerUtils.RabbitMqPort),
+                        [.. rabbitOpts.ConsumerBindings], [.. rabbitOpts.PublisherBindings], $"{rabbitOpts.DefaultQueueName}_dlx");
 
             builder.Builders.Add(confBuilder => configuration.Invoke(confBuilder, rabbitSettings));
 

@@ -3,6 +3,9 @@ using FluentTesting.Common.Extensions;
 using FluentTesting.Common.Interfaces;
 using FluentTesting.RabbitMq;
 using FluentTesting.RabbitMq.Options;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using Samples.Worker.RabbitMq.ConsumptionHandlingServices;
 
 namespace Samples.Worker.RabbitMq.Tests.Shared;
 
@@ -13,12 +16,14 @@ public class TestFixture : ITestFixture
 {
     public IApplicationFactory ApplicationFactory { get; }
 
+    public readonly Mock<IConsumptionHandler> ConsumptionHandlerMock = new();
+
     public TestFixture()
     {
         ApplicationFactory = new ApplicationFactoryBuilder<Program>()
             .RegisterServices((services, configuration) =>
                 {
-
+                    services.AddSingleton(ConsumptionHandlerMock.Object);
                 })
             .UseRabbitMq((configuration, rabbitSettings) =>
             {
@@ -35,14 +40,17 @@ public class TestFixture : ITestFixture
                     RoutingKeys = ["testRoutingKey"]
                 }];
 
-                // Since we want to consume aswell (published message from tested app),
-                // we need to add publisher bindings which will be asserter in tests
-                opts.ConsumerBindings = [new Exchange() {
-                    ExchangeName = "test",
-                    RoutingKeys = ["testRoutingKey"]
-                }];
+                opts.ConsumerBindings = [
 
-                opts.QueueName = "testQueue";
+                    new Exchange()
+                    {
+                        ExchangeName = "consumptionTest",
+                        RoutingKeys = ["RabbitMessage"],
+                        QueueName = "ConsumptionTestRabbitMessageQueue"
+                    }
+                ];
+
+                opts.DefaultQueueName = "testQueue";
             })
             .Build();
     }
