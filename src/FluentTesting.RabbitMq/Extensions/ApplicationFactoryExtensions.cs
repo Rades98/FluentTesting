@@ -1,4 +1,5 @@
 ﻿using DotNet.Testcontainers.Containers;
+using FluentTesting.Common.Extensions;
 using FluentTesting.Common.Interfaces;
 using FluentTesting.RabbitMq.Options;
 using System.Text.Json;
@@ -17,8 +18,8 @@ namespace FluentTesting.RabbitMq.Extensions
         /// <param name="queue">queue name</param>
         /// <param name="cancellationToken">cancellation token</param>
         /// <returns>Rabbit message representing object <see cref="RabbitMqMessage"/></returns>
-        public static async Task<RabbitMqMessage?> ConsumeRabbitMqMessage(this IApplicationFactory factory, string queue, CancellationToken cancellationToken)
-            => (await factory.ConsumeMessage(queue, cancellationToken))?.Stdout.ExtractMessageFromOutput();
+        public static Task<RabbitMqMessage?> ConsumeRabbitMqMessage(this IApplicationFactory factory, string queue, CancellationToken cancellationToken)
+            => factory.ConsumeMessage(queue, cancellationToken);
 
         /// <summary>
         /// Consume rabbit mq JSON message
@@ -32,26 +33,52 @@ namespace FluentTesting.RabbitMq.Extensions
         {
             var res = await factory.ConsumeMessage(queue, cancellationToken);
 
-            var payload = res?.Stdout.ExtractMessageFromOutput()?.Payload;
+            var payload = res?.Payload;
 
             return payload is null ? default : JsonSerializer.Deserialize<T>(payload);
         }
 
+        /// <summary>
+        /// Publish string to rabbit and wait for consumption using cancellation token source provided
+        /// </summary>
+        /// <param name="factory">factory <seealso cref="IApplicationFactory"/></param>
+        /// <param name="exchangeName">exchange name</param>
+        /// <param name="routingKey">routing key</param>
+        /// <param name="payload">payload</param>
+        /// <param name="cts">cancellation token source used to stop waiting mechanism</param>
+        public static Task PublishToRabbitAndWaitForConsumption(this IApplicationFactory factory, string exchangeName, string routingKey, string payload, CancellationTokenSource cts)
+            => factory.ExecuteAndWait(factory.PublishToRabbit(exchangeName, routingKey, payload, cts.Token), cts);
 
-        private async static Task<ExecResult?> ConsumeMessage(this IApplicationFactory factory, string queue, CancellationToken cancellationToken)
+        /// <summary>
+        /// Publish JSON object to rabbit and wait for consumption using cancellation token source provided
+        /// </summary>
+        /// <param name="factory">factory <seealso cref="IApplicationFactory"/></param>
+        /// <param name="exchangeName">exchange name</param>
+        /// <param name="routingKey">routing key</param>
+        /// <param name="payload">payload</param>
+        /// <param name="cts">cancellation token source used to stop waiting mechanism</param>
+        public static Task PublishJsonToRabbitAndWaitForConsumption<T>(this IApplicationFactory factory, string exchangeName, string routingKey, T payload, CancellationTokenSource cts)
+            => factory.ExecuteAndWait(factory.PublishToRabbit(exchangeName, routingKey, JsonSerializer.Serialize(payload), cts.Token), cts);
+
+        private async static Task<RabbitMqMessage?> ConsumeMessage(this IApplicationFactory factory, string queue, CancellationToken cancellationToken)
         {
-            ExecResult? res = null;
-
-            await Task.Delay(100, cancellationToken);
+            ExecResult? rabbitRes = null;
 
             var rabbitContainer = factory.Containers.First(x => x.Key == RabbitMqOptions.ContainerName);
 
-            while (res is null && !cancellationToken.IsCancellationRequested)
+            while (rabbitRes?.ExitCode != 0 && !cancellationToken.IsCancellationRequested)
             {
-                res = await rabbitContainer.Value.ExecAsync(["/bin/bash", "-c", $"rabbitmqadmin -u {RabbitMqOptions.UserName} -p {RabbitMqOptions.Password} get queue={queue} count=1"], cancellationToken);
+                await Task.Delay(1000, cancellationToken);
+
+                rabbitRes = (await rabbitContainer.Value.ExecAsync(["/bin/bash", "-c", $"rabbitmqadmin -u {RabbitMqOptions.UserName} -p {RabbitMqOptions.Password} get queue={queue} count=1"], cancellationToken));
+
+                if (rabbitRes?.ExitCode == 0)
+                {
+                    return rabbitRes?.Stdout.ExtractMessageFromOutput();
+                }
             }
 
-            return res;
+            return null;
         }
 
         private static RabbitMqMessage? ExtractMessageFromOutput(this string output)
@@ -79,6 +106,13 @@ namespace FluentTesting.RabbitMq.Extensions
             message.Redelivered = bool.TryParse(columns[8], out var redelivered) && redelivered;
 
             return message;
+        }
+
+        private static async Task PublishToRabbit(this IApplicationFactory factory, string exchangeName, string routingKey, string payload, CancellationToken cancellationToken)
+        {
+            var rabbitContainer = factory.Containers.First(x => x.Key == RabbitMqOptions.ContainerName);
+            var rabbitRes = await rabbitContainer.Value.ExecAsync(["/bin/bash", "-c",
+                $"rabbitmqadmin -u {RabbitMqOptions.UserName} -p {RabbitMqOptions.Password} publish exchange={exchangeName} routing_key={routingKey} payload={payload}"], cancellationToken);
         }
     }
 }

@@ -55,6 +55,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rabbit", "Rabbit", "{C2A752
 	ProjectSection(SolutionItems) = preProject
 		docs\rabbit\rabbit.md = docs\rabbit\rabbit.md
 		docs\rabbit\rabbitManager.md = docs\rabbit\rabbitManager.md
+		docs\rabbit\rabbitSamples.md = docs\rabbit\rabbitSamples.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{58A19E74-A543-4FA4-89B0-409C34CB4B44}"

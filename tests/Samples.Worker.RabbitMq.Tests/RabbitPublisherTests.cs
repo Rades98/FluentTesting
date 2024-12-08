@@ -11,7 +11,9 @@ namespace Samples.Worker.RabbitMq.Tests
         [Fact]
         public async Task PublishFromApp_ShouldWork()
         {
-            var cts = fixture.GetCtsWithTimeoutInSeconds(600);
+            var cts = fixture.GetCtsWithTimeoutInSeconds();
+
+            await Task.Delay(1000);
 
             var consumed = await fixture.ApplicationFactory.ConsumeRabbitMqMessage("testQueue", cts.Token);
 

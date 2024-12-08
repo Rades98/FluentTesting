@@ -17,11 +17,7 @@ namespace FluentTesting.RabbitMq.Containers
             IEnumerable<Exchange> publisherBindings,
             bool useProxiedImages)
         {
-            IContainer rabbitMqContainer;
-
-            if (System.Diagnostics.Debugger.IsAttached && rabbitOpts.RunAdminTool)
-            {
-                rabbitMqContainer = new ContainerBuilder()
+            var rabbitMqContainer = new ContainerBuilder()
                     .WithNetwork(network)
                     .WithCleanUp(true)
                     .WithImage("rabbitmq:3.11-management".GetProxiedImagePath(useProxiedImages))
@@ -36,22 +32,6 @@ namespace FluentTesting.RabbitMq.Containers
                         .ForUnixContainer()
                         .UntilMessageIsLogged("Server startup complete"))
                     .Build();
-            }
-            else
-            {
-                rabbitMqContainer = new ContainerBuilder()
-                    .WithNetwork(network)
-                    .WithCleanUp(true)
-                    .WithImage("rabbitmq:3.11".GetProxiedImagePath(useProxiedImages))
-                    .WithName($"TestContainers-RabbitMq-{Guid.NewGuid()}")
-                    .WithEnvironment("RABBITMQ_DEFAULT_USER", RabbitMqOptions.UserName)
-                    .WithEnvironment("RABBITMQ_DEFAULT_PASS", RabbitMqOptions.Password)
-                    .WithPortBinding(rabbitOpts.Port ?? RabbitMqPort, 5672)
-                    .WithWaitStrategy(Wait
-                        .ForUnixContainer()
-                        .UntilMessageIsLogged("Server startup complete"))
-                    .Build();
-            }
 
             rabbitMqContainer.EnsureContainer(async container =>
             {

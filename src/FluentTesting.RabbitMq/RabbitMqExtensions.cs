@@ -10,7 +10,7 @@ namespace FluentTesting.RabbitMq
 {
     public static class RabbitMqExtensions
     {
-        private static RabbitMqOptions rabbitOpts = new();
+        private static readonly RabbitMqOptions rabbitOpts = new();
         private static RabbitMqContainerSettings? rabbitSettings;
 
         /// <summary>
