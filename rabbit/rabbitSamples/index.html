@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../../dotnet/">
+        <link rel="prev" href="../rabbitManager/">
       
       
-        <link rel="next" href="../aspExtensions/">
+        <link rel="next" href="../../sql/sql/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>ASP - FluentTesting</title>
+        <title>Samples - FluentTesting</title>
       
     
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#aspnet" class="md-skip">
+        <a href="#samples" class="md-skip">
           Skip to content
         </a>
       
@@ -98,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ASP
+              Samples
             
           </span>
         </div>
@@ -211,19 +211,17 @@
       
   
   
-    
   
   
-  
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -237,7 +235,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             ASP
@@ -248,19 +246,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../asp/asp/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -269,7 +258,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -282,7 +270,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../aspExtensions/" class="md-nav__link">
+      <a href="../../asp/aspExtensions/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -475,17 +463,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -499,7 +489,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             RabbitMq
@@ -513,7 +503,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rabbit/rabbit/" class="md-nav__link">
+      <a href="../rabbit/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -534,7 +524,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rabbit/rabbitManager/" class="md-nav__link">
+      <a href="../rabbitManager/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -552,10 +542,19 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../rabbit/rabbitSamples/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -564,6 +563,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -985,31 +985,209 @@
                   
 
 
-<h1 id="aspnet">ASP.NET</h1>
-<p>Usage is simple, create your application Fixture, which will be used in tests and create <code>AspApplicationFactoryBuilder&lt;TProgram&gt;</code>object. 
-This fixture should inherit from <code>ITestFixture</code>, so you will be able to use more extensions way fluently.</p>
-<p>To add mocks use <code>RegisterServices(Action&lt;IServiceCollection, IConfiguration&gt; )</code> method which has as parameter delegate containing <code>IServiceProvider</code> and <code>IConfiguration</code> </p>
-<p>To add configuration to provider, use <code>UseConfiguration(Action&lt;ConfigurationBuilder&gt; )</code> method which has as parameter delegate containing <code>ConfigurationBuilder</code>
-Note that all configuration providers are removed in tests, so appSettings.*.json or any sort of .env files won't work here. You have to specify all needed configuration in this method.</p>
-<pre><code class="language-csharp">public class TestFixture : ITestFixture
+<h1 id="samples">Samples</h1>
+<details>
+ <summary>Fixture</summary>
+
+
+
+<pre><code class="language-csharp">using FluentTesting.Common;
+using FluentTesting.Common.Extensions;
+using FluentTesting.Common.Interfaces;
+using FluentTesting.RabbitMq;
+using FluentTesting.RabbitMq.Options;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using Samples.Worker.RabbitMq.ConsumptionHandlingServices;
+
+namespace Samples.Worker.RabbitMq.Tests.Shared;
+
+/// &lt;summary&gt;
+/// Example of test fixture with custom options
+/// &lt;/summary&gt;
+public class TestFixture : ITestFixture
 {
     public IApplicationFactory ApplicationFactory { get; }
 
-    public HttpClient Client { get; }
+    public readonly Mock&lt;IConsumptionHandler&gt; ConsumptionHandlerMock = new();
 
     public TestFixture()
     {
-        ApplicationFactory = new AspApplicationFactoryBuilder&lt;Program&gt;()
+        ApplicationFactory = new ApplicationFactoryBuilder&lt;Program&gt;()
             .RegisterServices((services, configuration) =&gt;
                 {
-                    //register your services etc
+                    services.AddSingleton(ConsumptionHandlerMock.Object);
                 })
-            .Build();
+            .UseRabbitMq((configuration, rabbitSettings) =&gt;
+            {
+                configuration.AddObject(&quot;RabbitConnectionOptions&quot;, new RabbitConnectionOptions()
+                {
+                    HostName = rabbitSettings.Host,
+                    Password = rabbitSettings.Password,
+                    UserName = rabbitSettings.UserName,
+                });
+            }, opts =&gt;
+            {
+                opts.PublisherBindings = [new Exchange() {
+                    ExchangeName = &quot;test&quot;,
+                    RoutingKeys = [&quot;testRoutingKey&quot;]
+                }];
 
-        Client = ApplicationFactory.GetClient();
+                opts.ConsumerBindings = [
+
+                    new Exchange()
+                    {
+                        ExchangeName = &quot;consumptionTest&quot;,
+                        RoutingKeys = [&quot;RabbitMessage&quot;],
+                        QueueName = &quot;ConsumptionTestRabbitMessageQueue&quot;
+                    }
+                ];
+
+                opts.DefaultQueueName = &quot;testQueue&quot;;
+            })
+            .Build();
     }
 }
 </code></pre>
+
+
+
+</details>
+
+<details>
+ <summary>Publishing on app run in worker service</summary>
+
+
+
+<pre><code class="language-csharp">using Microsoft.Extensions.Options;
+using RabbitMQ.Client;
+using System.Text;
+
+namespace Samples.Worker.RabbitMq
+{
+    public class RabbitPublishingWorker(IOptions&lt;RabbitConnectionOptions&gt; opts) : BackgroundService
+    {
+        private readonly RabbitConnectionOptions rabbitOpts = opts.Value;
+
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            var factory = new ConnectionFactory
+            {
+                HostName = rabbitOpts.HostName,
+                UserName = rabbitOpts.UserName,
+                Password = rabbitOpts.Password,
+            };
+
+            using var connection = await factory.CreateConnectionAsync(stoppingToken);
+            using var channel = await connection.CreateChannelAsync(null, stoppingToken);
+
+            byte[] messageBodyBytes = Encoding.UTF8.GetBytes(&quot;Hello, world!&quot;);
+
+            await channel.BasicPublishAsync(&quot;test&quot;, &quot;testRoutingKey&quot;, true, new BasicProperties(), messageBodyBytes, stoppingToken);
+
+            await channel.CloseAsync(cancellationToken: stoppingToken);
+            await connection.CloseAsync(cancellationToken: stoppingToken);
+        }
+    }
+}
+
+</code></pre>
+
+
+
+</details>
+
+<details>
+ <summary>Test - consumming message from rabbit to assert that it was published sucessfully</summary>
+
+
+
+<pre><code class="language-csharp">using FluentAssertions;
+using FluentTesting.Common.Extensions;
+using FluentTesting.RabbitMq.Extensions;
+using Samples.Worker.RabbitMq.Tests.Shared;
+
+namespace Samples.Worker.RabbitMq.Tests
+{
+    [Collection(&quot;RabbitMqFixture&quot;)]
+    public class RabbitPublisherTests(TestFixture fixture)
+    {
+        [Fact]
+        public async Task PublishFromApp_ShouldWork()
+        {
+            var cts = fixture.GetCtsWithTimeoutInSeconds();
+
+            await Task.Delay(1000);
+
+            var consumed = await fixture.ApplicationFactory.ConsumeRabbitMqMessage(cts.Token);
+
+            consumed.Should().NotBeNull();
+
+            consumed?.Payload.Should().Be(&quot;Hello, world!&quot;);
+        }
+    }
+}
+</code></pre>
+
+
+
+</details>
+
+<details>
+ <summary>Test - publishing message to RabbitMQ which is sucessfully managed by application</summary>
+
+
+
+<pre><code class="language-csharp">﻿using FluentAssertions;
+using FluentTesting.Common.Extensions;
+using FluentTesting.RabbitMq.Extensions;
+using Moq;
+using Samples.Worker.RabbitMq.ConsumptionHandlingServices;
+using Samples.Worker.RabbitMq.Contracts;
+using Samples.Worker.RabbitMq.Tests.Shared;
+
+namespace Samples.Worker.RabbitMq.Tests
+{
+    [Collection(&quot;RabbitMqFixture&quot;)]
+    public class RabbitConsumerTests(TestFixture fixture)
+    {
+        [Fact]
+        public async Task ObtainingMessages_Should_Work()
+        {
+            var contract = new RabbitMessage()
+            {
+                BirthDate = DateTime.Now,
+                Email = &quot;coconut@coco.com&quot;,
+                SurName = &quot;Testschenko&quot;,
+                Name = &quot;Testicss&quot;
+            };
+
+            var cts = fixture.GetCtsWithTimeoutInSeconds(60);
+
+            // pseudo unmocking process to create callback to stop waiting for consumption, cause message has been consumed
+            fixture.UnmockAndWait&lt;IConsumptionHandler, bool, RabbitMessage, CancellationToken&gt;(
+                fixture.ConsumptionHandlerMock,
+                src =&gt; src.HandleMessageAsync(It.IsAny&lt;RabbitMessage&gt;(), It.IsAny&lt;CancellationToken&gt;()),
+                cts);
+
+            await fixture.ApplicationFactory.PublishJsonToRabbitAndWaitForConsumption(&quot;consumptionTest&quot;, &quot;RabbitMessage&quot;, contract, cts);
+
+            // This should be asserted against db or handler should create new notification etc
+            // This static object is just here for test purposes where i don't want to include db or smth
+            // but it is filled in handler where message is handled
+            StaticRabbitHandlerState.RabbitMessage.BirthDate.Should().Be(contract.BirthDate);
+            StaticRabbitHandlerState.RabbitMessage.Email.Should().Be(contract.Email);
+            StaticRabbitHandlerState.RabbitMessage.SurName.Should().Be(contract.SurName);
+            StaticRabbitHandlerState.RabbitMessage.Name.Should().Be(contract.Name);
+        }
+    }
+}
+
+</code></pre>
+
+
+
+</details>
 
 
 

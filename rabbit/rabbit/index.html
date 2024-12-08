@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tbd" class="md-skip">
+        <a href="#rabbit-mq" class="md-skip">
           Skip to content
         </a>
       
@@ -548,6 +548,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rabbitSamples/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Samples
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -964,7 +985,45 @@
                   
 
 
-<h1 id="tbd">TBD</h1>
+<h1 id="rabbit-mq">Rabbit MQ</h1>
+<p>To use elasticsearch use extension method on <code>IApplicationFactoryBuilder</code> named <code>UseRabbitMq</code> 
+with delegate containing <code>ConfigurationBuilder</code> and <code>RabbitMqContainerSettings</code>. There is <code>RabbitMQOptions</code> delegate aswell to define 
+exchanges, routing keys, queues and bindings.
+This will allow you to run RabbitMq in docker and register it within your fixture as follows.
+This extension lives in package: <code>FluentTesting.RabbitMq</code></p>
+<pre><code class="language-csharp">    .RegisterServices((services, configuration) =&gt;
+        {
+            services.AddSingleton(ConsumptionHandlerMock.Object);
+        })
+    .UseRabbitMq((configuration, rabbitSettings) =&gt;
+    {
+        configuration.AddObject(&quot;RabbitConnectionOptions&quot;, new RabbitConnectionOptions()
+        {
+            HostName = rabbitSettings.Host,
+            Password = rabbitSettings.Password,
+            UserName = rabbitSettings.UserName,
+        });
+    }, opts =&gt;
+    {
+        opts.PublisherBindings = [new Exchange() {
+            ExchangeName = &quot;test&quot;,
+            RoutingKeys = [&quot;testRoutingKey&quot;]
+        }];
+
+        opts.ConsumerBindings = [
+
+            new Exchange()
+            {
+                ExchangeName = &quot;consumptionTest&quot;,
+                RoutingKeys = [&quot;RabbitMessage&quot;],
+                QueueName = &quot;ConsumptionTestRabbitMessageQueue&quot;
+            }
+        ];
+
+        opts.DefaultQueueName = &quot;testQueue&quot;;
+    })
+    .Build();
+</code></pre>
 
 
 
