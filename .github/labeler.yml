@@ -21,3 +21,5 @@ DevOps:
  - .github/**
 Azurite:
  - src/FluentTesting.Azurite/**   
+documentation:
+ - docs/**    

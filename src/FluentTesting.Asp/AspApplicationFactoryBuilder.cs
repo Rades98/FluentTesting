@@ -104,7 +104,7 @@ namespace FluentTesting.Asp
         /// <returns></returns>
         public IApplicationFactory Build()
         {
-            return new AspApplicationFactory(Services, CreateDefaultClient(), assertationRegex);
+            return new AspApplicationFactory(Services, CreateDefaultClient(), Containers, assertationRegex);
         }
 
         /// <summary>
