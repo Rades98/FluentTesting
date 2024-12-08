@@ -1,4 +1,7 @@
-﻿namespace FluentTesting.Common.Interfaces
+﻿using DotNet.Testcontainers.Containers;
+using System.Collections.Concurrent;
+
+namespace FluentTesting.Common.Interfaces
 {
     /// <summary>
     /// Application factory interface
@@ -9,6 +12,8 @@
         /// Services
         /// </summary>
         IServiceProvider Services { get; }
+
+        public ConcurrentDictionary<string, IContainer> Containers { get; }
 
         /// <summary>
         /// Append dispose action - used to add disposable objects to collection in factory
