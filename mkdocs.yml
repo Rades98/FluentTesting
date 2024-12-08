@@ -16,6 +16,7 @@ nav:
   - RabbitMq:
      - RabbitMQ: rabbit/rabbit.md
      - RabbitMQ Manager: rabbit/rabbitManager.md
+     - Samples: rabbit/rabbitSamples.md 
   - MsSql: 
       - SQL: sql/sql.md
       - Adminer: sql/adminer.md

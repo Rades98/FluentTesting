@@ -101,7 +101,7 @@ namespace FluentTesting.Common
         {
             var host = Services.GetRequiredService<IHost>();
 
-            return new ApplicationFactory(host);
+            return new ApplicationFactory(host, Containers);
         }
 
         /// <summary>
