@@ -35,6 +35,12 @@ app.MapGet("sql", async (ISomeRepo repo, CancellationToken ct) =>
 
     return Results.Ok(new SqlData(StringValue, IntValue));
 });
+app.MapPut("sql", async (ISomeRepo repo, CancellationToken ct) =>
+{
+    var res = await repo.UpdateDataAsync(ct);
+
+    return Results.Ok(res);
+});
 
 await app.RunAsync(default);
 
