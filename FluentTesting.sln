@@ -61,6 +61,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{58A19E74-A543-4FA4-89B0-409C34CB4B44}"
 	ProjectSection(SolutionItems) = preProject
 		docs\sql\adminer.md = docs\sql\adminer.md
+		docs\sql\extensions.md = docs\sql\extensions.md
 		docs\sql\sql.md = docs\sql\sql.md
 	EndProjectSection
 EndProject
