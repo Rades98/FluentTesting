@@ -26,4 +26,5 @@ Library providing testing mechanisms to run application in memory with needed th
 | 2.1.0 | | Added azurite - support for Azure blob |
 | 2.1.2 | | Fixed azurite - mea culpa  |
 | 2.3.0 | | Fixed stuff around websocket which didnt work and fixed Configuration binding with Timespans|
-| 2.4.0 | | Added support for RabbitMq|
+| 2.4.0 | [#36](https://github.com/Rades98/FluentTesting/issues/36)| Added support for RabbitMq|
+| 2.4.1 | [#44](https://github.com/Rades98/FluentTesting/issues/44) | Added sql backup-restore mechanism |

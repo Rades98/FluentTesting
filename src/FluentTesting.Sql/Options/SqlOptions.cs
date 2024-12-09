@@ -7,6 +7,9 @@ namespace FluentTesting.Sql.Options
     /// </summary>
     public class SqlOptions : IContainerOptions
     {
+        internal const string ContainerName = "MsSqlContainer";
+        internal const string BackupPath = "/var/opt/mssql/backups";
+
         /// <inheritdoc/>
         public int? Port { get; set; } = 1433;
 
