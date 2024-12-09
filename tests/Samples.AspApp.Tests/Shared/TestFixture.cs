@@ -31,6 +31,9 @@ public class TestFixture : ITestFixture
                 configuration.AddConnectionString("Web", sqlSettings.ConnectionString);
 
                 SqlConnectionString = sqlSettings.ConnectionString;
+            }, opts =>
+            {
+                opts.Database = "TestDb";
             })
             .Build();
 
