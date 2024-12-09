@@ -20,6 +20,7 @@ nav:
   - MsSql: 
       - SQL: sql/sql.md
       - Adminer: sql/adminer.md
+      - Extensions: sql/extensions.md
   - Elasticsearch: 
       - Elastic: elastic/elastic.md
       - Kibana: elastic/kibana.md
