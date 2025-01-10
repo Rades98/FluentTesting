@@ -4,8 +4,6 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <Import Project="common.props" />
-
   <ItemGroup>
     <ProjectReference Include="..\FluentTesting.Asp\FluentTesting.Asp.csproj" />
     <ProjectReference Include="..\FluentTesting.Azurite\FluentTesting.Azurite.csproj" />

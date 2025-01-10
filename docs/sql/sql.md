@@ -3,7 +3,7 @@ To use MsSQL use extension method on `IApplicationFactoryBuilder` named `UseSql`
 
 This extension lives in package: `Testing.Sql`
 
-Prepare your sql seed
+Prepare your sql seed or just use some sort of migrations in startup
 
 ```csharp
 var sqlSeed = "CREATE TABLE etc etc...";
