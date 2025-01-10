@@ -31,7 +31,7 @@ jobs:
       - name: Get Version from csproj
         id: get_version
         run: |
-          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" src/FluentTesting/common.props)
+          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" Directory.Build.props)
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "Extracted version: $VERSION"
 

@@ -106,7 +106,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Labeler", "Labeler", "{3EC9
 		.github\labeler.yml = .github\labeler.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentTesting.Azurite", "src\FluentTesting.Azurite\FluentTesting.Azurite.csproj", "{A8B12E92-357A-41DA-AA58-EB2DB91F8E38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentTesting.Azurite", "src\FluentTesting.Azurite\FluentTesting.Azurite.csproj", "{A8B12E92-357A-41DA-AA58-EB2DB91F8E38}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blob", "Blob", "{03F496B2-105C-4954-AF81-0AD651B7BD93}"
 	ProjectSection(SolutionItems) = preProject
@@ -114,13 +114,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blob", "Blob", "{03F496B2-1
 		docs\blob\blob.md = docs\blob\blob.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentTesting.Common.Tests", "tests\FluentTesting.Common.Tests\FluentTesting.Common.Tests.csproj", "{8F8FCFEF-30A9-4622-880B-4F00017E52E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentTesting.Common.Tests", "tests\FluentTesting.Common.Tests\FluentTesting.Common.Tests.csproj", "{8F8FCFEF-30A9-4622-880B-4F00017E52E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentTesting.RabbitMq", "src\FluentTesting.RabbitMq\FluentTesting.RabbitMq.csproj", "{CD4ED137-0E60-4A76-92F1-4A274FD07E37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentTesting.RabbitMq", "src\FluentTesting.RabbitMq\FluentTesting.RabbitMq.csproj", "{CD4ED137-0E60-4A76-92F1-4A274FD07E37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.Worker.RabbitMq", "samples\Samples.Worker.RabbitMq\Samples.Worker.RabbitMq.csproj", "{7DBD4902-B0AE-4793-8C5E-F4BAD84A6C81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.Worker.RabbitMq", "samples\Samples.Worker.RabbitMq\Samples.Worker.RabbitMq.csproj", "{7DBD4902-B0AE-4793-8C5E-F4BAD84A6C81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.Worker.RabbitMq.Tests", "tests\Samples.Worker.RabbitMq.Tests\Samples.Worker.RabbitMq.Tests.csproj", "{65505032-DADA-4013-8FF5-A88A58E30DAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.Worker.RabbitMq.Tests", "tests\Samples.Worker.RabbitMq.Tests\Samples.Worker.RabbitMq.Tests.csproj", "{65505032-DADA-4013-8FF5-A88A58E30DAC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution-items", ".solution-items", "{CEF639A7-166B-40F8-A362-349C004CF06F}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
