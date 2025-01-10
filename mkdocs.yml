@@ -35,7 +35,24 @@ nav:
 
 plugins:
   - codeinclude 
+  - search
 
 theme:
-  name: material
+  name: flatly
+  highlightjs: true
+  features:
+    - instant
+    - tabs
 
+markdown_extensions:
+  - markdown.extensions.admonition
+  - markdown.extensions.toc
+  - fenced_code
+  # - pymdownx.highlight:
+  #     extend_pygments_lang:
+  #       - name: csharp
+  #       - lang: csharp
+  #       - options:
+  #         - startinline: true
+  #     linenums: true
+  #     linenums_style: pymdownx-inline
