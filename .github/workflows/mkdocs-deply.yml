@@ -25,7 +25,7 @@ jobs:
           pip install mkdocs
           pip install mkdocs-codeinclude-plugin
           pip install mkdocs-material
-          pip install mkdocs-bootstrap
+          pip install mkdocs-bootswatch
 
       - name: Build MkDocs site
         run: mkdocs build --strict
