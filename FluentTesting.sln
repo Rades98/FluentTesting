@@ -19,6 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentTesting.Sql", "src\Fl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{47A481C2-7244-4338-AD98-C0C1918B6128}"
 	ProjectSection(SolutionItems) = preProject
+		docs\common.md = docs\common.md
 		docs\index.md = docs\index.md
 		docs\mocking.md = docs\mocking.md
 		README.md = README.md
@@ -112,6 +113,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blob", "Blob", "{03F496B2-1
 	ProjectSection(SolutionItems) = preProject
 		docs\blob\azureExplorer.md = docs\blob\azureExplorer.md
 		docs\blob\blob.md = docs\blob\blob.md
+		docs\blob\blobExtensions.md = docs\blob\blobExtensions.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentTesting.Common.Tests", "tests\FluentTesting.Common.Tests\FluentTesting.Common.Tests.csproj", "{8F8FCFEF-30A9-4622-880B-4F00017E52E5}"
@@ -122,7 +124,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.Worker.RabbitMq", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.Worker.RabbitMq.Tests", "tests\Samples.Worker.RabbitMq.Tests\Samples.Worker.RabbitMq.Tests.csproj", "{65505032-DADA-4013-8FF5-A88A58E30DAC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution-items", ".solution-items", "{CEF639A7-166B-40F8-A362-349C004CF06F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution-items", ".solution-items", "{F76EAAF6-CE26-4725-BA76-4796A8943C68}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection

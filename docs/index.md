@@ -29,3 +29,4 @@ Library providing testing mechanisms to run application in memory with needed th
 | 2.4.0 | [#36](https://github.com/Rades98/FluentTesting/issues/36)| Added support for RabbitMq|
 | 2.4.1 | [#44](https://github.com/Rades98/FluentTesting/issues/44) | Added sql backup-restore mechanism |
 | 2.4.2 | [#51](https://github.com/Rades98/FluentTesting/issues/51) | Added sql data obtaining mechanism + Directory.Build.props instead of common.props |
+| 2.5.0 | [#54](https://github.com/Rades98/FluentTesting/issues/54) | Added Blob assert + dataInfo obtaining extensions + seed support |
