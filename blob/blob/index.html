@@ -38,6 +38,9 @@
                                 <a href="../.." class="nav-link">Home</a>
                             </li>
                             <li class="nav-item">
+                                <a href="../../common/" class="nav-link">Common</a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="../../mocking/" class="nav-link">Mocking</a>
                             </li>
                             <li class="nav-item">
@@ -62,6 +65,10 @@
                                     
 <li>
     <a href="./" class="dropdown-item active" aria-current="page">Blob</a>
+</li>
+                                    
+<li>
+    <a href="../blobExtensions/" class="dropdown-item">BlobExtensions</a>
 </li>
                                     
 <li>
@@ -175,7 +182,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="../azureExplorer/" class="nav-link">
+                                <a rel="next" href="../blobExtensions/" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -199,6 +206,10 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#azure-blob" class="nav-link">Azure Blob</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#seed" class="nav-link">Seed</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -215,6 +226,35 @@ This extension lives in package: <code>FluentTesting.Azurite</code></p>
 {
     configuration.AddConnectionString(&quot;BlobStorageConnection&quot;, settings.ConnectionString);
 })
+</code></pre>
+<h2 id="seed">Seed</h2>
+<p>To seed data you can add <code>AzuriteOptions</code> filling delegate where is property named BlobSeed. Seed has structure as follows 
+where <code>Name</code> is name of container (in means of BLOB) and <code>Files</code> has props for <code>Path</code> and optionally for specific file name.
+To set custom name set <code>Name</code> property, otherwise is used file name from <code>Path</code></p>
+<pre><code class="language-csharp">.UseAzurite(
+    (configuration, settings) =&gt;
+    {
+        configuration.AddConnectionString(&quot;BlobStorageConnection&quot;, settings.ConnectionString);
+    },
+    opts =&gt;
+    {
+        opts.BlobSeed =
+        [
+            new()
+            {
+                Name = &quot;photos&quot;,
+                Files =
+                [
+                    new()
+                    {
+                        // Update file path to yor needs, this leads to &lt;TestProj&gt;/Share/asd.png file as is in Samples.AspApp.Tests
+                        Path = Path.Combine(Directory.GetCurrentDirectory(), &quot;Shared&quot;, &quot;asd.png&quot;)
+                    }
+                ]
+            }
+        ];
+    }
+)
 </code></pre></div>
             </div>
         </div>

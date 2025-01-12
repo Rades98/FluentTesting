@@ -8,7 +8,7 @@
         
         
         <link rel="shortcut icon" href="../../img/favicon.ico">
-        <title>Samples - FluentTesting</title>
+        <title>BlobExtensions - FluentTesting</title>
         <link href="../../css/bootstrap.min.css" rel="stylesheet">
         <link href="../../css/fontawesome.min.css" rel="stylesheet">
         <link href="../../css/brands.min.css" rel="stylesheet">
@@ -60,19 +60,19 @@
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Azurite</a>
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Azurite</a>
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="../../blob/blob/" class="dropdown-item">Blob</a>
+    <a href="../blob/" class="dropdown-item">Blob</a>
 </li>
                                     
 <li>
-    <a href="../../blob/blobExtensions/" class="dropdown-item">BlobExtensions</a>
+    <a href="./" class="dropdown-item active" aria-current="page">BlobExtensions</a>
 </li>
                                     
 <li>
-    <a href="../../blob/azureExplorer/" class="dropdown-item">AzureExplorer</a>
+    <a href="../azureExplorer/" class="dropdown-item">AzureExplorer</a>
 </li>
                                 </ul>
                             </li>
@@ -90,19 +90,19 @@
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">RabbitMq</a>
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">RabbitMq</a>
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="../rabbit/" class="dropdown-item">RabbitMQ</a>
+    <a href="../../rabbit/rabbit/" class="dropdown-item">RabbitMQ</a>
 </li>
                                     
 <li>
-    <a href="../rabbitManager/" class="dropdown-item">RabbitMQ Manager</a>
+    <a href="../../rabbit/rabbitManager/" class="dropdown-item">RabbitMQ Manager</a>
 </li>
                                     
 <li>
-    <a href="./" class="dropdown-item active" aria-current="page">Samples</a>
+    <a href="../../rabbit/rabbitSamples/" class="dropdown-item">Samples</a>
 </li>
                                 </ul>
                             </li>
@@ -177,12 +177,12 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" href="../rabbitManager/" class="nav-link">
+                                <a rel="prev" href="../blob/" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="../../sql/sql/" class="nav-link">
+                                <a rel="next" href="../azureExplorer/" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -204,8 +204,16 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#samples" class="nav-link">Samples</a>
+            <li class="nav-item" data-bs-level="1"><a href="#extensions" class="nav-link">Extensions</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#get-informations" class="nav-link">Get informations</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#assert-md5" class="nav-link">Assert MD5</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -213,109 +221,49 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="samples">Samples</h1>
+<h1 id="extensions">Extensions</h1>
+<h2 id="get-informations">Get informations</h2>
+<p>To obtain some sort of informations such as file name, content length, content type, md5, created and last modified, 
+you can use <code>GetBlobInformationsAsync</code> extension on <code>ITestFixture</code> and <code>IApplicationFactory</code> where arguments are 
+container name and blob file name with extension.</p>
 <details>
- <summary>Fixture</summary>
+    <summary>Blob infos model</summary>
 
 
 
-<pre><code class="language-csharp">using FluentTesting.Common;
-using FluentTesting.Common.Extensions;
-using FluentTesting.Common.Interfaces;
-using FluentTesting.RabbitMq;
-using FluentTesting.RabbitMq.Options;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using Samples.Worker.RabbitMq.ConsumptionHandlingServices;
-
-namespace Samples.Worker.RabbitMq.Tests.Shared;
-
-/// &lt;summary&gt;
-/// Example of test fixture with custom options
-/// &lt;/summary&gt;
-public class TestFixture : ITestFixture
+<pre><code class="language-csharp">﻿namespace FluentTesting.Azurite
 {
-    public IApplicationFactory ApplicationFactory { get; }
-
-    public readonly Mock&lt;IConsumptionHandler&gt; ConsumptionHandlerMock = new();
-
-    public TestFixture()
+    public class BlobData
     {
-        ApplicationFactory = new ApplicationFactoryBuilder&lt;Program&gt;()
-            .RegisterServices((services, configuration) =&gt;
-                {
-                    services.AddSingleton(ConsumptionHandlerMock.Object);
-                })
-            .UseRabbitMq((configuration, rabbitSettings) =&gt;
-            {
-                configuration.AddObject(&quot;RabbitConnectionOptions&quot;, new RabbitConnectionOptions()
-                {
-                    HostName = rabbitSettings.Host,
-                    Password = rabbitSettings.Password,
-                    UserName = rabbitSettings.UserName,
-                });
-            }, opts =&gt;
-            {
-                opts.PublisherBindings = [new Exchange() {
-                    ExchangeName = &quot;test&quot;,
-                    RoutingKeys = [&quot;testRoutingKey&quot;]
-                }];
+        /// &lt;summary&gt;
+        /// File name
+        /// &lt;/summary&gt;
+        public required string Name { get; set; }
 
-                opts.ConsumerBindings = [
+        /// &lt;summary&gt;
+        /// Content length
+        /// &lt;/summary&gt;
+        public required long ContentLength { get; set; }
 
-                    new Exchange()
-                    {
-                        ExchangeName = &quot;consumptionTest&quot;,
-                        RoutingKeys = [&quot;RabbitMessage&quot;],
-                        QueueName = &quot;ConsumptionTestRabbitMessageQueue&quot;
-                    }
-                ];
+        /// &lt;summary&gt;
+        /// Content type
+        /// &lt;/summary&gt;
+        public required string ContentType { get; set; }
 
-                opts.DefaultQueueName = &quot;testQueue&quot;;
-            })
-            .Build();
-    }
-}
-</code></pre>
+        /// &lt;summary&gt;
+        /// Content MD5 hash for futher assertions
+        /// &lt;/summary&gt;
+        public required string ContentMd5 { get; set; }
 
+        /// &lt;summary&gt;
+        /// Created
+        /// &lt;/summary&gt;
+        public required DateTimeOffset Created { get; set; }
 
-
-</details>
-
-<details>
- <summary>Publishing on app run in worker service</summary>
-
-
-
-<pre><code class="language-csharp">using Microsoft.Extensions.Options;
-using RabbitMQ.Client;
-using System.Text;
-
-namespace Samples.Worker.RabbitMq
-{
-    public class RabbitPublishingWorker(IOptions&lt;RabbitConnectionOptions&gt; opts) : BackgroundService
-    {
-        private readonly RabbitConnectionOptions rabbitOpts = opts.Value;
-
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            var factory = new ConnectionFactory
-            {
-                HostName = rabbitOpts.HostName,
-                UserName = rabbitOpts.UserName,
-                Password = rabbitOpts.Password,
-            };
-
-            using var connection = await factory.CreateConnectionAsync(stoppingToken);
-            using var channel = await connection.CreateChannelAsync(null, stoppingToken);
-
-            byte[] messageBodyBytes = Encoding.UTF8.GetBytes(&quot;Hello, world!&quot;);
-
-            await channel.BasicPublishAsync(&quot;test&quot;, &quot;testRoutingKey&quot;, true, new BasicProperties(), messageBodyBytes, stoppingToken);
-
-            await channel.CloseAsync(cancellationToken: stoppingToken);
-            await connection.CloseAsync(cancellationToken: stoppingToken);
-        }
+        /// &lt;summary&gt;
+        /// Last modified
+        /// &lt;/summary&gt;
+        public required DateTimeOffset LastModified { get; set; }
     }
 }
 
@@ -325,97 +273,23 @@ namespace Samples.Worker.RabbitMq
 
 </details>
 
-<details>
- <summary>Test - consumming message from rabbit to assert that it was published sucessfully</summary>
+<pre><code class="language-csharp">var blobInfos = await fixture.GetBlobInformationsAsync(&quot;photos&quot;, &quot;asd.png&quot;);
 
-
-
-<pre><code class="language-csharp">using FluentAssertions;
-using FluentTesting.Common.Extensions;
-using FluentTesting.RabbitMq.Extensions;
-using Samples.Worker.RabbitMq.Tests.Shared;
-
-namespace Samples.Worker.RabbitMq.Tests
-{
-    [Collection(&quot;RabbitMqFixture&quot;)]
-    public class RabbitPublisherTests(TestFixture fixture)
-    {
-        [Fact]
-        public async Task PublishFromApp_ShouldWork()
-        {
-            var cts = fixture.GetCtsWithTimeoutInSeconds();
-
-            await Task.Delay(1000);
-
-            var consumed = await fixture.ApplicationFactory.ConsumeRabbitMqMessage(cts.Token);
-
-            consumed.Should().NotBeNull();
-
-            consumed?.Payload.Should().Be(&quot;Hello, world!&quot;);
-        }
-    }
-}
+blobInfos.LastModified.Should().BeLessThan(TimeSpan.FromTicks(DateTimeOffset.Now.Ticks));
 </code></pre>
-
-
-
-</details>
-
-<details>
- <summary>Test - publishing message to RabbitMQ which is sucessfully managed by application</summary>
-
-
-
-<pre><code class="language-csharp">﻿using FluentAssertions;
-using FluentTesting.Common.Extensions;
-using FluentTesting.RabbitMq.Extensions;
-using Moq;
-using Samples.Worker.RabbitMq.ConsumptionHandlingServices;
-using Samples.Worker.RabbitMq.Contracts;
-using Samples.Worker.RabbitMq.Tests.Shared;
-
-namespace Samples.Worker.RabbitMq.Tests
-{
-    [Collection(&quot;RabbitMqFixture&quot;)]
-    public class RabbitConsumerTests(TestFixture fixture)
-    {
-        [Fact]
-        public async Task ObtainingMessages_Should_Work()
-        {
-            var contract = new RabbitMessage()
-            {
-                BirthDate = DateTime.Now,
-                Email = &quot;coconut@coco.com&quot;,
-                SurName = &quot;Testschenko&quot;,
-                Name = &quot;Testicss&quot;
-            };
-
-            var cts = fixture.GetCtsWithTimeoutInSeconds(60);
-
-            // pseudo unmocking process to create callback to stop waiting for consumption, cause message has been consumed
-            fixture.UnmockAndWait&lt;IConsumptionHandler, bool, RabbitMessage, CancellationToken&gt;(
-                fixture.ConsumptionHandlerMock,
-                src =&gt; src.HandleMessageAsync(It.IsAny&lt;RabbitMessage&gt;(), It.IsAny&lt;CancellationToken&gt;()),
-                cts);
-
-            await fixture.ApplicationFactory.PublishJsonToRabbitAndWaitForConsumption(&quot;consumptionTest&quot;, &quot;RabbitMessage&quot;, contract, cts);
-
-            // This should be asserted against db or handler should create new notification etc
-            // This static object is just here for test purposes where i don't want to include db or smth
-            // but it is filled in handler where message is handled
-            StaticRabbitHandlerState.RabbitMessage.BirthDate.Should().Be(contract.BirthDate);
-            StaticRabbitHandlerState.RabbitMessage.Email.Should().Be(contract.Email);
-            StaticRabbitHandlerState.RabbitMessage.SurName.Should().Be(contract.SurName);
-            StaticRabbitHandlerState.RabbitMessage.Name.Should().Be(contract.Name);
-        }
-    }
-}
-
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To assert MD5 hash you can use predefined Extension <code>AssertFileResponseAgainstBlobMd5Async</code></p>
+</div>
+<h2 id="assert-md5">Assert MD5</h2>
+<p><code>AssertFileResponseAgainstBlobMd5Async</code> extension on <code>ITestFixture</code> validates <code>HttpResponseMessage</code> representing <code>FileContentResponse</code> or any other version of stream against blob file via MD5 hash.
+Arguments are response, container name and file name with extension.</p>
+<pre><code class="language-csharp">await fixture.AssertFileResponseAgainstBlobMd5Async(res, &quot;photos&quot;, &quot;asd.png&quot;);
 </code></pre>
-
-
-
-</details></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If returns that blobInfo is null, you should double check that container name and file are filled correctly!</p>
+</div></div>
             </div>
         </div>
 
