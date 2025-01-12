@@ -1,19 +1,24 @@
 ﻿namespace FluentTesting.Azurite.Options
 {
-    public class AzuriteOptions
-    {
-        public int? BlobPort { get; set; } = 10_000;
+	public class AzuriteOptions
+	{
+		internal const string AzureCliContainerName = "AzureCLIContainer";
+		internal const string AzuriteContainerName = "AzuriteContainer";
 
-        public int? QueuePort { get; set; } = 10_001;
+		public int? BlobPort { get; set; } = 10_000;
 
-        public int? TablePort { get; set; } = 10_002;
+		public int? QueuePort { get; set; } = 10_001;
 
-        public int GuiPort { get; set; } = 8100;
+		public int? TablePort { get; set; } = 10_002;
 
-        public string DefaultUserName { get; set; } = "devstoreaccount1";
+		public int GuiPort { get; set; } = 8100;
 
-        public string DefaultPassword { get; set; } = "devstoreaccount1";
+		public string DefaultUserName { get; set; } = "devstoreaccount1";
 
-        public bool RunAdminTool { get; set; } = true;
-    }
+		public string DefaultPassword { get; set; } = "devstoreaccount1";
+
+		public bool RunAdminTool { get; set; } = true;
+
+		public IEnumerable<BlobContainer> BlobSeed { get; set; } = [];
+	}
 }

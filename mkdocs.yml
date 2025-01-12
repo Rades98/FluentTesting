@@ -2,6 +2,7 @@ site_name: 'FluentTesting'
 
 nav:
   - Home: index.md
+  - Common: common.md
   - Mocking: mocking.md
   - Dotnet: dotnet.md
   - ASP:
@@ -9,6 +10,7 @@ nav:
       - Extensions: asp/aspExtensions.md
   - Azurite:
       - Blob: blob/blob.md
+      - BlobExtensions: blob/blobExtensions.md
       - AzureExplorer: blob/azureExplorer.md
   - Kafka:
       - Kafka: kafka/kafka.md
