@@ -1,5 +1,6 @@
 using FluentAssertions;
 using FluentTesting.Asp.Extensions;
+using FluentTesting.Azurite.Extensions;
 using FluentTesting.Sql.Extensions;
 using Samples.AspApp.Tests.Shared;
 
@@ -36,6 +37,16 @@ namespace Samples.AspApp.Tests
 			res.AssertStatusCode(System.Net.HttpStatusCode.OK);
 
 			await fixture.AssertJsonResponseAsync(res, "AssertSqlResponse.json");
+		}
+
+		[Fact]
+		public async Task BlobEndpoint_ShouldReturnOK()
+		{
+			var res = await fixture.Client.GetAsync("file");
+
+			res.AssertStatusCode(System.Net.HttpStatusCode.OK);
+
+			await fixture.AssertFileResponseAgainstBlobMd5Async(res, "photos", "asd.png");
 		}
 
 		[Fact]

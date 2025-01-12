@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\samples\Samples.AspApp\Samples.AspApp.csproj" />
     <ProjectReference Include="..\..\src\FluentTesting.Asp\FluentTesting.Asp.csproj" />
+    <ProjectReference Include="..\..\src\FluentTesting.Azurite\FluentTesting.Azurite.csproj" />
     <ProjectReference Include="..\..\src\FluentTesting.Common\FluentTesting.Common.csproj" />
     <ProjectReference Include="..\..\src\FluentTesting.Sql\FluentTesting.Sql.csproj" />
   </ItemGroup>
@@ -35,6 +36,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="AssertSqlResponse.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Shared\asd.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
