@@ -147,6 +147,10 @@
 <li>
     <a href="../redis/redisInsight/" class="dropdown-item">RedisInsight</a>
 </li>
+                                    
+<li>
+    <a href="../redis/redisExtensions/" class="dropdown-item">Extensions</a>
+</li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -227,6 +231,7 @@
     using FluentTesting.Azurite;
     using FluentTesting.Common.Extensions;
     using FluentTesting.Common.Interfaces;
+    using FluentTesting.Redis;
     using FluentTesting.Sql;</p>
 <pre><code>namespace Samples.AspApp.Tests.Shared;
 
@@ -281,6 +286,22 @@ public class TestFixture : ITestFixture
                     ];
                 }
             )
+            .UseRedis(
+                (configuration, settings) =&gt;
+                {
+                    configuration.AddConnectionString("RedisConnectionString", $"{settings.Url}:{settings.Port}");
+                },
+                opts =&gt;
+                {
+                    opts.Seed = new()
+                    {
+                        { "someKey", "some value :)" },
+                        { "someKey2", "some value :)" },
+                        { "someKey3", "some value :)" },
+                        { "someKey4", "some value :)" },
+                        { "someKey5", "some value :)" },
+                    };
+                })
             .Build();
 
         Client = ApplicationFactory.GetClient();

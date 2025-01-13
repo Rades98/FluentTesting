@@ -147,6 +147,10 @@
 <li>
     <a href="../redisInsight/" class="dropdown-item">RedisInsight</a>
 </li>
+                                    
+<li>
+    <a href="../redisExtensions/" class="dropdown-item">Extensions</a>
+</li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -206,6 +210,10 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#redis" class="nav-link">Redis</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#seed" class="nav-link">Seed</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -246,7 +254,23 @@
     )
 </code></pre>
 
-</details></div>
+</details>
+
+<h2 id="seed">Seed</h2>
+<p>To register with seed fill <code>Seed</code> prop of type <code>Dictionary&lt;string, string&gt;</code> in options delegate</p>
+<pre><code class="language-csharp">.UseRedis(
+    (configuration, settings) =&gt;
+    {
+        configuration.AddConnectionString(&quot;RedisConnectionString&quot;, $&quot;{settings.Url}:{settings.Port}&quot;);
+    },
+    opts =&gt;
+    {
+        opts.Seed = new()
+        {
+            { &quot;someKey&quot;, &quot;some value :)&quot; }
+        };
+    })
+</code></pre></div>
             </div>
         </div>
 
