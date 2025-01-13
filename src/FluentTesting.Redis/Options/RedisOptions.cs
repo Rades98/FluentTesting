@@ -7,9 +7,13 @@ namespace FluentTesting.Redis.Options;
 /// </summary>
 public class RedisOptions : IContainerOptions
 {
-    /// <inheritdoc/>
-    public int? Port { get; set; } = 6001;
+	internal const string ContainerName = "RedisContainer";
 
-    /// <inheritdoc/>
-    public bool RunAdminTool { get; set; } = true;
+	/// <inheritdoc/>
+	public int? Port { get; set; } = 6001;
+
+	/// <inheritdoc/>
+	public bool RunAdminTool { get; set; } = true;
+
+	public Dictionary<string, string> Seed = [];
 }
