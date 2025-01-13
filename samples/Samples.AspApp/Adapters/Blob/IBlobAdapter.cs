@@ -1,4 +1,4 @@
-﻿namespace Samples.AspApp.Adapters
+﻿namespace Samples.AspApp.Adapters.Blob
 {
 	public interface IBlobAdapter
 	{
