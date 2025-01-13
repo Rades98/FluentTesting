@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Samples.AspApp;
-using Samples.AspApp.Adapters;
+using Samples.AspApp.Adapters.Blob;
+using Samples.AspApp.Adapters.Redis;
 using Samples.AspApp.Repos;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ISomeRepo, SomeRepo>();
 builder.Services.AddSingleton<AppBlobServiceClient>();
 builder.Services.AddTransient<IBlobAdapter, BlobAdapter>();
+builder.Services.AddTransient<IRedisAdapter, RedisAdapter>();
 
 var app = builder.Build();
 
@@ -52,6 +54,20 @@ app.MapGet("file", async (IBlobAdapter adapter, CancellationToken ct) =>
 	return file is not null ? Results.File(file, "image/png") : Results.NotFound();
 });
 
+app.MapGet("redis", async (IRedisAdapter adapter, CancellationToken ct) =>
+{
+	var entry = await adapter.GetValueAsync("someKey");
+
+	return string.IsNullOrEmpty(entry) ? Results.NotFound() : Results.Ok(entry);
+
+});
+
+app.MapPut("redis", async (IRedisAdapter adapter, CancellationToken ct) =>
+{
+	await adapter.SetValueAsync("someKey", "some new value");
+
+	return Results.Accepted();
+});
 
 await app.RunAsync(default);
 

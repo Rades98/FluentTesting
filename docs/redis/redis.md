@@ -35,3 +35,20 @@ public TestsFixture()
     )
 ```
 </details>
+
+## Seed
+To register with seed fill `Seed` prop of type `Dictionary<string, string>` in options delegate
+```csharp
+.UseRedis(
+	(configuration, settings) =>
+	{
+		configuration.AddConnectionString("RedisConnectionString", $"{settings.Url}:{settings.Port}");
+	},
+	opts =>
+	{
+		opts.Seed = new()
+		{
+			{ "someKey", "some value :)" }
+		};
+	})
+```

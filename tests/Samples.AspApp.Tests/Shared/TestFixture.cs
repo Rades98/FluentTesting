@@ -4,6 +4,7 @@ using FluentTesting.Asp.Extensions;
 using FluentTesting.Azurite;
 using FluentTesting.Common.Extensions;
 using FluentTesting.Common.Interfaces;
+using FluentTesting.Redis;
 using FluentTesting.Sql;
 
 namespace Samples.AspApp.Tests.Shared;
@@ -59,6 +60,22 @@ public class TestFixture : ITestFixture
 					];
 				}
 			)
+			.UseRedis(
+				(configuration, settings) =>
+				{
+					configuration.AddConnectionString("RedisConnectionString", $"{settings.Url}:{settings.Port}");
+				},
+				opts =>
+				{
+					opts.Seed = new()
+					{
+						{ "someKey", "some value :)" },
+						{ "someKey2", "some value :)" },
+						{ "someKey3", "some value :)" },
+						{ "someKey4", "some value :)" },
+						{ "someKey5", "some value :)" },
+					};
+				})
 			.Build();
 
 		Client = ApplicationFactory.GetClient();

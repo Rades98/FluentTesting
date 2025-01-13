@@ -69,6 +69,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Redis", "Redis", "{A1A23704-9C72-461E-A6C3-42C65E2C6840}"
 	ProjectSection(SolutionItems) = preProject
 		docs\redis\redis.md = docs\redis\redis.md
+		docs\redis\redisExtensions.md = docs\redis\redisExtensions.md
 		docs\redis\redisInsight.md = docs\redis\redisInsight.md
 	EndProjectSection
 EndProject

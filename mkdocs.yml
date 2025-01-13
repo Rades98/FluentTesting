@@ -29,6 +29,7 @@ nav:
   - Redis:
       - Redis: redis/redis.md
       - RedisInsight: redis/redisInsight.md
+      - Extensions: redis/redisExtensions.md
   - Mongo: 
       - Mongo: mongo/mongo.md
       - MongoExpress: mongo/mongoExpress.md

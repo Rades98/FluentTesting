@@ -33,4 +33,4 @@ await fixture.AssertFileResponseAgainstBlobMd5Async(res, "photos", "asd.png");
 ```
 
 !!! warning
-	If returns that blobInfo is null, you should double check that container name and file are filled correctly!
+	If returns that blobInfo is null, you should double check that container name and file are filled correctly! Or that file really exists
