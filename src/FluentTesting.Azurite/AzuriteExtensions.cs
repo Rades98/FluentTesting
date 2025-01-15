@@ -55,7 +55,10 @@ namespace FluentTesting.Azurite
 			{
 				var connectionString = AzuriteContainerUtils.GetConnectionString(azuriteContainer, AzuriteOptions, "azurite");
 
-				var results = new List<ExecResult>();
+				var results = new List<ExecResult>()
+				{
+					new("", "", 0)
+				};
 
 				foreach (var containerSeed in AzuriteOptions.BlobSeed)
 				{
@@ -79,7 +82,7 @@ namespace FluentTesting.Azurite
 
 			if (res.ExitCode != 0)
 			{
-				throw new Exception(res.Stderr, new(res.Stdout));
+				throw new Exception("Azurite initialisation failed: " + res.Stderr);
 			}
 
 

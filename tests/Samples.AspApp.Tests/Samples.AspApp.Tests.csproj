@@ -30,13 +30,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="AssertAuthJson.json">
+    <None Update="Endpoints\AssertAuthJson.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="AssertJson.json">
+    <None Update="Endpoints\AssertJson.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="AssertSqlResponse.json">
+    <None Update="SQL\AssertSqlResponse.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Shared\asd.png">

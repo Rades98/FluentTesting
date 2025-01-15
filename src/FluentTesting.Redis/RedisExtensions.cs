@@ -66,9 +66,12 @@ public static class RedisExtensions
 				.UntilPortIsAvailable(RedisPort))
 			.Build();
 
-		container.EnsureContainer(async container =>
+		var result = container.EnsureContainer(async container =>
 		{
-			var results = new List<ExecResult>();
+			var results = new List<ExecResult>()
+			{
+				new("", "", 0)
+			};
 
 			foreach (var entry in redisOptions.Seed)
 			{
@@ -77,6 +80,11 @@ public static class RedisExtensions
 
 			return results.Any(x => x.ExitCode != 0) ? results.First(x => x.ExitCode != 0) : results.First();
 		});
+
+		if (result.ExitCode != 0)
+		{
+			throw new Exception("Redis initialisation failed: " + result.Stderr);
+		}
 
 		IContainer? clientContainer = null;
 
