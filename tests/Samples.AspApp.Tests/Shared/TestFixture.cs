@@ -23,7 +23,6 @@ public class TestFixture : ITestFixture
 	public TestFixture()
 	{
 		ApplicationFactory = new AspApplicationFactoryBuilder<Program>()
-			.SetAssertionRegex(@".*Samples\.AspApp\.Tests[\\\/]+(.*?)[\\\/](?:(?![\\\/]).)*$")
 			.RegisterServices((services, configuration) =>
 				{
 					services.RegisterAuth();

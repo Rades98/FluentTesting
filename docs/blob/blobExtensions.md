@@ -34,3 +34,12 @@ await fixture.AssertFileResponseAgainstBlobMd5Async(res, "photos", "asd.png");
 
 !!! warning
 	If returns that blobInfo is null, you should double check that container name and file are filled correctly! Or that file really exists
+
+If your response object is more complex and contains several files, you can assert stream via `AssertFileResponseAgainstBlobMd5Async`
+extension on `ITestFixture` that validates `Stream` representing desired file against blob file via MD5 hash.
+Arguments are stream, container name and file name with extension.
+```csharp
+using var fileStream = await res.Content.ReadAsStreamAsync(); // Obtain specific part from multipart if needed
+
+await fixture.AssertFileResponseAgainstBlobMd5Async(fileStream, "photos", "asd.png");
+```

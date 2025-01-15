@@ -51,6 +51,7 @@ markdown_extensions:
   - markdown.extensions.admonition
   - markdown.extensions.toc
   - fenced_code
+  - attr_list
   # - pymdownx.highlight:
   #     extend_pygments_lang:
   #       - name: csharp

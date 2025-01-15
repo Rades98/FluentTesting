@@ -39,5 +39,28 @@ namespace FluentTesting.Azurite.Extensions
 				fileMd5.Should().BeEquivalentTo(Convert.FromBase64String(blobInfo.ContentMd5));
 			}
 		}
+
+		/// <summary>
+		/// Validates returned file stream against blob file via MD5 hash check
+		/// </summary>
+		/// <param name="fixture">fixture</param>
+		/// <param name="fileStream">stream from response</param>
+		/// <param name="containerName">Blob container name</param>
+		/// <param name="blobName">Blob name with extension</param>
+		public static async Task AssertFileResponseAgainstBlobMd5Async(this ITestFixture fixture, Stream fileStream, string containerName, string blobName)
+		{
+			fileStream.Seek(0, SeekOrigin.Begin);
+
+			var blobInfo = await fixture.GetBlobInformationsAsync(containerName, blobName);
+
+			blobInfo.Should().NotBeNull();
+
+			if (blobInfo is not null)
+			{
+				using var md5 = MD5.Create();
+				var fileMd5 = md5.ComputeHash(fileStream);
+				fileMd5.Should().BeEquivalentTo(Convert.FromBase64String(blobInfo.ContentMd5));
+			}
+		}
 	}
 }

@@ -1,26 +1,33 @@
+﻿# About
+
+![icon](https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png){: style="width:30px; height:30px;" } [GitHub repo](https://github.com/Rades98/FluentTesting)
+
+![icon](https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg){: style="width:30px; height:30px;" } [Radek Řezníček](https://www.linkedin.com/in/radek-%C5%99ezn%C3%AD%C4%8Dek-545638163/)
+
 # Overview
+
 Library providing testing mechanisms to run application in memory with needed third party dependencies like Kafka, RabbitMq, NoSQL databases, SQL
 
-|Technology|Description| Support  |
-|-|:-|:-:|
-| .NET8|in memory factory| &#x2713; |
-| ASP.NET|in memory factory| &#x2713; | 
-| Kafka|Test container with kafka and schema registry with topics creation| &#x2713; | 
-| Elasticsearch| Test container with elastic| &#x2713; |
-| RabbitMQ|Test container with rabbit supporting exchanges and routing keys creation| &#x2713; |
-| MsSQL|Test container with SQL supporting init seed| &#x2713; |
-| Redis|Test container with Redis| &#x2713; |
-| Mongo|Test container with Mongo supporting init seed | &#x2713; |
-| Azure Blob |Test container with Azure Blob | &#x2713; |
-| PostgreSQL | Container with PostgreSQL supporting init seed and snapshot management | &#x2718; |
-| MariaDB | Container with MariaDB supporting init seed and snapshot management | &#x2718; |
-| Azure service bus | | &#x2718; |
+|Technology|Description| Support  |	![nuget](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJwDPg5pC-Uvd60lmcIl_0OBnwGG7s5KjVVw&s){: style="width:20px; height:20px;" }  nuget |
+|-|:-|:-:|:- | 
+| .NET8|in memory factory| &#x2713; |																[Common](https://www.nuget.org/packages/FluentTesting.Common/) |
+| ASP.NET|in memory factory| &#x2713; |																[Asp](https://www.nuget.org/packages/FluentTesting.Asp/) |
+| Kafka|Test container with kafka and schema registry with topics creation| &#x2713; | 				[Kafka](https://www.nuget.org/packages/FluentTesting.Kafka/) |
+| Elasticsearch| Test container with elastic| &#x2713; |										    [Elasticsearch](https://www.nuget.org/packages/FluentTesting.Elasticsearch/) |
+| RabbitMQ|Test container with rabbit supporting exchanges and routing keys creation| &#x2713; |	[RabbitMq](https://www.nuget.org/packages/FluentTesting.RabbitMq/) |
+| MsSQL|Test container with SQL supporting init seed| &#x2713; |									[Sql](https://www.nuget.org/packages/FluentTesting.Sql/) |
+| Redis|Test container with Redis| &#x2713; |														[Redis](https://www.nuget.org/packages/FluentTesting.Redis/) |
+| Mongo|Test container with Mongo supporting init seed | &#x2713; |									[Mongo](https://www.nuget.org/packages/FluentTesting.Mongo/) |
+| Azure Blob |Test container with Azure Blob | &#x2713; |											[Azurite](https://www.nuget.org/packages/FluentTesting.Azurite/) |
+| PostgreSQL | Container with PostgreSQL supporting init seed and snapshot management | &#x2718; |	- |
+| MariaDB | Container with MariaDB supporting init seed and snapshot management | &#x2718; |		- |
+| Azure service bus | | &#x2718; |																	- |
 
 ## Release notes
 
 
-| Version | Task | Info |
-|-|:-|:-:|
+| Version | Task | Info | 
+|-|:-|:-|
 | 1.0.0 | | Beggining of this master piece |
 | 2.0.0 | | Fixed namespaces |
 | 2.1.0 | | Added azurite - support for Azure blob |
@@ -31,3 +38,5 @@ Library providing testing mechanisms to run application in memory with needed th
 | 2.4.2 | [#51](https://github.com/Rades98/FluentTesting/issues/51) | Added sql data obtaining mechanism + Directory.Build.props instead of common.props |
 | 2.5.0 | [#54](https://github.com/Rades98/FluentTesting/issues/54) | Added Blob assert + dataInfo obtaining extensions + seed support |
 | 2.6.0 | [#57](https://github.com/Rades98/FluentTesting/issues/57) | Added redis assert + keys/value obtaining extensions + seed support |
+| 2.7.0 | [#61](https://github.com/Rades98/FluentTesting/issues/61) | Removed redundant regex needs of SetAssertionRegex |
+|       | [#62](https://github.com/Rades98/FluentTesting/issues/62) | Fixed optionality of seed for Redis and Blob |

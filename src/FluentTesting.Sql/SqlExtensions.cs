@@ -49,6 +49,37 @@ namespace FluentTesting.Sql
 		}
 
 		/// <summary>
+		/// Use sql server in docker
+		/// </summary>
+		/// <param name="builder"></param>
+		/// <param name="configuration">configuration to set connection string</param>
+		/// <param name="customOptions">custom options</param>
+		/// <returns></returns>
+		public static IApplicationFactoryBuilder UseSql(
+			this IApplicationFactoryBuilder builder,
+			Action<ConfigurationBuilder, SqlContainerSettings> configuration, Action<SqlOptions>? customOptions = null)
+		{
+			customOptions ??= _ => { };
+
+			customOptions.Invoke(SqlOptions);
+
+			var (SqlContainer, SqlClientContainer, SqlNetwork) = CreateSql(string.Empty, builder.UseProxiedImages);
+
+			builder.Containers.TryAdd(SqlOptions.ContainerName, SqlContainer);
+
+			if (SqlClientContainer is not null)
+			{
+				builder.Containers.TryAdd(nameof(SqlClientContainer), SqlClientContainer);
+			}
+
+			builder.Networks.TryAdd(nameof(SqlNetwork), SqlNetwork);
+
+			builder.Builders.Add(cknfBuilder => configuration.Invoke(cknfBuilder, new(GetConnectionString(SqlContainer))));
+
+			return builder;
+		}
+
+		/// <summary>
 		/// Executes the SQL script in the MsSql container.
 		/// </summary>
 		/// <param name="scriptContent">The content of the SQL script to execute.</param>
@@ -103,7 +134,7 @@ namespace FluentTesting.Sql
 
 			if (result.ExitCode != 0)
 			{
-				throw new Exception("Sql seed failed: " + result.Stderr);
+				throw new Exception("Sql initialisation failed: " + result.Stderr);
 			}
 
 			if (System.Diagnostics.Debugger.IsAttached && SqlOptions.RunAdminTool)
