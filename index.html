@@ -208,6 +208,11 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
+            <li class="nav-item" data-bs-level="1"><a href="#about" class="nav-link">About</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
             <li class="nav-item" data-bs-level="1"><a href="#overview" class="nav-link">Overview</a>
               <ul class="nav flex-column">
             <li class="nav-item" data-bs-level="2"><a href="#release-notes" class="nav-link">Release notes</a>
@@ -221,6 +226,9 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
+<h1 id="about">About</h1>
+<p><img alt="icon" src="https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" style="width:30px; height:30px;" /> <a href="https://github.com/Rades98/FluentTesting">GitHub repo</a></p>
+<p><img alt="icon" src="https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg" style="width:30px; height:30px;" /> <a href="https://www.linkedin.com/in/radek-%C5%99ezn%C3%AD%C4%8Dek-545638163/">Radek Řezníček</a></p>
 <h1 id="overview">Overview</h1>
 <p>Library providing testing mechanisms to run application in memory with needed third party dependencies like Kafka, RabbitMq, NoSQL databases, SQL</p>
 <table>
@@ -229,6 +237,7 @@
 <th>Technology</th>
 <th style="text-align: left;">Description</th>
 <th style="text-align: center;">Support</th>
+<th style="text-align: left;"><img alt="nuget" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJwDPg5pC-Uvd60lmcIl_0OBnwGG7s5KjVVw&amp;s" style="width:20px; height:20px;" />  nuget</th>
 </tr>
 </thead>
 <tbody>
@@ -236,61 +245,73 @@
 <td>.NET8</td>
 <td style="text-align: left;">in memory factory</td>
 <td style="text-align: center;">&#x2713;</td>
+<td style="text-align: left;"><a href="https://www.nuget.org/packages/FluentTesting.Common/">Common</a></td>
 </tr>
 <tr>
 <td>ASP.NET</td>
 <td style="text-align: left;">in memory factory</td>
 <td style="text-align: center;">&#x2713;</td>
+<td style="text-align: left;"><a href="https://www.nuget.org/packages/FluentTesting.Asp/">Asp</a></td>
 </tr>
 <tr>
 <td>Kafka</td>
 <td style="text-align: left;">Test container with kafka and schema registry with topics creation</td>
 <td style="text-align: center;">&#x2713;</td>
+<td style="text-align: left;"><a href="https://www.nuget.org/packages/FluentTesting.Kafka/">Kafka</a></td>
 </tr>
 <tr>
 <td>Elasticsearch</td>
 <td style="text-align: left;">Test container with elastic</td>
 <td style="text-align: center;">&#x2713;</td>
+<td style="text-align: left;"><a href="https://www.nuget.org/packages/FluentTesting.Elasticsearch/">Elasticsearch</a></td>
 </tr>
 <tr>
 <td>RabbitMQ</td>
 <td style="text-align: left;">Test container with rabbit supporting exchanges and routing keys creation</td>
 <td style="text-align: center;">&#x2713;</td>
+<td style="text-align: left;"><a href="https://www.nuget.org/packages/FluentTesting.RabbitMq/">RabbitMq</a></td>
 </tr>
 <tr>
 <td>MsSQL</td>
 <td style="text-align: left;">Test container with SQL supporting init seed</td>
 <td style="text-align: center;">&#x2713;</td>
+<td style="text-align: left;"><a href="https://www.nuget.org/packages/FluentTesting.Sql/">Sql</a></td>
 </tr>
 <tr>
 <td>Redis</td>
 <td style="text-align: left;">Test container with Redis</td>
 <td style="text-align: center;">&#x2713;</td>
+<td style="text-align: left;"><a href="https://www.nuget.org/packages/FluentTesting.Redis/">Redis</a></td>
 </tr>
 <tr>
 <td>Mongo</td>
 <td style="text-align: left;">Test container with Mongo supporting init seed</td>
 <td style="text-align: center;">&#x2713;</td>
+<td style="text-align: left;"><a href="https://www.nuget.org/packages/FluentTesting.Mongo/">Mongo</a></td>
 </tr>
 <tr>
 <td>Azure Blob</td>
 <td style="text-align: left;">Test container with Azure Blob</td>
 <td style="text-align: center;">&#x2713;</td>
+<td style="text-align: left;"><a href="https://www.nuget.org/packages/FluentTesting.Azurite/">Azurite</a></td>
 </tr>
 <tr>
 <td>PostgreSQL</td>
 <td style="text-align: left;">Container with PostgreSQL supporting init seed and snapshot management</td>
 <td style="text-align: center;">&#x2718;</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
 <td>MariaDB</td>
 <td style="text-align: left;">Container with MariaDB supporting init seed and snapshot management</td>
 <td style="text-align: center;">&#x2718;</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
 <td>Azure service bus</td>
 <td style="text-align: left;"></td>
 <td style="text-align: center;">&#x2718;</td>
+<td style="text-align: left;">-</td>
 </tr>
 </tbody>
 </table>
@@ -300,59 +321,69 @@
 <tr>
 <th>Version</th>
 <th style="text-align: left;">Task</th>
-<th style="text-align: center;">Info</th>
+<th style="text-align: left;">Info</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>1.0.0</td>
 <td style="text-align: left;"></td>
-<td style="text-align: center;">Beggining of this master piece</td>
+<td style="text-align: left;">Beggining of this master piece</td>
 </tr>
 <tr>
 <td>2.0.0</td>
 <td style="text-align: left;"></td>
-<td style="text-align: center;">Fixed namespaces</td>
+<td style="text-align: left;">Fixed namespaces</td>
 </tr>
 <tr>
 <td>2.1.0</td>
 <td style="text-align: left;"></td>
-<td style="text-align: center;">Added azurite - support for Azure blob</td>
+<td style="text-align: left;">Added azurite - support for Azure blob</td>
 </tr>
 <tr>
 <td>2.1.2</td>
 <td style="text-align: left;"></td>
-<td style="text-align: center;">Fixed azurite - mea culpa</td>
+<td style="text-align: left;">Fixed azurite - mea culpa</td>
 </tr>
 <tr>
 <td>2.3.0</td>
 <td style="text-align: left;"></td>
-<td style="text-align: center;">Fixed stuff around websocket which didnt work and fixed Configuration binding with Timespans</td>
+<td style="text-align: left;">Fixed stuff around websocket which didnt work and fixed Configuration binding with Timespans</td>
 </tr>
 <tr>
 <td>2.4.0</td>
 <td style="text-align: left;"><a href="https://github.com/Rades98/FluentTesting/issues/36">#36</a></td>
-<td style="text-align: center;">Added support for RabbitMq</td>
+<td style="text-align: left;">Added support for RabbitMq</td>
 </tr>
 <tr>
 <td>2.4.1</td>
 <td style="text-align: left;"><a href="https://github.com/Rades98/FluentTesting/issues/44">#44</a></td>
-<td style="text-align: center;">Added sql backup-restore mechanism</td>
+<td style="text-align: left;">Added sql backup-restore mechanism</td>
 </tr>
 <tr>
 <td>2.4.2</td>
 <td style="text-align: left;"><a href="https://github.com/Rades98/FluentTesting/issues/51">#51</a></td>
-<td style="text-align: center;">Added sql data obtaining mechanism + Directory.Build.props instead of common.props</td>
+<td style="text-align: left;">Added sql data obtaining mechanism + Directory.Build.props instead of common.props</td>
 </tr>
 <tr>
 <td>2.5.0</td>
 <td style="text-align: left;"><a href="https://github.com/Rades98/FluentTesting/issues/54">#54</a></td>
-<td style="text-align: center;">Added Blob assert + dataInfo obtaining extensions + seed support</td>
+<td style="text-align: left;">Added Blob assert + dataInfo obtaining extensions + seed support</td>
 </tr>
 <tr>
 <td>2.6.0</td>
 <td style="text-align: left;"><a href="https://github.com/Rades98/FluentTesting/issues/57">#57</a></td>
-<td style="text-align: center;">Added redis assert + keys/value obtaining extensions + seed support</td>
+<td style="text-align: left;">Added redis assert + keys/value obtaining extensions + seed support</td>
+</tr>
+<tr>
+<td>2.7.0</td>
+<td style="text-align: left;"><a href="https://github.com/Rades98/FluentTesting/issues/61">#61</a></td>
+<td style="text-align: left;">Removed redundant regex needs of SetAssertionRegex</td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: left;"><a href="https://github.com/Rades98/FluentTesting/issues/62">#62</a></td>
+<td style="text-align: left;">Fixed optionality of seed for Redis and Blob</td>
 </tr>
 </tbody>
 </table></div>
@@ -437,5 +468,5 @@
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2025-01-13 00:24:06.325629+00:00
+Build Date UTC : 2025-01-15 10:20:57.463048+00:00
 -->

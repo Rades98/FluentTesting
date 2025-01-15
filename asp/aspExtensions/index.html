@@ -233,10 +233,6 @@
 <p>This API comes with several extensions like JWT mocking, json assertions etc</p>
 <h2 id="mock-jwt-auth">Mock JWT Auth</h2>
 <p>To mock jwt authentication you can simly use <code>RegisterAuth()</code> extensions on <code>IServiceCollection</code></p>
-<details>
-    <summary>See example </summary>
-
-
 <pre><code class="language-csharp">ApplicationFactory = new AspApplicationFactoryBuilder&lt;Program&gt;()
     .RegisterServices((services, configuration) =&gt;
         {
@@ -244,44 +240,18 @@
         })
     .Build();
 </code></pre>
-
-</details>
-
 <h2 id="send-request-with-mocked-jwt">Send request with mocked JWT</h2>
 <p>If you have registered mocked JWT you can use several extensions simulationg user request</p>
 <pre><code class="language-csharp">var res = await fixture.Client.GetAsUserAsync(&quot;auth&quot;, 1);
 </code></pre>
 <p>if you want to test with specific claims and roles, you will have to use <code>JwtHelper</code> object with <code>GetJwt</code> 
 method supporting definition of roles ets</p>
-<details>
-    <summary>Usage with specific roles or claims</summary>
-
-
-<pre><code class="language-csharp">client
-    .AddBearerAuthHeader(JwtHelper.GetJwt(userId))
+<pre><code class="language-csharp">await fixture.Client
+    .AddBearerAuthHeader(JwtHelper.GetJwt(userId, claims, roles))
     .GetAsync(requestUri);
 </code></pre>
-
-</details>
-
 <h2 id="json-assertation-extension-against-file">JSON assertation extension against file</h2>
-<p>You can assert http message against json file if you will follow 2 steps</p>
-<details>
-    <summary>1. You have to register your path regex to base tests directory as follows</summary>
-
-
-<pre><code class="language-csharp">ApplicationFactory = new AspApplicationFactoryBuilder&lt;Program&gt;()
-    .SetAssertionRegex(@&quot;.*Samples\.AspApp\.Tests[\\\/]+(.*?)[\\\/](?:(?![\\\/]).)*$&quot;)
-    ...
-    .Build();
-</code></pre>
-
-</details>
-
-<details>
-    <summary>2. Use it in file properly</summary>
-
-
+<p>You can assert http message against json file</p>
 <pre><code class="language-csharp">[Fact]
 public async Task AnonymousEndpoint_Should_ReturnOk()
 {
@@ -292,8 +262,20 @@ public async Task AnonymousEndpoint_Should_ReturnOk()
     await fixture.AssertJsonResponseAsync(res, &quot;AssertJson.json&quot;);
 }
 </code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>NOTE THAT you have to set Copy always/preserve newest on assertation file so it will appear in build folder</p>
+</div>
+<details>
+    <summary> Optionally you can specify assertion regex for getting json path if needed, but by default it should work via calling assembly</summary>
 
-NOTE THAT you have to set Copy always on assertation file so it will appear in build folder
+
+<pre><code class="language-csharp">ApplicationFactory = new AspApplicationFactoryBuilder&lt;Program&gt;()
+    .SetAssertionRegex(@&quot;.*Samples\.AspApp\.Tests[\\\/]+(.*?)[\\\/](?:(?![\\\/]).)*$&quot;)
+    ...
+    .Build();
+</code></pre>
+
 </details></div>
             </div>
         </div>

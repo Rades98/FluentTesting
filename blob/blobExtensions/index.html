@@ -293,7 +293,14 @@ Arguments are response, container name and file name with extension.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>If returns that blobInfo is null, you should double check that container name and file are filled correctly! Or that file really exists</p>
-</div></div>
+</div>
+<p>If your response object is more complex and contains several files, you can assert stream via <code>AssertFileResponseAgainstBlobMd5Async</code>
+extension on <code>ITestFixture</code> that validates <code>Stream</code> representing desired file against blob file via MD5 hash.
+Arguments are stream, container name and file name with extension.</p>
+<pre><code class="language-csharp">using var fileStream = await res.Content.ReadAsStreamAsync(); // Obtain specific part from multipart if needed
+
+await fixture.AssertFileResponseAgainstBlobMd5Async(fileStream, &quot;photos&quot;, &quot;asd.png&quot;);
+</code></pre></div>
             </div>
         </div>
 
