@@ -1,0 +1,27 @@
+name: Feature Request
+description: Suggest a new feature or improvement
+labels: enhancement
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please describe your idea for a new feature or improvement.
+
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: A short summary of your feature request.
+
+  - type: textarea
+    id: feature_description
+    attributes:
+      label: Description
+      description: What should this feature do?
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this feature useful?
