@@ -228,9 +228,12 @@
 <h1 id="extensions">Extensions</h1>
 <h2 id="backup-and-restore">Backup and Restore</h2>
 <p>On <code>ITestsFixture</code> and <code>IApplicationFactory</code> is extension <code>BackupMsSqlDatabaseAsync</code> which creates backup of whole database. To restore state,
-use <code>RestoreMsSqlDatabasesAsync</code>. 
-To make this whole work, ensure that you are <strong><em>not using master</em></strong> as db. This can be achieved by defining database
+use <code>RestoreMsSqlDatabasesAsync</code>. </p>
+<div class="admonition warning">
+<p class="admonition-title">Do not use master</p>
+<p>To make this whole work, ensure that you are <strong><em>not using master</em></strong> as db. This can be achieved by defining database
 name in <code>UseSql</code> settings as shown bellow:</p>
+</div>
 <pre><code class="language-cs">.UseSql(SqlSeed, (configuration, sqlSettings) =&gt;
 {
     configuration.AddConnectionString(&quot;Web&quot;, sqlSettings.ConnectionString);
@@ -255,14 +258,22 @@ public async Task SomeUpdatingOrCreatingtestScenario()
 
 </code></pre>
 <h2 id="obtain-data-from-sql-for-futher-use">Obtain data from sql for futher use</h2>
-<p>To Get data there are extension on <code>ITestsFixture</code> and <code>IApplicationFactory</code> named <code>GetMsSqlObjectAsync</code> and <code>GetRawMsSqlObjectAsync</code></p>
+<p>To Get data there are extension on <code>ITestsFixture</code> and <code>IApplicationFactory</code> named <code>GetMsSqlObjectAsync</code> and <code>GetRawMsSqlObjectAsync</code>
+or for collection you can use <code>GetMsSqlCollectionAsync</code></p>
+<h3 id="getmssqlobjectasync">GetMsSqlObjectAsync</h3>
 <p>This one is trying to map data for you from sql response - for mapping purposes is used JSON, 
 so you should reflect naming etc or use native .NET JSON attributes to achieve so.</p>
 <pre><code class="language-csharp">var obj = await fixture.GetMsSqlObjectAsync&lt;SomeTable, int&gt;(&quot;SomeTable&quot;, 1, &quot;Id&quot;);
 
 obj?.SomeString.Should().Be(&quot;MyString&quot;);
 </code></pre>
-<p>Some error may occure in serialization proces, co there is even GetRawMsSqlObjectAsync which returns raw data </p>
+<div class="admonition warning">
+<p class="admonition-title">No enumerables</p>
+<p>Do not try to obtain collection of data with this, since this method contains TOP(1) 
+and even will throw exception if object is assignable to IEnumerable</p>
+</div>
+<h3 id="getrawmssqlobjectasync">GetRawMsSqlObjectAsync</h3>
+<p>Some error may occure in serialization proces, so there is even GetRawMsSqlObjectAsync which returns raw data </p>
 <div class="admonition warning">
 <p class="admonition-title">Raw string</p>
 <p>This extension returns response from SQL server running inside container, so it is just string which needs some work, but as was foretold, some problems in serialization may occure, so to not let you without this functionality this one comes to play</p>
@@ -270,16 +281,25 @@ obj?.SomeString.Should().Be(&quot;MyString&quot;);
 <pre><code class="language-csharp">var data = await fixture.GetRawMsSqlObjectAsync(&quot;SomeTable&quot;, 1, &quot;Id&quot;);
 </code></pre>
 <details>
-    <summary>Example of string data representation returned from container</summary>
+<summary>Example of string data representation returned from container</summary>
+
 
 <pre><code class="language-txt">Id          SomeInt     SomeString                    
 ----------- ----------- ------------------------------
-            1           0 kokos                         
+1           0           kokos                         
 
 (1 rows affected)
 </code></pre>
 
-</details></div>
+</details>
+
+<h3 id="getmssqlcollectionasync">GetMsSqlCollectionAsync</h3>
+<p>This one is trying to map collection of data for you from sql response - for mapping purposes is used JSON, 
+so you should reflect naming etc or use native .NET JSON attributes to achieve so.</p>
+<pre><code class="language-csharp">var collectionOfAll = await fixture.GetMsSqlCollectionAsync&lt;SomeTable&gt;(&quot;SomeTable&quot;);
+
+collectionOfAll.Should().HaveCount(4);
+</code></pre></div>
             </div>
         </div>
 

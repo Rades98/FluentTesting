@@ -278,7 +278,8 @@ public class TestFixture : ITestFixture
                             [
                                 new()
                                 {
-                                    Path = Path.Combine(Directory.GetCurrentDirectory(), "Shared", "asd.png")
+                                    Path = Path.Combine(Directory.GetCurrentDirectory(), "Shared", "asd.png"),
+                                    Name = "Some name"
                                 }
                             ]
                         }
@@ -310,10 +311,15 @@ public class TestFixture : ITestFixture
         CREATE TABLE dbo.SomeTable(
             Id INT PRIMARY KEY IDENTITY(1,1), 
             SomeInt INT NOT NULL, 
-            SomeString VARCHAR(30) NOT NULL
+            SomeString VARCHAR(30) NOT NULL,
+            SomeNullableString VARCHAR(30),
+            SomeBool bit,
         );
 
-        INSERT INTO dbo.SomeTable(SomeInt, SomeString) VALUES (0, 'string');
+        INSERT INTO dbo.SomeTable(SomeInt, SomeString, SomeNullableString, SomeBool) VALUES (0, 'string', NULL, 0);
+        INSERT INTO dbo.SomeTable(SomeInt, SomeString, SomeNullableString) VALUES (1, '0', NULL);
+        INSERT INTO dbo.SomeTable(SomeInt, SomeString, SomeNullableString) VALUES (2, 'string', NULL);
+        INSERT INTO dbo.SomeTable(SomeInt, SomeString, SomeNullableString) VALUES (3, '1', NULL);
     ";
 }
 
