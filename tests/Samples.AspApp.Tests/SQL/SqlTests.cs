@@ -42,10 +42,27 @@ namespace Samples.AspApp.Tests.SQL
 			res2.AssertStatusCode(System.Net.HttpStatusCode.OK);
 
 			await fixture.AssertJsonResponseAsync(res2, "AssertSqlResponse.json");
+		}
 
+		[Fact]
+		public async Task SqlExtensionse_SHouldWork()
+		{
 			var obj2 = await fixture.GetMsSqlObjectAsync<SomeTable, int>("SomeTable", 1, "Id");
 
 			obj2?.SomeString.Should().Be("string");
+
+			var collectionOfAll = await fixture.GetMsSqlCollectionAsync<SomeTable>("SomeTable");
+
+			collectionOfAll.Should().HaveCount(4);
+
+			try
+			{
+				var failingCollection = await fixture.GetMsSqlObjectAsync<List<SomeTable>, int>("SomeTable", 1, "Id");
+			}
+			catch (Exception ex)
+			{
+				ex.Message.Should().Be("TObject cannot be a collection type.");
+			}
 		}
 	}
 }

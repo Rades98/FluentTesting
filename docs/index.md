@@ -33,10 +33,14 @@ Library providing testing mechanisms to run application in memory with needed th
 | 2.1.0 | | Added azurite - support for Azure blob |
 | 2.1.2 | | Fixed azurite - mea culpa  |
 | 2.3.0 | | Fixed stuff around websocket which didnt work and fixed Configuration binding with Timespans|
-| 2.4.0 | [#36](https://github.com/Rades98/FluentTesting/issues/36)| Added support for RabbitMq|
+| 2.4.0 | [#36](https://github.com/Rades98/FluentTesting/issues/36) | Added support for RabbitMq|
 | 2.4.1 | [#44](https://github.com/Rades98/FluentTesting/issues/44) | Added sql backup-restore mechanism |
 | 2.4.2 | [#51](https://github.com/Rades98/FluentTesting/issues/51) | Added sql data obtaining mechanism + Directory.Build.props instead of common.props |
 | 2.5.0 | [#54](https://github.com/Rades98/FluentTesting/issues/54) | Added Blob assert + dataInfo obtaining extensions + seed support |
 | 2.6.0 | [#57](https://github.com/Rades98/FluentTesting/issues/57) | Added redis assert + keys/value obtaining extensions + seed support |
 | 2.7.0 | [#61](https://github.com/Rades98/FluentTesting/issues/61) | Removed redundant regex needs of SetAssertionRegex |
 |       | [#62](https://github.com/Rades98/FluentTesting/issues/62) | Fixed optionality of seed for Redis and Blob |
+| 2.7.1 | [#65](https://github.com/Rades98/FluentTesting/issues/65) | Fixed nullable properties in SQL obtained objects |
+|       | [#66](https://github.com/Rades98/FluentTesting/issues/66) | Fixed bool mapping |
+|       | [#67](https://github.com/Rades98/FluentTesting/issues/67) | Added extension to obtain collection |
+|       | [#68](https://github.com/Rades98/FluentTesting/issues/68) | Fixed blob work with spaces in names |
