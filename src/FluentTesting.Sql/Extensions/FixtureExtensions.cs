@@ -47,7 +47,16 @@ namespace FluentTesting.Sql.Extensions
 		/// <returns></returns>
 		public static Task<string> GetRawMsSqlObjectAsync<TIdentifier>(this ITestFixture fixture, string tableName, TIdentifier key, string? identifierName = null)
 			where TIdentifier : notnull
-			=> fixture.ApplicationFactory.GetRawMsSqlObjectAsync<TIdentifier>(tableName, key, identifierName);
+			=> fixture.ApplicationFactory.GetRawMsSqlObjectAsync(tableName, key, identifierName);
 
+		/// <summary>
+		/// Get a collection of objects from SQL - note that there is no explicit mapping mechanism, so the result will be mapped to objects via JSON deserialization.
+		/// </summary>
+		/// <typeparam name="TObject">Type of object representing data</typeparam>
+		/// <param name="tableName">Name of the table</param>
+		/// <returns>A collection of deserialized objects of type <typeparamref name="TObject"/></returns>
+		public static Task<List<TObject>> GetMsSqlCollectionAsync<TObject>(this ITestFixture fixture, string tableName)
+			where TObject : class, new()
+			=> fixture.ApplicationFactory.GetMsSqlCollectionAsync<TObject>(tableName);
 	}
 }

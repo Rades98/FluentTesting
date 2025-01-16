@@ -26,7 +26,7 @@ namespace FluentTesting.Azurite.Extensions
 
 			var connectionString = GetBlobConnectionString(AzuriteExtensions.AzuriteOptions);
 
-			var res = await container.ExecAsync(["/bin/bash", "-c", $"az storage blob show --container-name {containerName} --name {fileName} --connection-string '{connectionString}'"]);
+			var res = await container.ExecAsync(["/bin/bash", "-c", $"az storage blob show --container-name {containerName} --name '{fileName}' --connection-string '{connectionString}'"]);
 
 			if (res.ExitCode == 0 && !string.IsNullOrEmpty(res.Stdout))
 			{

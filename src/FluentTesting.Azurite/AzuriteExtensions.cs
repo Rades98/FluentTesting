@@ -62,18 +62,18 @@ namespace FluentTesting.Azurite
 
 				foreach (var containerSeed in AzuriteOptions.BlobSeed)
 				{
-					results.Add(await container.ExecAsync(["/bin/bash", "-c", $"az storage container create -n {containerSeed.Name} --connection-string '{connectionString}'"]));
+					results.Add(await container.ExecAsync(["/bin/bash", "-c", $"az storage container create -n '{containerSeed.Name}' --connection-string '{connectionString}'"]));
 
 					foreach (var file in containerSeed.Files)
 					{
 						var fileName = file.Name ?? $"{Path.GetFileName(file.Path)}";
-						var filePath = $"/blob/{containerSeed.Name}/{fileName}";
+						var filePath = $"/blob/{containerSeed.Name}/{Path.GetFileName(file.Path)}";
 
 						await container.CopyAsync(file.Path, $"/blob/{containerSeed.Name}");
 
 						var result = await container.ExecAsync(["ls", "-l", $"/blob/{containerSeed.Name}"]);
 
-						results.Add(await container.ExecAsync(["/bin/bash", "-c", $"az storage blob upload --container-name {containerSeed.Name} --name {fileName} --file {filePath} --connection-string '{connectionString}'"]));
+						results.Add(await container.ExecAsync(["/bin/bash", "-c", $"az storage blob upload --container-name '{containerSeed.Name}' --name '{fileName}' --file '{filePath}' --connection-string '{connectionString}'"]));
 					}
 				}
 
