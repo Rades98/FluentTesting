@@ -3,6 +3,7 @@ using FluentTesting.Common.Interfaces;
 using FluentTesting.Sql.Options;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace FluentTesting.Sql.Extensions
 {
@@ -11,6 +12,11 @@ namespace FluentTesting.Sql.Extensions
 	/// </summary>
 	public static partial class ApplicationFactoryExtensions
 	{
+		private static readonly JsonSerializerOptions _jsonOptions = new()
+		{
+			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+		};
+
 		/// <summary>
 		/// Backup databases - ignores master, so if you want to use such extension, set database name in 
 		/// <see cref="SqlOptions"/> defined in 
@@ -69,48 +75,6 @@ namespace FluentTesting.Sql.Extensions
 		}
 
 		/// <summary>
-		/// Get object from sql - note that there is no mapping mechanism, so result will be mapped to object via JSON deserialization, 
-		/// in case that primitive mapping provided in this package is not working for your scenario, use <see cref="GetRawMsSqlObjectAsync"/>
-		/// and handle mapping mechanism yourself
-		/// </summary>
-		/// <typeparam name="TObject">type of object representing data</typeparam>
-		/// <typeparam name="TIdentifier">type of Identifier</typeparam>
-		/// <param name="tableName">Name of table</param>
-		/// <param name="key">key</param>
-		/// <param name="identifierName">key name - if not provided, logic tableName+Id will be applied</param>
-		/// <returns></returns>
-		public static async Task<TObject> GetMsSqlObjectAsync<TObject, TIdentifier>
-			(this IApplicationFactory factory, string tableName, TIdentifier key, string? identifierName = null)
-			where TObject : class, new()
-			where TIdentifier : notnull
-		{
-			var command = new StringBuilder($"USE {SqlExtensions.SqlOptions.Database}; SELECT TOP(1) * FROM {tableName} where ");
-
-			if (identifierName is not null)
-			{
-				command.Append($"{identifierName} = ");
-			}
-			else
-			{
-				command.Append($"{tableName}Id = ");
-			}
-
-			if (key is sbyte or byte or short or ushort or int or uint or long or ulong or float or double or decimal)
-			{
-				command.Append(key);
-			}
-			else
-			{
-				command.Append($"'{key}'");
-			}
-
-			var msSqlContainer = factory.GetSqlContainer();
-			var result = await msSqlContainer.ExecMsSqlScriptAsync(command.ToString());
-
-			return JsonSerializer.Deserialize<TObject>(result.Stdout.ParseSqlResponseToJson())!;
-		}
-
-		/// <summary>
 		/// Get raw result from sql
 		/// </summary>
 		/// <typeparam name="TIdentifier">type of Identifier</typeparam>
@@ -148,41 +112,143 @@ namespace FluentTesting.Sql.Extensions
 			return result.Stdout;
 		}
 
-		private static async Task<string[]> GetDatabaseNamesAsync(this IContainer container)
+		/// <summary>
+		/// Get object from SQL - note that there is no explicit mapping mechanism, so the result will be mapped to the object via JSON deserialization. 
+		/// If the provided primitive mapping mechanism does not suit your scenario, use <see cref="GetRawMsSqlObjectAsync"/>
+		/// Do not use with collections, if you want to obtain collection, use <see cref="GetMsSqlCollectionAsync"/>
+		/// and handle mapping yourself.
+		/// </summary>
+		/// <typeparam name="TObject">Type of object representing data</typeparam>
+		/// <typeparam name="TIdentifier">Type of Identifier</typeparam>
+		/// <param name="tableName">Name of the table</param>
+		/// <param name="key">Key</param>
+		/// <param name="identifierName">Key name - if not provided, the logic `tableName + Id` will be applied</param>
+		/// <returns>Deserialized object of type <typeparamref name="TObject"/></returns>
+		public static async Task<TObject> GetMsSqlObjectAsync<TObject, TIdentifier>(
+			this IApplicationFactory factory,
+			string tableName,
+			TIdentifier key,
+			string? identifierName = null)
+			where TObject : class, new()
+			where TIdentifier : notnull
 		{
-			var res = await container.ExecMsSqlScriptAsync("SELECT name FROM sys.databases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb');");
+			if (typeof(System.Collections.IEnumerable).IsAssignableFrom(typeof(TObject)) && typeof(TObject) != typeof(string))
+			{
+				throw new ArgumentException($"TObject cannot be a collection type.");
+			}
 
-			return res.Stdout
-					.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries)
-					.Where(name =>
-						!string.IsNullOrWhiteSpace(name) &&
-						!name.Contains("name       ") &&
-						!name.Contains("----") &&
-						!name.Contains('(') &&
-						!name.Contains(')'))
-					.Select(name => name.Replace(" ", string.Empty))
-					.ToArray();
+			var msSqlContainer = factory.GetSqlContainer();
+
+			var columnMetadata = await msSqlContainer.GetMetadataAsync(tableName);
+
+			var command = new StringBuilder($"USE {SqlExtensions.SqlOptions.Database}; SELECT TOP(1) * FROM {tableName} WHERE ");
+
+			if (identifierName is not null)
+			{
+				command.Append($"{identifierName} = ");
+			}
+			else
+			{
+				command.Append($"{tableName}Id = ");
+			}
+
+			if (key is sbyte or byte or short or ushort or int or uint or long or ulong or float or double or decimal)
+			{
+				command.Append(key);
+			}
+			else
+			{
+				command.Append($"'{key}'");
+			}
+
+			var dataResult = await msSqlContainer.ExecMsSqlScriptAsync(command.ToString());
+			var parsedJson = ParseSqlResponseToJson(dataResult.Stdout, columnMetadata);
+			return JsonSerializer.Deserialize<TObject>(parsedJson)!;
 		}
 
-		private static IContainer GetSqlContainer(this IApplicationFactory factory)
-			=> factory.Containers.First(x => x.Key == SqlOptions.ContainerName).Value;
+		/// <summary>
+		/// Get a collection of objects from SQL - note that there is no explicit mapping mechanism, so the result will be mapped to objects via JSON deserialization.
+		/// </summary>
+		/// <typeparam name="TObject">Type of object representing data</typeparam>
+		/// <param name="tableName">Name of the table</param>
+		/// <returns>A collection of deserialized objects of type <typeparamref name="TObject"/></returns>
+		public static async Task<List<TObject>> GetMsSqlCollectionAsync<TObject>(
+			this IApplicationFactory factory,
+			string tableName)
+			where TObject : class, new()
+		{
+			var msSqlContainer = factory.GetSqlContainer();
 
-		private static string ParseSqlResponseToJson(this string response)
+			var columnMetadata = await msSqlContainer.GetMetadataAsync(tableName);
+
+			var command = new StringBuilder($"USE {SqlExtensions.SqlOptions.Database}; SELECT * FROM {tableName};");
+			var dataResult = await msSqlContainer.ExecMsSqlScriptAsync(command.ToString());
+
+			var rows = ParseSqlResponseToJsonArray(dataResult.Stdout, columnMetadata);
+			return rows.Select(row => JsonSerializer.Deserialize<TObject>(row, _jsonOptions)!).ToList();
+		}
+
+		private static List<string> ParseSqlResponseToJsonArray(string response, List<(string ColumnName, string DataType)> columnMetadata)
 		{
 			var lines = response.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
+
+			var headerLine = lines[0];
+			var separatorLine = lines[1];
+			var dataLines = lines.Skip(2).Take(lines.Length - 3);
+
+			var columns = ParseColumns(headerLine, separatorLine);
+			var result = new List<string>();
+
+			foreach (var dataLine in dataLines)
+			{
+				var row = new Dictionary<string, object?>();
+
+				foreach (var (ColumnName, StartIndex, Length) in columns)
+				{
+					var value = dataLine.Substring(StartIndex, Length).Trim();
+					var metadata = columnMetadata.FirstOrDefault(c => c.ColumnName == ColumnName);
+					row[ColumnName] = ConvertToType(value, metadata.DataType);
+				}
+
+				result.Add(JsonSerializer.Serialize(row, _jsonOptions));
+			}
+
+			return result;
+		}
+
+		private static List<(string ColumnName, string DataType)> ParseColumnMetadata(string metadataResponse)
+		{
+			return metadataResponse
+				.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries)
+				.Skip(1)
+				.Select(line =>
+				{
+					var parts = line.Split([' '], StringSplitOptions.RemoveEmptyEntries);
+					return (ColumnName: parts[0], DataType: parts[1]);
+				})
+				.ToList();
+		}
+
+		private static string ParseSqlResponseToJson(string response, List<(string ColumnName, string DataType)> columnMetadata)
+		{
+			var lines = response.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
+			if (lines.Length < 3) throw new InvalidOperationException("Invalid SQL response format.");
+
 			var headerLine = lines[0];
 			var separatorLine = lines[1];
 			var dataLine = lines[2];
+
 			var columns = ParseColumns(headerLine, separatorLine);
-			var result = new Dictionary<string, object>();
+			var result = new Dictionary<string, object?>();
 
 			foreach (var (ColumnName, StartIndex, Length) in columns)
 			{
 				var value = dataLine.Substring(StartIndex, Length).Trim();
-				result[ColumnName] = ParseValue(value);
+				var metadata = columnMetadata.FirstOrDefault(c => c.ColumnName == ColumnName);
+				result[ColumnName] = ConvertToType(value, metadata.DataType);
 			}
 
-			return JsonSerializer.Serialize(result);
+			return JsonSerializer.Serialize(result, _jsonOptions);
 		}
 
 		private static List<(string ColumnName, int StartIndex, int Length)> ParseColumns(string headerLine, string separatorLine)
@@ -211,14 +277,51 @@ namespace FluentTesting.Sql.Extensions
 			return columns;
 		}
 
-		private static object ParseValue(string value)
+		private static object? ConvertToType(string value, string dataType)
 		{
-			if (int.TryParse(value, out var intValue)) return intValue;
-			if (long.TryParse(value, out var longValue)) return longValue;
-			if (double.TryParse(value, out var doubleValue)) return doubleValue;
-			if (decimal.TryParse(value, out var decimalValue)) return decimalValue;
-			if (float.TryParse(value, out var floatValue)) return floatValue;
-			return value;
+			if (value == "NULL")
+			{
+				return null;
+			}
+
+			return dataType.ToLower() switch
+			{
+				"int" => int.TryParse(value, out var intValue) ? intValue : 0,
+				"bigint" => long.TryParse(value, out var longValue) ? longValue : 0L,
+				"decimal" => decimal.TryParse(value, out var decimalValue) ? decimalValue : 0M,
+				"float" => float.TryParse(value, out var floatValue) ? floatValue : 0F,
+				"double" => double.TryParse(value, out var doubleValue) ? doubleValue : 0D,
+				"bit" => (value == "1" || value.Equals("true", StringComparison.OrdinalIgnoreCase)),
+				"datetime" or "smalldatetime" => DateTime.TryParse(value, out var dateValue) ? dateValue : default,
+				_ => value
+			};
+		}
+
+		private static IContainer GetSqlContainer(this IApplicationFactory factory)
+			=> factory.Containers.First(x => x.Key == SqlOptions.ContainerName).Value;
+
+		private static async Task<List<(string ColumnName, string DataType)>> GetMetadataAsync(this IContainer container, string tableName)
+		{
+			var columnMetadataQuery = $@"USE {SqlExtensions.SqlOptions.Database}; SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{tableName}';";
+
+			var columnMetadataResult = await container.ExecMsSqlScriptAsync(columnMetadataQuery);
+			return ParseColumnMetadata(columnMetadataResult.Stdout);
+		}
+
+		private static async Task<string[]> GetDatabaseNamesAsync(this IContainer container)
+		{
+			var res = await container.ExecMsSqlScriptAsync("SELECT name FROM sys.databases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb');");
+
+			return res.Stdout
+					.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries)
+					.Where(name =>
+						!string.IsNullOrWhiteSpace(name) &&
+						!name.Contains("name       ") &&
+						!name.Contains("----") &&
+						!name.Contains('(') &&
+						!name.Contains(')'))
+					.Select(name => name.Replace(" ", string.Empty))
+					.ToArray();
 		}
 	}
 }

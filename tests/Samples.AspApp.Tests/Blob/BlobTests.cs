@@ -14,7 +14,7 @@ namespace Samples.AspApp.Tests.Blob
 
 			res.AssertStatusCode(System.Net.HttpStatusCode.OK);
 
-			await fixture.AssertFileResponseAgainstBlobMd5Async(res, "photos", "asd.png");
+			await fixture.AssertFileResponseAgainstBlobMd5Async(res, "photos", "Some name");
 
 			//using var fileStream = await res.Content.ReadAsStreamAsync(); // Obtain specific part from multipart if needed
 

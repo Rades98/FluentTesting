@@ -49,7 +49,7 @@ app.MapPut("sql", async (ISomeRepo repo, CancellationToken ct) =>
 
 app.MapGet("file", async (IBlobAdapter adapter, CancellationToken ct) =>
 {
-	var file = await adapter.GetFileAsync("photos", "asd.png", ct);
+	var file = await adapter.GetFileAsync("photos", "Some name", ct);
 
 	return file is not null ? Results.File(file, "image/png") : Results.NotFound();
 });
