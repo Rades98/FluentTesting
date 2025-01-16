@@ -201,16 +201,7 @@ namespace FluentTesting.Sql.Extensions
 
 			foreach (var dataLine in dataLines)
 			{
-				var row = new Dictionary<string, object?>();
-
-				foreach (var (ColumnName, StartIndex, Length) in columns)
-				{
-					var value = dataLine.Substring(StartIndex, Length).Trim();
-					var metadata = columnMetadata.FirstOrDefault(c => c.ColumnName == ColumnName);
-					row[ColumnName] = ConvertToType(value, metadata.DataType);
-				}
-
-				result.Add(JsonSerializer.Serialize(row, _jsonOptions));
+				result.Add(GetRow(columns, dataLine, columnMetadata));
 			}
 
 			return result;
@@ -232,13 +223,18 @@ namespace FluentTesting.Sql.Extensions
 		private static string ParseSqlResponseToJson(string response, List<(string ColumnName, string DataType)> columnMetadata)
 		{
 			var lines = response.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
-			if (lines.Length < 3) throw new InvalidOperationException("Invalid SQL response format.");
 
 			var headerLine = lines[0];
 			var separatorLine = lines[1];
 			var dataLine = lines[2];
 
 			var columns = ParseColumns(headerLine, separatorLine);
+
+			return GetRow(columns, dataLine, columnMetadata);
+		}
+
+		private static string GetRow(List<(string ColumnName, int StartIndex, int Length)> columns, string dataLine, List<(string ColumnName, string DataType)> columnMetadata)
+		{
 			var result = new Dictionary<string, object?>();
 
 			foreach (var (ColumnName, StartIndex, Length) in columns)
