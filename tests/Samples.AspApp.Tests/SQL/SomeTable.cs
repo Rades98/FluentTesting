@@ -11,5 +11,7 @@
 		public string? SomeNullableString { get; set; }
 
 		public bool? SomeBool { get; set; }
+
+		public double? SomeDouble { get; set; }
 	}
 }
