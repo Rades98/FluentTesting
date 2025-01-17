@@ -275,21 +275,16 @@ namespace FluentTesting.Sql.Extensions
 
 		private static object? ConvertToType(string value, string dataType)
 		{
-			if (value == "NULL")
-			{
-				return null;
-			}
-
 			return dataType.ToLower() switch
 			{
-				"int" => int.TryParse(value, out var intValue) ? intValue : 0,
-				"bigint" => long.TryParse(value, out var longValue) ? longValue : 0L,
-				"decimal" => decimal.TryParse(value, out var decimalValue) ? decimalValue : 0M,
-				"float" => float.TryParse(value, out var floatValue) ? floatValue : 0F,
-				"double" => double.TryParse(value, out var doubleValue) ? doubleValue : 0D,
-				"bit" => (value == "1" || value.Equals("true", StringComparison.OrdinalIgnoreCase)),
-				"datetime" or "smalldatetime" => DateTime.TryParse(value, out var dateValue) ? dateValue : default,
-				_ => value
+				"int" => value is null || value.Equals("NULL") ? (int?)null : int.TryParse(value, out var intValue) ? intValue : 0,
+				"bigint" => value is null || value.Equals("NULL") ? (long?)null : long.TryParse(value, out var longValue) ? longValue : 0L,
+				"decimal" => value is null || value.Equals("NULL") ? (decimal?)null : decimal.TryParse(value, out var decimalValue) ? decimalValue : 0M,
+				"float" => value is null || value.Equals("NULL") ? (float?)null : float.TryParse(value, out var floatValue) ? floatValue : 0F,
+				"double" => value is null || value.Equals("NULL") ? (double?)null : double.TryParse(value, out var doubleValue) ? doubleValue : 0D,
+				"bit" => value is null || value.Equals("NULL") ? (bool?)null : (value == "1" || value.Equals("true", StringComparison.OrdinalIgnoreCase)),
+				"datetime" or "smalldatetime" => value is null || value.Equals("NULL") ? (DateTime?)null : DateTime.TryParse(value, out var dateValue) ? dateValue : default,
+				_ => value is null || value.Equals("NULL") ? null : value
 			};
 		}
 
