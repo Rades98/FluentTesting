@@ -33,7 +33,7 @@ namespace FluentTesting.Sql.Extensions
 		/// <param name="identifierName">key name - if not provided, logic tableName+Id will be applied</param>
 		/// <returns></returns>
 		public static Task<TObject> GetMsSqlObjectAsync<TObject, TIdentifier>(this ITestFixture fixture, string tableName, TIdentifier key, string? identifierName = null)
-			where TObject : class, new()
+			where TObject : class
 			where TIdentifier : notnull
 			=> fixture.ApplicationFactory.GetMsSqlObjectAsync<TObject, TIdentifier>(tableName, key, identifierName);
 
@@ -56,7 +56,7 @@ namespace FluentTesting.Sql.Extensions
 		/// <param name="tableName">Name of the table</param>
 		/// <returns>A collection of deserialized objects of type <typeparamref name="TObject"/></returns>
 		public static Task<List<TObject>> GetMsSqlCollectionAsync<TObject>(this ITestFixture fixture, string tableName)
-			where TObject : class, new()
+			where TObject : class
 			=> fixture.ApplicationFactory.GetMsSqlCollectionAsync<TObject>(tableName);
 	}
 }

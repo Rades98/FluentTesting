@@ -1,10 +1,10 @@
-﻿namespace Samples.AspApp.Tests
+﻿namespace Samples.AspApp.Tests.SQL
 {
 	public class SomeTable
 	{
 		public int Id { get; set; }
 
-		public int SomeInt { get; set; }
+		public required int SomeInt { get; set; }
 
 		public string? SomeString { get; set; }
 
