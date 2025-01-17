@@ -129,7 +129,7 @@ namespace FluentTesting.Sql.Extensions
 			string tableName,
 			TIdentifier key,
 			string? identifierName = null)
-			where TObject : class, new()
+			where TObject : class
 			where TIdentifier : notnull
 		{
 			if (typeof(System.Collections.IEnumerable).IsAssignableFrom(typeof(TObject)) && typeof(TObject) != typeof(string))
@@ -175,7 +175,7 @@ namespace FluentTesting.Sql.Extensions
 		public static async Task<List<TObject>> GetMsSqlCollectionAsync<TObject>(
 			this IApplicationFactory factory,
 			string tableName)
-			where TObject : class, new()
+			where TObject : class
 		{
 			var msSqlContainer = factory.GetSqlContainer();
 
