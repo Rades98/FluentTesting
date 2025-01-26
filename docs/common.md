@@ -32,3 +32,21 @@ Example for setting the port for SQL:
 
 !!! note "Technology"
 	In this case, `<Technology>` is a placeholder for any specific technology (like `Sql`, `Redis`, etc.), depending on your context.
+
+## Disable admin tool
+Each `<Technology>Options` contains a `RunAdminTool` property, which allows you to run admin tool for visualization. By default it is set 
+to true and works only in debug mode.
+
+Example for setting the port for SQL:
+```csharp
+.UseSql(SqlSeed, (configuration, sqlSettings) =>
+{
+	...
+}, opts =>
+{
+	opts.RunAdminTool = false;
+})
+```
+
+!!! note "Technology"
+	In this case, `<Technology>` is a placeholder for any specific technology (like `Sql`, `Redis`, etc.), depending on your context.
