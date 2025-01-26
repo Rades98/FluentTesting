@@ -35,6 +35,7 @@ public class TestFixture : ITestFixture
 			}, opts =>
 			{
 				opts.Database = "TestDb";
+				opts.Port = 1200;
 			})
 			.UseAzurite(
 				(configuration, settings) =>
