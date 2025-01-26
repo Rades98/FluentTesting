@@ -214,6 +214,14 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#port-setting" class="nav-link">Port Setting</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#disable-admin-tool" class="nav-link">Disable admin tool</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -233,7 +241,39 @@ ApplicationFactory = new ApplicationFactoryBuilder&lt;Program&gt;()
     ...
     .Build();
 </code></pre>
-<hr /></div>
+<hr />
+<h2 id="port-setting">Port Setting</h2>
+<p>Each <code>&lt;Technology&gt;Options</code> contains a <code>Port</code> property, which allows you to set the desired port for running the container.
+Example for setting the port for SQL:</p>
+<pre><code class="language-csharp">.UseSql(SqlSeed, (configuration, sqlSettings) =&gt;
+{
+    // SQL configuration, e.g., connection or database settings
+}, opts =&gt;
+{
+    // Set the port where the SQL container will run
+    opts.Port = 1200;
+})
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Technology</p>
+<p>In this case, <code>&lt;Technology&gt;</code> is a placeholder for any specific technology (like <code>Sql</code>, <code>Redis</code>, etc.), depending on your context.</p>
+</div>
+<h2 id="disable-admin-tool">Disable admin tool</h2>
+<p>Each <code>&lt;Technology&gt;Options</code> contains a <code>RunAdminTool</code> property, which allows you to run admin tool for visualization. By default it is set 
+to true and works only in debug mode.</p>
+<p>Example for setting the port for SQL:</p>
+<pre><code class="language-csharp">.UseSql(SqlSeed, (configuration, sqlSettings) =&gt;
+{
+    ...
+}, opts =&gt;
+{
+    opts.RunAdminTool = false;
+})
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Technology</p>
+<p>In this case, <code>&lt;Technology&gt;</code> is a placeholder for any specific technology (like <code>Sql</code>, <code>Redis</code>, etc.), depending on your context.</p>
+</div></div>
             </div>
         </div>
 
