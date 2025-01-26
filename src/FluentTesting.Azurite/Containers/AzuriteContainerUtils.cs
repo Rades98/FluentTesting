@@ -25,7 +25,9 @@ namespace FluentTesting.Azurite.Containers
 					.WithPortBinding(azuriteOpts.TablePort ?? TablePort, TablePort)
 					.WithWaitStrategy(Wait
 						.ForUnixContainer()
-						.UntilPortIsAvailable(BlobPort))
+						.UntilPortIsAvailable(BlobPort)
+						.UntilPortIsAvailable(QueuePort)
+						.UntilPortIsAvailable(TablePort))
 					.Build();
 
 		internal static IContainer GetAzureCLIContainer(INetwork network, bool useProxiedImages)
