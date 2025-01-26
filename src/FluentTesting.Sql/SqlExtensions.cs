@@ -114,7 +114,7 @@ namespace FluentTesting.Sql
 				.WithName($"TestContainers-MsSql-{Guid.NewGuid()}")
 				.WithWaitStrategy(Wait
 					.ForUnixContainer()
-					.UntilPortIsAvailable(SqlOptions.Port ?? MsSqlPort))
+					.UntilPortIsAvailable(MsSqlPort))
 				.Build();
 
 			var result = sqlContainer.EnsureContainer(async container =>
