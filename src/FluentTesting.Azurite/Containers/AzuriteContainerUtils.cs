@@ -50,11 +50,11 @@ namespace FluentTesting.Azurite.Containers
 					.WithCleanUp(true)
 					.Build();
 
-		internal static string GetConnectionString(IContainer container, AzuriteOptions azuriteOptions, string? networkAlias = null)
+		internal static string GetConnectionString(this IContainer container, AzuriteOptions azuriteOptions, string? networkAlias = null, bool isInternal = false)
 		{
-			var blob = $"http://{networkAlias ?? container.Hostname}:{container.GetMappedPublicPort(BlobPort)}/{azuriteOptions.DefaultUserName}";
-			var queue = $"http://{networkAlias ?? container.Hostname}:{container.GetMappedPublicPort(QueuePort)}/{azuriteOptions.DefaultUserName}";
-			var table = $"http://{networkAlias ?? container.Hostname}:{container.GetMappedPublicPort(TablePort)}/{azuriteOptions.DefaultUserName}";
+			var blob = $"http://{networkAlias ?? container.Hostname}:{(isInternal ? BlobPort : container.GetMappedPublicPort(BlobPort))}/{azuriteOptions.DefaultUserName}";
+			var queue = $"http://{networkAlias ?? container.Hostname}:{(isInternal ? QueuePort : container.GetMappedPublicPort(QueuePort))}/{azuriteOptions.DefaultUserName}";
+			var table = $"http://{networkAlias ?? container.Hostname}:{(isInternal ? TablePort : container.GetMappedPublicPort(TablePort))}/{azuriteOptions.DefaultUserName}";
 
 			var properties = new Dictionary<string, string>
 			{

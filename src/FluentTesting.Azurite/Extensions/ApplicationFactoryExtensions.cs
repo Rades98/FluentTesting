@@ -1,4 +1,5 @@
 ﻿using DotNet.Testcontainers.Containers;
+using FluentTesting.Azurite.Containers;
 using FluentTesting.Azurite.Options;
 using FluentTesting.Common.Interfaces;
 using System.Text.Json;
@@ -24,7 +25,7 @@ namespace FluentTesting.Azurite.Extensions
 		{
 			var container = factory.GetAzureCliContainer();
 
-			var connectionString = GetBlobConnectionString(AzuriteExtensions.AzuriteOptions);
+			var connectionString = container.GetConnectionString(AzuriteExtensions.AzuriteOptions, "azurite", true);
 
 			var res = await container.ExecAsync(["/bin/bash", "-c", $"az storage blob show --container-name {containerName} --name '{fileName}' --connection-string '{connectionString}'"]);
 
@@ -34,21 +35,6 @@ namespace FluentTesting.Azurite.Extensions
 			}
 
 			return null;
-		}
-
-		private static string GetBlobConnectionString(AzuriteOptions azuriteOptions)
-		{
-			var blob = $"http://azurite:10000/{azuriteOptions.DefaultUserName}";
-
-			var properties = new Dictionary<string, string>
-			{
-				{ "DefaultEndpointsProtocol", "http" },
-				{ "AccountName", azuriteOptions.DefaultUserName },
-				{ "AccountKey", azuriteOptions.DefaultPassword },
-				{ "BlobEndpoint", blob },
-			};
-
-			return string.Join(";", properties.Select(property => string.Join("=", property.Key, property.Value)));
 		}
 
 		private static IContainer GetAzureCliContainer(this IApplicationFactory factory)

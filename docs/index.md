@@ -46,3 +46,5 @@ Library providing testing mechanisms to run application in memory with needed th
 |       | [#68](https://github.com/Rades98/FluentTesting/issues/68) | Fixed blob work with spaces in names |
 | 2.7.2 |  | Fixed SQL extensions, so they don't need to satisfy new() generic policy |
 | 2.7.3 |  | SQL assertion and data retrieval nullable fields fix |
+| 2.7.4 |  | Fixed custom port usage |
+| 2.7.5 |  | Fixed custom port usage for Blob |
