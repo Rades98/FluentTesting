@@ -43,6 +43,10 @@ public class TestFixture : ITestFixture
 				},
 				opts =>
 				{
+					opts.BlobPort = 1200;
+					opts.QueuePort = 1201;
+					opts.TablePort = 1202;
+
 					opts.BlobSeed =
 					[
 						new()

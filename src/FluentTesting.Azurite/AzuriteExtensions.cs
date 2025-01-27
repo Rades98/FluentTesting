@@ -53,7 +53,7 @@ namespace FluentTesting.Azurite
 
 			var res = azureCliContainer.EnsureContainer(async container =>
 			{
-				var connectionString = AzuriteContainerUtils.GetConnectionString(azuriteContainer, AzuriteOptions, "azurite");
+				var connectionString = AzuriteContainerUtils.GetConnectionString(azuriteContainer, AzuriteOptions, "azurite", true);
 
 				var results = new List<ExecResult>()
 				{
