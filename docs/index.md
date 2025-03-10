@@ -49,3 +49,4 @@ Library providing testing mechanisms to run application in memory with needed th
 | 2.7.4 |  | Fixed custom port usage |
 | 2.7.5 |  | Fixed custom port usage for Blob |
 | 2.7.6 |  | Fixed SQL extension to work with NUMERIC() as decimal |
+| 2.7.7 |  | Invariant culture in SQL object mapper |
