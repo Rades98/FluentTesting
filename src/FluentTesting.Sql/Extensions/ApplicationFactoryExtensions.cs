@@ -1,6 +1,7 @@
 ﻿using DotNet.Testcontainers.Containers;
 using FluentTesting.Common.Interfaces;
 using FluentTesting.Sql.Options;
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -277,14 +278,14 @@ namespace FluentTesting.Sql.Extensions
     {
       return dataType.ToLower() switch
       {
-        "int" => value is null || value.Equals("NULL") ? (int?)null : int.TryParse(value, out var intValue) ? intValue : 0,
-        "bigint" => value is null || value.Equals("NULL") ? (long?)null : long.TryParse(value, out var longValue) ? longValue : 0L,
-        "decimal" => value is null || value.Equals("NULL") ? (decimal?)null : decimal.TryParse(value, out var decimalValue) ? decimalValue : 0M,
-        "numeric" => value is null || value.Equals("NULL") ? (decimal?)null : decimal.TryParse(value, out var decimalValue) ? decimalValue : 0M,
-        "float" => value is null || value.Equals("NULL") ? (float?)null : float.TryParse(value, out var floatValue) ? floatValue : 0F,
-        "double" => value is null || value.Equals("NULL") ? (double?)null : double.TryParse(value, out var doubleValue) ? doubleValue : 0D,
+        "int" => value is null || value.Equals("NULL") ? (int?)null : int.TryParse(value, CultureInfo.InvariantCulture, out var intValue) ? intValue : 0,
+        "bigint" => value is null || value.Equals("NULL") ? (long?)null : long.TryParse(value, CultureInfo.InvariantCulture, out var longValue) ? longValue : 0L,
+        "decimal" => value is null || value.Equals("NULL") ? (decimal?)null : decimal.TryParse(value, CultureInfo.InvariantCulture, out var decimalValue) ? decimalValue : 0M,
+        "numeric" => value is null || value.Equals("NULL") ? (decimal?)null : decimal.TryParse(value, CultureInfo.InvariantCulture, out var decimalValue) ? decimalValue : 0M,
+        "float" => value is null || value.Equals("NULL") ? (float?)null : float.TryParse(value, CultureInfo.InvariantCulture, out var floatValue) ? floatValue : 0F,
+        "double" => value is null || value.Equals("NULL") ? (double?)null : double.TryParse(value, CultureInfo.InvariantCulture, out var doubleValue) ? doubleValue : 0D,
         "bit" => value is null || value.Equals("NULL") ? (bool?)null : (value == "1" || value.Equals("true", StringComparison.OrdinalIgnoreCase)),
-        "datetime" or "smalldatetime" => value is null || value.Equals("NULL") ? (DateTime?)null : DateTime.TryParse(value, out var dateValue) ? dateValue : default,
+        "datetime" or "smalldatetime" => value is null || value.Equals("NULL") ? (DateTime?)null : DateTime.TryParse(value, CultureInfo.InvariantCulture, out var dateValue) ? dateValue : default,
         _ => value is null || value.Equals("NULL") ? null : value
       };
     }
