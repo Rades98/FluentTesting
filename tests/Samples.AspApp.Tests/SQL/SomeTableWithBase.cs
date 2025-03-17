@@ -1,6 +1,6 @@
 ﻿namespace Samples.AspApp.Tests.SQL
 {
-   public class SomeTable
+   public class SomeTableWithBase : SomeTableBase
    {
       public int Id { get; set; }
 
