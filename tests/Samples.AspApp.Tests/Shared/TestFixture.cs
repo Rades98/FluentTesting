@@ -98,6 +98,7 @@ public class TestFixture : ITestFixture
     CREATE TABLE dbo.SomeTableBase(
 			Id INT PRIMARY KEY IDENTITY(1,1), 
 			SomeBaseInt INT NOT NULL, 
+         SomeBaseFloat REAL NOT NULL,
 		);
 
 		INSERT INTO dbo.SomeTable(SomeInt, SomeString, SomeNullableString, SomeBool, SomeDecimal) VALUES (0, 'string', NULL, 0, 1000);
@@ -105,6 +106,6 @@ public class TestFixture : ITestFixture
 		INSERT INTO dbo.SomeTable(SomeInt, SomeString, SomeNullableString,SomeDecimal) VALUES (2, 'string', NULL,0);
 		INSERT INTO dbo.SomeTable(SomeInt, SomeString, SomeNullableString,SomeDecimal) VALUES (3, '1', NULL,0);
 
-		INSERT INTO dbo.SomeTableBase(SomeBaseInt) VALUES (3);
+		INSERT INTO dbo.SomeTableBase(SomeBaseInt, SomeBaseFloat) VALUES (3, 0.8);
 	";
 }

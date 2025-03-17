@@ -52,3 +52,4 @@ Library providing testing mechanisms to run application in memory with needed th
 | 2.7.7 |  | Invariant culture in SQL object mapper |
 | 2.7.8 |  |  |
 | 2.7.9 |  | Support for entity inheritance in GetMsSqlObjectWithBaseAsync |
+| 2.7.10|  | Support for float in sql which is in EF as real |
