@@ -322,6 +322,7 @@ namespace FluentTesting.Sql.Extensions
             "decimal" => value is null || value.Equals("NULL") ? (decimal?)null : decimal.TryParse(value, CultureInfo.InvariantCulture, out var decimalValue) ? decimalValue : 0M,
             "numeric" => value is null || value.Equals("NULL") ? (decimal?)null : decimal.TryParse(value, CultureInfo.InvariantCulture, out var decimalValue) ? decimalValue : 0M,
             "float" => value is null || value.Equals("NULL") ? (float?)null : float.TryParse(value, CultureInfo.InvariantCulture, out var floatValue) ? floatValue : 0F,
+            "real" => value is null || value.Equals("NULL") ? (float?)null : float.TryParse(value, CultureInfo.InvariantCulture, out var floatValue) ? floatValue : 0F,
             "double" => value is null || value.Equals("NULL") ? (double?)null : double.TryParse(value, CultureInfo.InvariantCulture, out var doubleValue) ? doubleValue : 0D,
             "bit" => value is null || value.Equals("NULL") ? (bool?)null : (value == "1" || value.Equals("true", StringComparison.OrdinalIgnoreCase)),
             "datetime" or "smalldatetime" => value is null || value.Equals("NULL") ? (DateTime?)null : DateTime.TryParse(value, CultureInfo.InvariantCulture, out var dateValue) ? dateValue : default,
