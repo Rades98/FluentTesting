@@ -167,6 +167,43 @@ namespace FluentTesting.Sql.Extensions
       return JsonSerializer.Deserialize<TObject>(parsedJson)!;
     }
 
+    public static async Task<TObject> GetMsSqlObjectWithBaseAsync<TObject, TIdentifier>(
+      this IApplicationFactory factory,
+      string tableName,
+      string baseTable,
+      TIdentifier key,
+      string identifierName,
+      string baseIdentifierName)
+      where TObject : class
+      where TIdentifier : notnull
+    {
+      if (typeof(System.Collections.IEnumerable).IsAssignableFrom(typeof(TObject)) && typeof(TObject) != typeof(string))
+      {
+        throw new ArgumentException($"TObject cannot be a collection type.");
+      }
+
+      var msSqlContainer = factory.GetSqlContainer();
+
+      var columnMetadata = await msSqlContainer.GetMetadataAsync(tableName);
+
+      var command = new StringBuilder($"USE {SqlExtensions.SqlOptions.Database}; SELECT TOP(1) * FROM {tableName} AS FST ");
+      command.Append($"INNER JOIN {baseTable} AS SND ON FST.{identifierName} = SND.{baseIdentifierName} ");
+      command.Append($"WHERE FST.{identifierName} = ");
+
+      if (key is sbyte or byte or short or ushort or int or uint or long or ulong or float or double or decimal)
+      {
+        command.Append(key);
+      }
+      else
+      {
+        command.Append($"'{key}'");
+      }
+
+      var dataResult = await msSqlContainer.ExecMsSqlScriptAsync(command.ToString());
+      var parsedJson = ParseSqlResponseToJson(dataResult.Stdout, columnMetadata);
+      return JsonSerializer.Deserialize<TObject>(parsedJson)!;
+    }
+
     /// <summary>
     /// Get a collection of objects from SQL - note that there is no explicit mapping mechanism, so the result will be mapped to objects via JSON deserialization.
     /// </summary>
