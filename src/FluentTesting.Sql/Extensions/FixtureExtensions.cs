@@ -75,5 +75,24 @@ namespace FluentTesting.Sql.Extensions
       public static Task<List<TObject>> GetMsSqlCollectionAsync<TObject>(this ITestFixture fixture, string tableName)
         where TObject : class
         => fixture.ApplicationFactory.GetMsSqlCollectionAsync<TObject>(tableName);
+
+      /// <summary>
+      /// Get a collection of objects from SQL with join
+      /// </summary>
+      /// <typeparam name="TObject"></typeparam>
+      /// <param name="fixture"></param>
+      /// <param name="tableName">table name</param>
+      /// <param name="baseTableName">base table name</param>
+      /// <param name="tableKey">table key for join</param>
+      /// <param name="baseKey">base table key for join</param>
+      /// <returns></returns>
+      public static Task<List<TObject>> GetMsSqlCollectionWithBaseAsync<TObject>(
+        this ITestFixture fixture,
+        string tableName,
+        string baseTableName,
+        string tableKey,
+        string baseKey)
+        where TObject : class
+         => fixture.ApplicationFactory.GetMsSqlCollectionWithBaseAsync<TObject>(tableName, baseTableName, tableKey, baseKey);
    }
 }

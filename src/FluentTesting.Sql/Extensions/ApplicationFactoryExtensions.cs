@@ -228,6 +228,27 @@ namespace FluentTesting.Sql.Extensions
          return rows.Select(row => JsonSerializer.Deserialize<TObject>(row, _jsonOptions)!).ToList();
       }
 
+      public static async Task<List<TObject>> GetMsSqlCollectionWithBaseAsync<TObject>(
+        this IApplicationFactory factory,
+        string tableName,
+        string baseTableName,
+        string tableKey,
+        string baseKey)
+        where TObject : class
+      {
+         var msSqlContainer = factory.GetSqlContainer();
+
+         var columnMetadata = await msSqlContainer.GetMetadataAsync(tableName);
+         var baseColumnMetadata = await msSqlContainer.GetMetadataAsync(baseTableName);
+         columnMetadata.AddRange(baseColumnMetadata);
+
+         var command = new StringBuilder($"USE {SqlExtensions.SqlOptions.Database}; SELECT * FROM {tableName} AS FST INNER JOIN {baseTableName} AS SND ON FST.{tableKey} = SND.{baseKey} ;");
+         var dataResult = await msSqlContainer.ExecMsSqlScriptAsync(command.ToString());
+
+         var rows = ParseSqlResponseToJsonArray(dataResult.Stdout, columnMetadata);
+         return rows.Select(row => JsonSerializer.Deserialize<TObject>(row, _jsonOptions)!).ToList();
+      }
+
       private static List<string> ParseSqlResponseToJsonArray(string response, List<(string ColumnName, string DataType)> columnMetadata)
       {
          var lines = response.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
