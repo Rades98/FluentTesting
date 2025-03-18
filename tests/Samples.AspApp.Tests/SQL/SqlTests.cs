@@ -68,7 +68,11 @@ namespace Samples.AspApp.Tests.SQL
       [Fact]
       public async Task SqlExtensions_Base_ShouldWork()
       {
+         var obj = await fixture.GetMsSqlObjectAsync<SomeTableBase, int>("SomeTableBase", 1, "Id");
+
          var obj2 = await fixture.GetMsSqlObjectWithBaseAsync<SomeTableWithBase, int>("SomeTable", "SomeTableBase", 1, "Id", "Id");
+
+         var collectionOfAll = await fixture.GetMsSqlCollectionAsync<SomeTableBase>("SomeTableBase");
 
          var x = 1;
          x++;
