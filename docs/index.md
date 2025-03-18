@@ -55,3 +55,4 @@ Library providing testing mechanisms to run application in memory with needed th
 | 2.7.10|  | Support for float in sql which is in EF as real |
 | 2.7.11|  | SQL Extensions Support for DateOnly, TimeOnly and Guids |
 | 2.7.12|  | Support for entity inheritance in GetMsSqlCollectionWithBaseAsync |
+| 2.7.13|  | SQL Support for DateTime as datetime2 |

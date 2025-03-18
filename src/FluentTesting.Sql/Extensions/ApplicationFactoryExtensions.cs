@@ -349,7 +349,7 @@ namespace FluentTesting.Sql.Extensions
             "uniqueidentifier" => value is null || value.Equals("NULL") ? (Guid?)null : Guid.TryParse(value, CultureInfo.InvariantCulture, out var guidValue) ? guidValue : Guid.Empty,
             "date" => value is null || value.Equals("NULL") ? (DateOnly?)null : DateOnly.TryParse(value, CultureInfo.InvariantCulture, out var dateOnlyValue) ? dateOnlyValue : default,
             "time" => value is null || value.Equals("NULL") ? (TimeOnly?)null : TimeOnly.TryParse(value, CultureInfo.InvariantCulture, out var timeOnlyValue) ? timeOnlyValue : default,
-            "datetime" or "smalldatetime" => value is null || value.Equals("NULL") ? (DateTime?)null : DateTime.TryParse(value, CultureInfo.InvariantCulture, out var dateValue) ? dateValue : default,
+            "datetime" or "smalldatetime" or "datetime2" => value is null || value.Equals("NULL") ? (DateTime?)null : DateTime.TryParse(value, CultureInfo.InvariantCulture, out var dateValue) ? dateValue : default,
             _ => value is null || value.Equals("NULL") ? null : value
          };
       }

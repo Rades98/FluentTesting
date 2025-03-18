@@ -11,5 +11,7 @@
       public required DateOnly SomeDateOnly { get; set; }
 
       public required TimeOnly SomeTimeOnly { get; set; }
+
+      public required DateTime SomeDateTime { get; set; }
    }
 }
