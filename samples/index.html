@@ -328,6 +328,7 @@ public class TestFixture : ITestFixture
          SomeGuid uniqueidentifier NOT NULL,
          SomeDateOnly Date NOT NULL,
          SomeTimeOnly Time NOT NULL,
+         SomeDateTime datetime2 Not NULL,
         );
 
         INSERT INTO dbo.SomeTable(SomeInt, SomeString, SomeNullableString, SomeBool, SomeDecimal) VALUES (0, 'string', NULL, 0, 1000);
@@ -335,7 +336,7 @@ public class TestFixture : ITestFixture
         INSERT INTO dbo.SomeTable(SomeInt, SomeString, SomeNullableString,SomeDecimal) VALUES (2, 'string', NULL,0);
         INSERT INTO dbo.SomeTable(SomeInt, SomeString, SomeNullableString,SomeDecimal) VALUES (3, '1', NULL,0);
 
-        INSERT INTO dbo.SomeTableBase(SomeBaseInt, SomeBaseFloat, SomeGuid, SomeDateOnly, SomeTimeOnly) VALUES (3, 0.8, 'F0B85BE2-3F18-4E58-9976-0C2D562C7458', '2024-01-09', '10:29:00.0000000');
+        INSERT INTO dbo.SomeTableBase(SomeBaseInt, SomeBaseFloat, SomeGuid, SomeDateOnly, SomeTimeOnly, SomeDateTime) VALUES (3, 0.8, 'F0B85BE2-3F18-4E58-9976-0C2D562C7458', '2024-01-09', '10:29:00.0000000', '2024-11-03 14:30:00.0000000');
     ";
 }
 
