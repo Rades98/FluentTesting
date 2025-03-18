@@ -99,6 +99,9 @@ public class TestFixture : ITestFixture
 			Id INT PRIMARY KEY IDENTITY(1,1), 
 			SomeBaseInt INT NOT NULL, 
          SomeBaseFloat REAL NOT NULL,
+         SomeGuid uniqueidentifier NOT NULL,
+         SomeDateOnly Date NOT NULL,
+         SomeTimeOnly Time NOT NULL,
 		);
 
 		INSERT INTO dbo.SomeTable(SomeInt, SomeString, SomeNullableString, SomeBool, SomeDecimal) VALUES (0, 'string', NULL, 0, 1000);
@@ -106,6 +109,6 @@ public class TestFixture : ITestFixture
 		INSERT INTO dbo.SomeTable(SomeInt, SomeString, SomeNullableString,SomeDecimal) VALUES (2, 'string', NULL,0);
 		INSERT INTO dbo.SomeTable(SomeInt, SomeString, SomeNullableString,SomeDecimal) VALUES (3, '1', NULL,0);
 
-		INSERT INTO dbo.SomeTableBase(SomeBaseInt, SomeBaseFloat) VALUES (3, 0.8);
+		INSERT INTO dbo.SomeTableBase(SomeBaseInt, SomeBaseFloat, SomeGuid, SomeDateOnly, SomeTimeOnly) VALUES (3, 0.8, 'F0B85BE2-3F18-4E58-9976-0C2D562C7458', '2024-01-09', '10:29:00.0000000');
 	";
 }
