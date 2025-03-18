@@ -74,6 +74,8 @@ namespace Samples.AspApp.Tests.SQL
 
          var collectionOfAll = await fixture.GetMsSqlCollectionAsync<SomeTableBase>("SomeTableBase");
 
+         var coll2 = await fixture.GetMsSqlCollectionWithBaseAsync<SomeTableWithBase>("SomeTable", "SomeTableBase", "Id", "Id");
+
          var x = 1;
          x++;
       }
