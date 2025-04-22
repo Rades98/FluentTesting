@@ -60,3 +60,4 @@ Library providing testing mechanisms to run application in memory with needed th
 | 2.7.15|  | SQL Server can run in Express mode |
 | 2.7.16|  | SQL Wait strategies |
 | 2.7.17|  | SQL editable w8 strategy + Container config |
+| 2.7.18|  | SQL wait before init script |

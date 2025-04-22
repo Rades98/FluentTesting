@@ -126,6 +126,14 @@ namespace FluentTesting.Sql
             {
                 await container.ExecAsync(["/bin/bash", "-c", $"mkdir -p {SqlOptions.BackupPath}"]);
 
+                var cts = new CancellationTokenSource();
+                cts.CancelAfter(SqlOptions.WaitStrategy?.TimeoutSeconds is not null ? SqlOptions.WaitStrategy.TimeoutSeconds.Value * 1000 : 5000);
+
+                var res = await container.ExecAsync(
+                [
+                    "/bin/bash", "-c", $"until /opt/mssql-tools/bin/sqlcmd -S localhost -U {SqlOptions.DefaultUsername} -P {SqlOptions.Password} -Q 'SELECT 1'; do sleep 2; done;"
+                ], cts.Token);
+
                 var updatedSeed = @$"
                                     CREATE DATABASE {SqlOptions.Database}
                                     GO
