@@ -147,7 +147,7 @@ namespace FluentTesting.Sql
 
             if (result.ExitCode != 0)
             {
-                throw new Exception("Sql initialisation failed: " + result.Stderr);
+                throw new Exception($"Sql initialisation failed: {result.Stderr} {result.Stdout}");
             }
 
             if (System.Diagnostics.Debugger.IsAttached && SqlOptions.RunAdminTool)
