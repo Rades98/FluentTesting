@@ -131,7 +131,7 @@ namespace FluentTesting.Sql
 
                 var res = await container.ExecAsync(
                 [
-                    "/bin/bash", "-c", $"until /opt/mssql-tools/bin/sqlcmd -S localhost -U {SqlOptions.DefaultUsername} -P {SqlOptions.Password} -Q 'SELECT 1'; do sleep 2; done;"
+                    "/bin/bash", "-c", $"until /opt/mssql-tools/bin/sqlcmd -b -r 1 -S localhost -U {SqlOptions.DefaultUsername} -P {SqlOptions.Password} -Q 'SELECT 1'; do sleep 2; done;"
                 ], cts.Token);
 
                 var updatedSeed = @$"
