@@ -92,7 +92,7 @@ namespace FluentTesting.Sql
             await container.CopyAsync(Encoding.Default.GetBytes(scriptContent), scriptFilePath, Unix.FileMode644, ct)
                 .ConfigureAwait(false);
 
-            return await container.ExecAsync(["/opt/mssql-tools/bin/sqlcmd", "-b", "-r", "1", "-U", SqlOptions.DefautUsername, "-P", SqlOptions.Password, "-i", scriptFilePath], ct)
+            return await container.ExecAsync(["/opt/mssql-tools/bin/sqlcmd", "-b", "-r", "1", "-U", SqlOptions.DefaultUsername, "-P", SqlOptions.Password, "-i", scriptFilePath], ct)
                 .ConfigureAwait(false);
         }
 
@@ -112,14 +112,8 @@ namespace FluentTesting.Sql
                 .WithEnvironment("SA_PASSWORD", SqlOptions.Password)
                 .WithPortBinding(SqlOptions.Port ?? MsSqlPort, MsSqlPort)
                 .WithName($"TestContainers-MsSql-{Guid.NewGuid()}")
-                .WithWaitStrategy(Wait
-                    .ForUnixContainer()
-                    .UntilPortIsAvailable(MsSqlPort, w =>
-                    {
-                        w.WithRetries(3);
-                        w.WithInterval(TimeSpan.FromSeconds(20));
-                        w.WithTimeout(TimeSpan.FromSeconds(90));
-                    }));
+                .SetWaitStrategy(MsSqlPort, SqlOptions.WaitStrategy)
+                .SetContainer(SqlOptions.ContainerConfig);
 
             if (SqlOptions.RunInExpressMode)
             {
@@ -155,7 +149,7 @@ namespace FluentTesting.Sql
                     .WithCleanUp(true)
                     .WithImage("adminer".GetProxiedImagePath(useProxiedImages))
                     .WithEnvironment("ADMINER_DEFAULT_SERVER", "mssql")
-                    .WithEnvironment("ADMINER_DEFAULT_USER", SqlOptions.DefautUsername)
+                    .WithEnvironment("ADMINER_DEFAULT_USER", SqlOptions.DefaultUsername)
                     .WithEnvironment("ADMINER_DEFAULT_PASSWORD", SqlOptions.Password)
                     .WithEnvironment("ADMINER_DEFAULT_DB", SqlOptions.Database)
                     .WithName($"TestContainers-SqlAdminer-{Guid.NewGuid()}")
@@ -178,7 +172,7 @@ namespace FluentTesting.Sql
             {
                 { "Server", container.Hostname + "," + container.GetMappedPublicPort(MsSqlPort) },
                 { "Database", SqlOptions.Database },
-                { "User Id", SqlOptions.DefautUsername },
+                { "User Id", SqlOptions.DefaultUsername },
                 { "Password", SqlOptions.Password },
                 { "TrustServerCertificate", bool.TrueString }
             };

@@ -14,78 +14,90 @@ namespace Samples.AspApp.Tests.Shared;
 /// </summary>
 public class TestFixture : ITestFixture
 {
-   public IApplicationFactory ApplicationFactory { get; }
+    public IApplicationFactory ApplicationFactory { get; }
 
-   public string SqlConnectionString { get; private set; } = string.Empty;
+    public string SqlConnectionString { get; private set; } = string.Empty;
 
-   public HttpClient Client { get; }
+    public HttpClient Client { get; }
 
-   public TestFixture()
-   {
-      ApplicationFactory = new AspApplicationFactoryBuilder<Program>()
-        .RegisterServices((services, configuration) =>
-          {
-             services.RegisterAuth();
-          })
-        .UseSql(SqlSeed, (configuration, sqlSettings) =>
-        {
-           configuration.AddConnectionString("Web", sqlSettings.ConnectionString);
-
-           SqlConnectionString = sqlSettings.ConnectionString;
-        }, opts =>
-        {
-           opts.Database = "TestDb";
-        })
-        .UseAzurite(
-          (configuration, settings) =>
-          {
-             configuration.AddConnectionString("BlobStorageConnection", settings.ConnectionString);
-          },
-          opts =>
-          {
-             opts.BlobPort = 1200;
-             opts.QueuePort = 1201;
-             opts.TablePort = 1202;
-
-             opts.BlobSeed =
-           [
-             new()
+    public TestFixture()
+    {
+        ApplicationFactory = new AspApplicationFactoryBuilder<Program>()
+            .RegisterServices((services, configuration) =>
             {
-              Name = "photos",
-              Files =
-              [
+                services.RegisterAuth();
+            })
+            .UseSql(SqlSeed, (configuration, sqlSettings) =>
+            {
+                configuration.AddConnectionString("Web", sqlSettings.ConnectionString);
+
+                SqlConnectionString = sqlSettings.ConnectionString;
+            }, opts =>
+            {
+                opts.Database = "TestDb";
+                opts.WaitStrategy = new()
+                {
+                    IntervalSeconds = 20,
+                    RetryCount = 3,
+                    TimeoutSeconds = 120,
+                };
+
+                opts.ContainerConfig = new()
+                {
+                    CPUs = 1,
+                    MemoryMb = 1024
+                };
+            })
+            .UseAzurite(
+            (configuration, settings) =>
+            {
+                configuration.AddConnectionString("BlobStorageConnection", settings.ConnectionString);
+            },
+            opts =>
+            {
+                opts.BlobPort = 1200;
+                opts.QueuePort = 1201;
+                opts.TablePort = 1202;
+
+                opts.BlobSeed =
+            [
                 new()
                 {
-                  Path = Path.Combine(Directory.GetCurrentDirectory(), "Shared", "asd.png"),
-                  Name = "Some name"
+                    Name = "photos",
+                    Files =
+                    [
+                    new()
+                    {
+                        Path = Path.Combine(Directory.GetCurrentDirectory(), "Shared", "asd.png"),
+                        Name = "Some name"
+                    }
+                    ]
                 }
-              ]
+            ];
             }
-           ];
-          }
-        )
-        .UseRedis(
-          (configuration, settings) =>
-          {
-             configuration.AddConnectionString("RedisConnectionString", $"{settings.Url}:{settings.Port}");
-          },
-          opts =>
-          {
-             opts.Seed = new()
+            )
+            .UseRedis(
+            (configuration, settings) =>
             {
+                configuration.AddConnectionString("RedisConnectionString", $"{settings.Url}:{settings.Port}");
+            },
+            opts =>
+            {
+                opts.Seed = new()
+                {
             { "someKey", "some value :)" },
             { "someKey2", "some value :)" },
             { "someKey3", "some value :)" },
             { "someKey4", "some value :)" },
             { "someKey5", "some value :)" },
-            };
-          })
-        .Build();
+                };
+            })
+            .Build();
 
-      Client = ApplicationFactory.GetClient();
-   }
+        Client = ApplicationFactory.GetClient();
+    }
 
-   private const string SqlSeed = @"
+    private const string SqlSeed = @"
 		CREATE TABLE dbo.SomeTable(
 			Id INT PRIMARY KEY IDENTITY(1,1), 
 			SomeInt INT NOT NULL, 

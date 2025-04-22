@@ -1,4 +1,5 @@
 ﻿using FluentTesting.Common.Abstraction;
+using FluentTesting.Common.Options;
 
 namespace FluentTesting.Sql.Options
 {
@@ -24,7 +25,7 @@ namespace FluentTesting.Sql.Options
         /// <summary>
         /// Default user name
         /// </summary>
-        public string DefautUsername { get; } = "sa";
+        public string DefaultUsername { get; } = "sa";
 
         /// <summary>
         /// Default password
@@ -35,5 +36,15 @@ namespace FluentTesting.Sql.Options
         /// Run with MSSQL_PID Express
         /// </summary>
         public bool RunInExpressMode { get; set; } = true;
+
+        /// <summary>
+        /// Container config
+        /// </summary>
+        public ContainerConfig? ContainerConfig { get; set; }
+
+        /// <summary>
+        /// Wait strategy
+        /// </summary>
+        public WaitStrategy? WaitStrategy { get; set; }
     }
 }
