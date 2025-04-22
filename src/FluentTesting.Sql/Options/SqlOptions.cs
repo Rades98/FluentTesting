@@ -30,5 +30,10 @@ namespace FluentTesting.Sql.Options
         /// Default password
         /// </summary>
         public string Password { get; set; } = "Strong(!)Password";
+
+        /// <summary>
+        /// Run with MSSQL_PID Express
+        /// </summary>
+        public bool RunInExpressMode { get; set; } = true;
     }
 }
