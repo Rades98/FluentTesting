@@ -58,3 +58,4 @@ Library providing testing mechanisms to run application in memory with needed th
 | 2.7.13|  | SQL Support for DateTime as datetime2 |
 | 2.7.14|  | .NET 9 |
 | 2.7.15|  | SQL Server can run in Express mode |
+| 2.7.16|  | SQL Wait strategies |

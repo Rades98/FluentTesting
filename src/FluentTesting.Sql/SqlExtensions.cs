@@ -114,16 +114,19 @@ namespace FluentTesting.Sql
                 .WithName($"TestContainers-MsSql-{Guid.NewGuid()}")
                 .WithWaitStrategy(Wait
                     .ForUnixContainer()
-                    .UntilPortIsAvailable(MsSqlPort));
+                    .UntilPortIsAvailable(MsSqlPort, w =>
+                    {
+                        w.WithRetries(3);
+                        w.WithInterval(TimeSpan.FromSeconds(20));
+                        w.WithTimeout(TimeSpan.FromSeconds(90));
+                    }));
 
             if (SqlOptions.RunInExpressMode)
             {
                 sqlContainerBuilder.WithEnvironment("MSSQL_PID", "Express");
             }
 
-
             var sqlContainer = sqlContainerBuilder.Build();
-
 
             var result = sqlContainer.EnsureContainer(async container =>
             {
