@@ -128,7 +128,10 @@ namespace FluentTesting.Sql
 
                 if (SqlOptions.Database != "master")
                 {
-                    var res = await container.ExecMsSqlScriptAsync($"CREATE DATABASE {SqlOptions.Database}");
+                    var res = await container.ExecAsync([
+                        "/opt/mssql-tools/bin/sqlcmd", "-b", "-r", "1", "-U",
+                        SqlOptions.DefaultUsername, "-P", SqlOptions.Password,
+                        "-Q", $"CREATE DATABASE {SqlOptions.Database}"]);
 
                     if (res.ExitCode != 0)
                     {

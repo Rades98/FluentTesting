@@ -66,3 +66,4 @@ Library providing testing mechanisms to run application in memory with needed th
 | 2.7.21|  | ContainerConfig DelayBeforeInit for toaster agents|
 | 2.7.22|  | optimisation for toaster agents|
 | 2.7.23|  | optimisation for toaster agents|
+| 2.7.24|  | optimisation for toaster agents|
