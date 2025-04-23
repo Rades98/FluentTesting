@@ -128,14 +128,20 @@ namespace FluentTesting.Sql
 
                 if (SqlOptions.Database != "master")
                 {
-                    var res = await container.ExecAsync([
+                    var resultCode = -1L;
+                    var maxRetries = SqlOptions.InitWaitStrategy.RetryCount;
+
+                    while (resultCode != 0 && maxRetries > 0)
+                    {
+                        var res = await container.ExecAsync([
                         "/opt/mssql-tools/bin/sqlcmd", "-b", "-r", "1", "-U",
                         SqlOptions.DefaultUsername, "-P", SqlOptions.Password,
                         "-Q", $"CREATE DATABASE {SqlOptions.Database}"]);
 
-                    if (res.ExitCode != 0)
-                    {
-                        return res;
+                        await Task.Delay(TimeSpan.FromSeconds(SqlOptions.InitWaitStrategy.IntervalSeconds is int interval ? interval : 1));
+
+                        resultCode = res.ExitCode;
+                        maxRetries--;
                     }
                 }
 
