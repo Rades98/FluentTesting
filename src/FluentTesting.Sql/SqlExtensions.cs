@@ -129,20 +129,20 @@ namespace FluentTesting.Sql
                 var cts = new CancellationTokenSource();
                 cts.CancelAfter(SqlOptions.WaitStrategy?.TimeoutSeconds is not null ? SqlOptions.WaitStrategy.TimeoutSeconds.Value * 1000 : 5000);
 
-                var res = await container.ExecAsync(
-                [
-                    "/bin/bash", "-c", $"until /opt/mssql-tools/bin/sqlcmd -b -r 1 -S localhost -U {SqlOptions.DefaultUsername} -P {SqlOptions.Password} -Q 'SELECT name FROM sys.databases'; do sleep 2; done;"
-                ], cts.Token);
+                if (SqlOptions.Database != "master")
+                {
+                    var res = await container.ExecMsSqlScriptAsync($"CREATE DATABASE {SqlOptions.Database}");
 
-                var updatedSeed = @$"
-                                    CREATE DATABASE {SqlOptions.Database}
-                                    GO
-                                    USE {SqlOptions.Database}; 
-                                    GO 
-                                    {seed}";
+                    if (res.ExitCode != 0)
+                    {
+                        return res;
+                    }
+                }
 
-                return await container.ExecMsSqlScriptAsync(SqlOptions.Database == "master" ? seed : updatedSeed);
-            }, SqlOptions.ContainerConfig?.DelayBeforeInit);
+                await Task.Delay(SqlOptions.ContainerConfig?.DelayBeforeInit ?? TimeSpan.FromSeconds(0));
+
+                return await container.ExecMsSqlScriptAsync($"USE {SqlOptions.Database}; {seed}");
+            });
 
 
             if (result.ExitCode != 0)
