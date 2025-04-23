@@ -131,7 +131,7 @@ namespace FluentTesting.Sql
 
                 var res = await container.ExecAsync(
                 [
-                    "/bin/bash", "-c", $"until /opt/mssql-tools/bin/sqlcmd -b -r 1 -S localhost -U {SqlOptions.DefaultUsername} -P {SqlOptions.Password} -Q 'SELECT 1'; do sleep 2; done;"
+                    "/bin/bash", "-c", $"until /opt/mssql-tools/bin/sqlcmd -b -r 1 -S localhost -U {SqlOptions.DefaultUsername} -P {SqlOptions.Password} -Q 'SELECT name FROM sys.databases'; do sleep 2; done;"
                 ], cts.Token);
 
                 var updatedSeed = @$"
@@ -142,7 +142,7 @@ namespace FluentTesting.Sql
                                     {seed}";
 
                 return await container.ExecMsSqlScriptAsync(SqlOptions.Database == "master" ? seed : updatedSeed);
-            });
+            }, SqlOptions.ContainerConfig?.DelayBeforeInit);
 
 
             if (result.ExitCode != 0)
