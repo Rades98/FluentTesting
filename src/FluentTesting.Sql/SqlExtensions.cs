@@ -126,9 +126,6 @@ namespace FluentTesting.Sql
             {
                 await container.ExecAsync(["/bin/bash", "-c", $"mkdir -p {SqlOptions.BackupPath}"]);
 
-                var cts = new CancellationTokenSource();
-                cts.CancelAfter(SqlOptions.WaitStrategy?.TimeoutSeconds is not null ? SqlOptions.WaitStrategy.TimeoutSeconds.Value * 1000 : 5000);
-
                 if (SqlOptions.Database != "master")
                 {
                     var res = await container.ExecMsSqlScriptAsync($"CREATE DATABASE {SqlOptions.Database}");
@@ -140,6 +137,11 @@ namespace FluentTesting.Sql
                 }
 
                 await Task.Delay(SqlOptions.ContainerConfig?.DelayBeforeInit ?? TimeSpan.FromSeconds(0));
+
+                if (string.IsNullOrEmpty(seed))
+                {
+                    return new("", "", 0);
+                }
 
                 return await container.ExecMsSqlScriptAsync($"USE {SqlOptions.Database}; {seed}");
             });
