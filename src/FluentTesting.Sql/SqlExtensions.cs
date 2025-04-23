@@ -130,18 +130,40 @@ namespace FluentTesting.Sql
                 {
                     var resultCode = -1L;
                     var maxRetries = SqlOptions.InitWaitStrategy.RetryCount;
+                    ExecResult dbInitResult = new();
 
                     while (resultCode != 0 && maxRetries > 0)
                     {
-                        var res = await container.ExecAsync([
+                        dbInitResult = await container.ExecAsync([
+                        "/opt/mssql-tools/bin/sqlcmd", "-b", "-r", "1", "-U",
+                        SqlOptions.DefaultUsername, "-P", SqlOptions.Password,
+                        "-Q", "SELECT 1"]);
+
+                        await Task.Delay(TimeSpan.FromSeconds(SqlOptions.InitWaitStrategy.IntervalSeconds is int interval ? interval : 1));
+
+                        resultCode = dbInitResult.ExitCode;
+                        maxRetries--;
+                    }
+
+                    resultCode = -1L;
+                    maxRetries = SqlOptions.InitWaitStrategy.RetryCount;
+
+                    while (resultCode != 0 && maxRetries > 0)
+                    {
+                        dbInitResult = await container.ExecAsync([
                         "/opt/mssql-tools/bin/sqlcmd", "-b", "-r", "1", "-U",
                         SqlOptions.DefaultUsername, "-P", SqlOptions.Password,
                         "-Q", $"CREATE DATABASE {SqlOptions.Database}"]);
 
                         await Task.Delay(TimeSpan.FromSeconds(SqlOptions.InitWaitStrategy.IntervalSeconds is int interval ? interval : 1));
 
-                        resultCode = res.ExitCode;
+                        resultCode = dbInitResult.ExitCode;
                         maxRetries--;
+                    }
+
+                    if (maxRetries < 0 && resultCode != 0)
+                    {
+                        return dbInitResult;
                     }
                 }
 
