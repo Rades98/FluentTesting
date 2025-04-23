@@ -46,5 +46,7 @@ namespace FluentTesting.Sql.Options
         /// Wait strategy
         /// </summary>
         public WaitStrategy? WaitStrategy { get; set; }
+
+        public WaitStrategy InitWaitStrategy { get; set; } = new() { IntervalSeconds = 2, RetryCount = 10 };
     }
 }
