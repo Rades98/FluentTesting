@@ -69,3 +69,5 @@ Library providing testing mechanisms to run application in memory with needed th
 | 2.7.24|  | optimisation for toaster agents|
 | 2.7.25|  | optimisation for toaster agents|
 | 2.7.26|  | optimisation for toaster agents|
+| 2.7.27|  | optimisation for toaster agents|
+| 2.7.28|  | SQL snapshot mechanism |

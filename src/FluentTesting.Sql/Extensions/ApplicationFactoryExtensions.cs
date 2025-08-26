@@ -382,5 +382,69 @@ namespace FluentTesting.Sql.Extensions
                 .Select(name => name.Replace(" ", string.Empty))
                 .ToArray();
         }
+
+        public static async Task<ExecResult> SnapshotMsSqlDatabasesAsync(this IApplicationFactory factory)
+        {
+            var msSqlContainer = factory.GetSqlContainer();
+            var dbNames = await msSqlContainer.GetDatabaseNamesAsync();
+
+            var execResults = new List<ExecResult>();
+
+            foreach (var database in dbNames)
+            {
+                var fileListResult = await msSqlContainer.ExecMsSqlScriptAsync(
+                $@"
+			        USE [{database}];
+			        SELECT name FROM sys.database_files WHERE type_desc = 'ROWS';
+		        ");
+
+                var lines = fileListResult.Stdout.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
+                var logicalName = lines.Length >= 3 ? lines[2].Trim() : throw new Exception("Logical name not found");
+
+                execResults.Add(await msSqlContainer.ExecMsSqlScriptAsync(
+                $@"
+                    USE master;
+			        CREATE DATABASE [{database}_Snapshot]
+			        ON (
+				        NAME = {logicalName},
+				        FILENAME = '{SqlOptions.BackupPath}/{database}_Snapshot.ss'
+			        )
+			        AS SNAPSHOT OF [{database}];
+		        "));
+            }
+
+            if (execResults.Any(x => x.ExitCode != 0))
+            {
+                return execResults.First(x => x.ExitCode != 0);
+            }
+
+            return execResults.FirstOrDefault();
+        }
+
+        public static async Task<ExecResult> RestoreMsSqlFromSnapshotAsync(this IApplicationFactory factory)
+        {
+            var msSqlContainer = factory.GetSqlContainer();
+            var dbNames = await msSqlContainer.GetDatabaseNamesAsync();
+
+            var execResults = new List<ExecResult>();
+
+            foreach (var database in dbNames)
+            {
+                execResults.Add(await msSqlContainer.ExecMsSqlScriptAsync(
+                    $@"
+                    USE master;
+                    ALTER DATABASE [{database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+                    RESTORE DATABASE [{database}] FROM DATABASE_SNAPSHOT = '{database}_Snapshot';
+                    ALTER DATABASE [{database}] SET MULTI_USER;
+                "));
+            }
+
+            if (execResults.Any(x => x.ExitCode != 0))
+            {
+                return execResults.First(x => x.ExitCode != 0);
+            }
+
+            return execResults.FirstOrDefault();
+        }
     }
 }
