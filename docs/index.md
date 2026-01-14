@@ -71,3 +71,4 @@ Library providing testing mechanisms to run application in memory with needed th
 | 2.7.26|  | optimisation for toaster agents|
 | 2.7.27|  | optimisation for toaster agents|
 | 2.7.28|  | SQL snapshot mechanism |
+| 2.7.29|  | Azurite custom version support |
