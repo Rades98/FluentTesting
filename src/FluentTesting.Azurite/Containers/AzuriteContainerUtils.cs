@@ -13,7 +13,8 @@ namespace FluentTesting.Azurite.Containers
         internal const int TablePort = 10002;
 
         internal static IContainer GetAzuriteContainer(INetwork network, AzuriteOptions azuriteOpts, bool useProxiedImages)
-            => new ContainerBuilder()
+        {
+            var containerBuilder = new ContainerBuilder()
                     .WithNetwork(network)
                     .WithCleanUp(true)
                     .WithNetworkAliases("azurite")
@@ -27,15 +28,28 @@ namespace FluentTesting.Azurite.Containers
                         .ForUnixContainer()
                         .UntilPortIsAvailable(BlobPort)
                         .UntilPortIsAvailable(QueuePort)
-                        .UntilPortIsAvailable(TablePort))
-                    .Build();
+                        .UntilPortIsAvailable(TablePort));
 
-        internal static IContainer GetAzureCLIContainer(INetwork network, bool useProxiedImages)
+            if (azuriteOpts.SkipApiVersionCheck)
+            {
+                containerBuilder.WithCommand(
+                    "azurite",
+                    "--blobHost", "0.0.0.0",
+                    "--queueHost", "0.0.0.0",
+                    "--tableHost", "0.0.0.0",
+                    "--skipApiVersionCheck"
+                );
+            }
+
+            return containerBuilder.Build();
+        }
+
+        internal static IContainer GetAzureCLIContainer(INetwork network, AzuriteOptions azuriteOpts, bool useProxiedImages)
             => new ContainerBuilder()
                 .WithNetwork(network)
                 .WithCleanUp(true)
                 .WithName($"AzureCli-{Guid.NewGuid()}")
-                .WithImage("azure-cli".GetProxiedImagePath(useProxiedImages, "mcr.microsoft.com"))
+                .WithImage($"azure-cli:{azuriteOpts.AzureCliVersion}".GetProxiedImagePath(useProxiedImages, "mcr.microsoft.com"))
                 .WithCommand("/bin/sh", "-c", "while true; do sleep 1000; done")
                 .Build();
 
