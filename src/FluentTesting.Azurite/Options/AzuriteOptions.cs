@@ -15,6 +15,10 @@
 
         public string Version { get; set; } = "latest";
 
+        public bool SkipApiVersionCheck { get; set; } = false;
+
+        public string AzureCliVersion { get; set; } = "latest";
+
         public string DefaultUserName { get; set; } = "devstoreaccount1";
 
         public string DefaultPassword { get; set; } = "devstoreaccount1";
