@@ -43,7 +43,7 @@ namespace FluentTesting.Common.Extensions
         /// <returns></returns>
         public static string GetProxiedImagePath(this string image, bool useProxiedImage, string? imageSource = defaultImageSource)
         {
-            return useProxiedImage ? $"{ImagesSetting.ImageProxyPath}/{imageSource}/{image}" : $"{(!imageSource!.Equals(defaultImageSource) || useProxiedImage ? imageSource + "/" : "")}/{image}";
+            return useProxiedImage ? $"{ImagesSetting.ImageProxyPath}/{imageSource}/{image}" : $"{(!imageSource!.Equals(defaultImageSource) || useProxiedImage ? imageSource + "/" : "")}{image}";
         }
     }
 }

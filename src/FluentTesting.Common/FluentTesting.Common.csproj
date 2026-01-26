@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>    
-    <PackageReference Include="FluentAssertions" Version="6.12.0" />    
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.3" />
-    <PackageReference Include="Moq" Version="4.20.70" />
-    <PackageReference Include="Testcontainers" Version="3.9.0" />
-    <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"  />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions"  />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions"  />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="Testcontainers" />
+    <PackageReference Include="Nito.AsyncEx" />
   </ItemGroup>
 
 </Project>

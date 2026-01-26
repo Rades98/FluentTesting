@@ -26,9 +26,9 @@ namespace FluentTesting.Azurite.Containers
                     .WithPortBinding(azuriteOpts.TablePort ?? TablePort, TablePort)
                     .WithWaitStrategy(Wait
                         .ForUnixContainer()
-                        .UntilPortIsAvailable(BlobPort)
-                        .UntilPortIsAvailable(QueuePort)
-                        .UntilPortIsAvailable(TablePort));
+                        .UntilInternalTcpPortIsAvailable(BlobPort)
+                        .UntilInternalTcpPortIsAvailable(QueuePort)
+                        .UntilInternalTcpPortIsAvailable(TablePort));
 
             if (azuriteOpts.SkipApiVersionCheck)
             {

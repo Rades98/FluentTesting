@@ -30,17 +30,12 @@ namespace FluentTesting.Sql.Options
         /// <summary>
         /// Default password
         /// </summary>
-        public string Password { get; set; } = "Strong(!)Password";
+        public string Password { get; set; } = "re!GXz-qta8XWV50u{7sZk!";
 
         /// <summary>
         /// Run with MSSQL_PID Express
         /// </summary>
         public bool RunInExpressMode { get; set; } = true;
-
-        /// <summary>
-        /// Container config
-        /// </summary>
-        public ContainerConfig? ContainerConfig { get; set; }
 
         /// <summary>
         /// Wait strategy

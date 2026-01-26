@@ -1,0 +1,87 @@
+<Solution>
+  <Folder Name="/.solution-items/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="NuGet.config" />
+  </Folder>
+  <Folder Name="/DevOps/">
+    <File Path="mkdocs.yml" />
+  </Folder>
+  <Folder Name="/DevOps/Documentation/">
+    <File Path="docs/common.md" />
+    <File Path="docs/index.md" />
+    <File Path="docs/mocking.md" />
+    <File Path="docs/samples.md" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/DevOps/Documentation/ASP/">
+    <File Path="docs/asp/asp.md" />
+    <File Path="docs/asp/aspExtensions.md" />
+  </Folder>
+  <Folder Name="/DevOps/Documentation/Blob/">
+    <File Path="docs/blob/azureExplorer.md" />
+    <File Path="docs/blob/blob.md" />
+    <File Path="docs/blob/blobExtensions.md" />
+  </Folder>
+  <Folder Name="/DevOps/Documentation/Dotnet/">
+    <File Path="docs/dotnet.md" />
+  </Folder>
+  <Folder Name="/DevOps/Documentation/Elastic/">
+    <File Path="docs/elastic/elastic.md" />
+    <File Path="docs/elastic/kibana.md" />
+  </Folder>
+  <Folder Name="/DevOps/Documentation/FAQ/">
+    <File Path="docs/faq/faq.md" />
+  </Folder>
+  <Folder Name="/DevOps/Documentation/Kafka/">
+    <File Path="docs/kafka/akhq.md" />
+    <File Path="docs/kafka/kafka.md" />
+  </Folder>
+  <Folder Name="/DevOps/Documentation/Mongo/">
+    <File Path="docs/mongo/mongo.md" />
+    <File Path="docs/mongo/mongoExpress.md" />
+  </Folder>
+  <Folder Name="/DevOps/Documentation/Rabbit/">
+    <File Path="docs/rabbit/rabbit.md" />
+    <File Path="docs/rabbit/rabbitManager.md" />
+    <File Path="docs/rabbit/rabbitSamples.md" />
+  </Folder>
+  <Folder Name="/DevOps/Documentation/Redis/">
+    <File Path="docs/redis/redis.md" />
+    <File Path="docs/redis/redisExtensions.md" />
+    <File Path="docs/redis/redisInsight.md" />
+  </Folder>
+  <Folder Name="/DevOps/Documentation/SQL/">
+    <File Path="docs/sql/adminer.md" />
+    <File Path="docs/sql/extensions.md" />
+    <File Path="docs/sql/sql.md" />
+  </Folder>
+  <Folder Name="/DevOps/Pipelines/">
+    <File Path=".github/workflows/cd.yml" />
+    <File Path=".github/workflows/ci.yml" />
+    <File Path=".github/workflows/mkdocs-deply.yml" />
+    <File Path=".github/workflows/pr.yml" />
+  </Folder>
+  <Folder Name="/DevOps/Pipelines/Labeler/">
+    <File Path=".github/labeler.yml" />
+  </Folder>
+  <Folder Name="/Samples/">
+    <Project Path="samples/Samples.AspApp/Samples.AspApp.csproj" />
+    <Project Path="samples/Samples.Worker.RabbitMq/Samples.Worker.RabbitMq.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FluentTesting.Common.Tests/FluentTesting.Common.Tests.csproj" />
+    <Project Path="tests/Samples.AspApp.Tests/Samples.AspApp.Tests.csproj" />
+    <Project Path="tests/Samples.Worker.RabbitMq.Tests/Samples.Worker.RabbitMq.Tests.csproj" />
+  </Folder>
+  <Project Path="src/FluentTesting.Asp/FluentTesting.Asp.csproj" />
+  <Project Path="src/FluentTesting.Azurite/FluentTesting.Azurite.csproj" />
+  <Project Path="src/FluentTesting.Common/FluentTesting.Common.csproj" />
+  <Project Path="src/FluentTesting.Elasticsearch/FluentTesting.Elasticsearch.csproj" />
+  <Project Path="src/FluentTesting.Kafka/FluentTesting.Kafka.csproj" />
+  <Project Path="src/FluentTesting.Mongo/FluentTesting.Mongo.csproj" />
+  <Project Path="src/FluentTesting.RabbitMq/FluentTesting.RabbitMq.csproj" />
+  <Project Path="src/FluentTesting.Redis/FluentTesting.Redis.csproj" />
+  <Project Path="src/FluentTesting.Sql/FluentTesting.Sql.csproj" />
+  <Project Path="src/FluentTesting/FluentTesting.csproj" />
+</Solution>

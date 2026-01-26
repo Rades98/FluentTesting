@@ -73,3 +73,4 @@ Library providing testing mechanisms to run application in memory with needed th
 | 2.7.28|  | SQL snapshot mechanism |
 | 2.7.29|  | Azurite custom version support |
 | 2.7.30|  | AzureCLI custom version support  + SkipApiVersionCheck |
+| 3.0.0 |  | Major release - switched to .NET 10, updated dependencies (Rabbit not working tho O:) will be fixed! )|

@@ -1,6 +1,4 @@
-﻿using Docker.DotNet.Models;
-using DotNet.Testcontainers.Builders;
-using FluentTesting.Common.Options;
+﻿using DotNet.Testcontainers.Builders;
 
 namespace FluentTesting.Common.Extensions
 {
@@ -11,7 +9,7 @@ namespace FluentTesting.Common.Extensions
             builder
                 .WithWaitStrategy(Wait
                     .ForUnixContainer()
-                    .UntilPortIsAvailable(port, w =>
+                    .UntilInternalTcpPortIsAvailable(port, w =>
                     {
                         if (waitStrategy is null)
                         {
@@ -33,21 +31,6 @@ namespace FluentTesting.Common.Extensions
                             w.WithTimeout(TimeSpan.FromSeconds(timeout));
                         }
                     }));
-
-            return builder;
-        }
-
-        public static ContainerBuilder SetContainer(this ContainerBuilder builder, ContainerConfig? containerConfig)
-        {
-            if (containerConfig is not null && containerConfig is { } config)
-            {
-                builder.WithCreateParameterModifier(p =>
-                {
-                    p.HostConfig = p.HostConfig ?? new HostConfig();
-                    p.HostConfig.Memory = config.MemoryMb * 1024 * 1024;
-                    p.HostConfig.NanoCPUs = (long)(config.CPUs * 1_000_000_000);
-                });
-            }
 
             return builder;
         }

@@ -20,7 +20,7 @@ namespace FluentTesting.RabbitMq.Containers
             var rabbitMqContainer = new ContainerBuilder()
                     .WithNetwork(network)
                     .WithCleanUp(true)
-                    .WithImage("rabbitmq:3.11-management".GetProxiedImagePath(useProxiedImages))
+                    .WithImage("rabbitmq:4.0-management".GetProxiedImagePath(useProxiedImages))
                     .WithName($"TestContainers-RabbitMq-{Guid.NewGuid()}")
                     .WithEnvironment("RABBITMQ_DEFAULT_USER", RabbitMqOptions.UserName)
                     .WithEnvironment("RABBITMQ_DEFAULT_PASS", RabbitMqOptions.Password)

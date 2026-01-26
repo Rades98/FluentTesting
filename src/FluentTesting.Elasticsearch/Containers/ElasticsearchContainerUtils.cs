@@ -21,7 +21,7 @@ namespace FluentTesting.Elasticsearch.Containers
                 .WithEnvironment("ingest.geoip.downloader.enabled", "false")
                 .WithPortBinding(System.Diagnostics.Debugger.IsAttached ? $"{elasticOpts.Port ?? ElasticPort}" : "", $"{ElasticPort}")
                 .WithCleanUp(true)
-                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(ElasticPort))
+                .WithWaitStrategy(Wait.ForUnixContainer().UntilInternalTcpPortIsAvailable(ElasticPort))
                 .Build();
 
         internal static IContainer GetKibanaContainer(INetwork network, bool useProxiedImages)
@@ -32,7 +32,7 @@ namespace FluentTesting.Elasticsearch.Containers
                 .WithPortBinding(9889, 5601)
                 .WithNetworkAliases("kibana")
                 .WithNetwork(network)
-                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5601))
+                .WithWaitStrategy(Wait.ForUnixContainer().UntilInternalTcpPortIsAvailable(5601))
                 .Build();
     }
 }

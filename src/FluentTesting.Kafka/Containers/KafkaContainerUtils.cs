@@ -1,5 +1,4 @@
 ﻿using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using FluentTesting.Common.Extensions;
@@ -60,7 +59,7 @@ namespace FluentTesting.Kafka.Containers
                     startupScript.Append("echo '' > /etc/confluent/docker/ensure");
                     startupScript.Append(lf);
                     startupScript.Append("/etc/confluent/docker/run");
-                    return container.CopyAsync(Encoding.Default.GetBytes(startupScript.ToString()), StartupScriptFilePath, Unix.FileMode755, ct);
+                    return container.CopyAsync(Encoding.Default.GetBytes(startupScript.ToString()), StartupScriptFilePath);
                 })
                 .Build();
 

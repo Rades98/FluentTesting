@@ -1,4 +1,4 @@
-using FluentTesting.Asp;
+﻿using FluentTesting.Asp;
 using FluentTesting.Asp.Authentication;
 using FluentTesting.Asp.Extensions;
 using FluentTesting.Azurite;
@@ -42,11 +42,7 @@ public class TestFixture : ITestFixture
                     TimeoutSeconds = 120,
                 };
 
-                opts.ContainerConfig = new()
-                {
-                    CPUs = 1,
-                    MemoryMb = 1024
-                };
+                opts.Port = 11434;
             })
             .UseAzurite(
             (configuration, settings) =>
@@ -61,6 +57,7 @@ public class TestFixture : ITestFixture
 
                 opts.Version = "3.35.0";
                 opts.AzureCliVersion = "2.81.0";
+                opts.SkipApiVersionCheck = true;
 
                 opts.BlobSeed =
             [
