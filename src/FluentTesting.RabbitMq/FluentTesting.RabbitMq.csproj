@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
+	  <PackageReference Include="Newtonsoft.Json" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\FluentTesting.Common\FluentTesting.Common.csproj" />
 	</ItemGroup>
 

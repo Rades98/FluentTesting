@@ -1,5 +1,4 @@
 ﻿using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using FluentTesting.Common.Extensions;
@@ -89,10 +88,10 @@ namespace FluentTesting.Sql
         {
             var scriptFilePath = string.Join("/", string.Empty, "tmp", Guid.NewGuid().ToString("D"), Path.GetRandomFileName());
 
-            await container.CopyAsync(Encoding.Default.GetBytes(scriptContent), scriptFilePath, Unix.FileMode644, ct)
+            await container.CopyAsync(Encoding.Default.GetBytes(scriptContent), scriptFilePath)
                 .ConfigureAwait(false);
 
-            return await container.ExecAsync(["/opt/mssql-tools/bin/sqlcmd", "-b", "-r", "1", "-U", SqlOptions.DefaultUsername, "-P", SqlOptions.Password, "-i", scriptFilePath], ct)
+            return await container.ExecAsync(["/opt/mssql-tools18/bin/sqlcmd", "-C", "-b", "-r", "1", "-U", SqlOptions.DefaultUsername, "-P", SqlOptions.Password, "-i", scriptFilePath], ct)
                 .ConfigureAwait(false);
         }
 
@@ -103,21 +102,23 @@ namespace FluentTesting.Sql
 
             IContainer? clientContainer = null;
 
-            var sqlContainerBuilder = new ContainerBuilder()
+            var sqlContainerBuilder = new ContainerBuilder("mssql/server:2019-CU32-ubuntu-20.04".GetProxiedImagePath(useProxiedImages, "mcr.microsoft.com"))
                 .WithNetwork(network)
                 .WithCleanUp(true)
                 .WithNetworkAliases("mssql")
-                .WithImage("mssql/server:2019-CU18-ubuntu-20.04".GetProxiedImagePath(useProxiedImages, "mcr.microsoft.com"))
                 .WithEnvironment("ACCEPT_EULA", "Y")
-                .WithEnvironment("SA_PASSWORD", SqlOptions.Password)
+                .WithEnvironment("MSSQL_SA_PASSWORD", SqlOptions.Password)
                 .WithPortBinding(SqlOptions.Port ?? MsSqlPort, MsSqlPort)
                 .WithName($"TestContainers-MsSql-{Guid.NewGuid()}")
-                .SetWaitStrategy(MsSqlPort, SqlOptions.WaitStrategy)
-                .SetContainer(SqlOptions.ContainerConfig);
+                .SetWaitStrategy(MsSqlPort, SqlOptions.WaitStrategy);
 
             if (SqlOptions.RunInExpressMode)
             {
                 sqlContainerBuilder.WithEnvironment("MSSQL_PID", "Express");
+            }
+            else
+            {
+                sqlContainerBuilder.WithEnvironment("MSSQL_PID", "Developer");
             }
 
             var sqlContainer = sqlContainerBuilder.Build();
@@ -135,13 +136,13 @@ namespace FluentTesting.Sql
                     while (resultCode != 0 && maxRetries > 0)
                     {
                         dbInitResult = await container.ExecAsync([
-                        "/opt/mssql-tools/bin/sqlcmd", "-b", "-r", "1", "-U",
+                        "/opt/mssql-tools18/bin/sqlcmd", "-C", "-b", "-r", "1", "-U",
                         SqlOptions.DefaultUsername, "-P", SqlOptions.Password,
                         "-Q", "SELECT 1"]);
 
                         await Task.Delay(TimeSpan.FromSeconds(SqlOptions.InitWaitStrategy.IntervalSeconds is int interval ? interval : 1));
 
-                        resultCode = dbInitResult.ExitCode;
+                        resultCode = dbInitResult.ExitCode ?? -1;
                         maxRetries--;
                     }
 
@@ -151,13 +152,13 @@ namespace FluentTesting.Sql
                     while (resultCode != 0 && maxRetries > 0)
                     {
                         dbInitResult = await container.ExecAsync([
-                        "/opt/mssql-tools/bin/sqlcmd", "-b", "-r", "1", "-U",
+                        "/opt/mssql-tools18/bin/sqlcmd", "-C", "-b", "-r", "1", "-U",
                         SqlOptions.DefaultUsername, "-P", SqlOptions.Password,
                         "-Q", $"CREATE DATABASE {SqlOptions.Database}"]);
 
                         await Task.Delay(TimeSpan.FromSeconds(SqlOptions.InitWaitStrategy.IntervalSeconds is int interval ? interval : 1));
 
-                        resultCode = dbInitResult.ExitCode;
+                        resultCode = dbInitResult.ExitCode ?? -1;
                         maxRetries--;
                     }
 
@@ -166,8 +167,6 @@ namespace FluentTesting.Sql
                         return dbInitResult;
                     }
                 }
-
-                await Task.Delay(SqlOptions.ContainerConfig?.DelayBeforeInit ?? TimeSpan.FromSeconds(0));
 
                 if (string.IsNullOrEmpty(seed))
                 {
@@ -215,6 +214,7 @@ namespace FluentTesting.Sql
                 { "Database", SqlOptions.Database },
                 { "User Id", SqlOptions.DefaultUsername },
                 { "Password", SqlOptions.Password },
+                { "Encrypt", bool.TrueString },
                 { "TrustServerCertificate", bool.TrueString }
             };
             return string.Join(";", properties.Select(property => string.Join("=", property.Key, property.Value)));

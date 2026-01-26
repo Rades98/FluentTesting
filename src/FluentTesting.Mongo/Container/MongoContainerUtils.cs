@@ -1,5 +1,4 @@
 ﻿using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using FluentTesting.Common.Extensions;
@@ -24,7 +23,7 @@ namespace FluentTesting.Mongo.Container
                 .WithName($"TestContainers-MongoDb-{Guid.NewGuid()}")
                 .WithWaitStrategy(Wait
                     .ForUnixContainer()
-                    .UntilPortIsAvailable(MongoDbPort))
+                    .UntilInternalTcpPortIsAvailable(MongoDbPort))
                 .Build();
 
         internal static IContainer GetMongoExpressContainer(INetwork network, bool useProxiedImages)
@@ -45,7 +44,7 @@ namespace FluentTesting.Mongo.Container
 
             var scriptFilePath = string.Join("/", string.Empty, "tmp", Guid.NewGuid().ToString("D"), Path.GetRandomFileName());
 
-            await container.CopyAsync(Encoding.Default.GetBytes(scriptContent), scriptFilePath, Unix.FileMode644, ct)
+            await container.CopyAsync(Encoding.Default.GetBytes(scriptContent), scriptFilePath)
                 .ConfigureAwait(false);
 
             var whichMongoDbShell = await container.ExecAsync(["which", "mongosh"], ct)
