@@ -2,13 +2,13 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"  />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions"  />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions"  />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
     <PackageReference Include="Microsoft.Extensions.Configuration" />
     <PackageReference Include="Moq" />
-    <PackageReference Include="Testcontainers" />
     <PackageReference Include="Nito.AsyncEx" />
+    <PackageReference Include="Testcontainers.XunitV3" />
   </ItemGroup>
 
 </Project>
