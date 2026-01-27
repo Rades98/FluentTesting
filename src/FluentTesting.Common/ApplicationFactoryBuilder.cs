@@ -21,7 +21,7 @@ namespace FluentTesting.Common
     public sealed class ApplicationFactoryBuilder<Program> : WebApplicationFactory<Program>, IApplicationFactoryBuilder
         where Program : class
     {
-        public ConcurrentDictionary<string, IContainer> Containers { get; } = new();
+        public ConcurrentDictionary<string, ContainerActionPair> Containers { get; } = new();
         public ConcurrentDictionary<string, INetwork> Networks { get; } = new();
         public ConcurrentBag<Action<ConfigurationBuilder>> Builders { get; } = [];
 
@@ -79,8 +79,8 @@ namespace FluentTesting.Common
         {
             foreach (var container in Containers)
             {
-                await container.Value.StopAsync().ConfigureAwait(false);
-                await container.Value.DisposeAsync().ConfigureAwait(false);
+                await container.Value.Container.StopAsync().ConfigureAwait(false);
+                await container.Value.Container.DisposeAsync().ConfigureAwait(false);
             }
 
             foreach (var network in Networks)

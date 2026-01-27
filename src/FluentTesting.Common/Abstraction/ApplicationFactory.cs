@@ -2,6 +2,7 @@
 using FluentTesting.Common.Interfaces;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Concurrent;
+using Xunit;
 
 namespace FluentTesting.Common.Abstraction
 {
@@ -9,7 +10,7 @@ namespace FluentTesting.Common.Abstraction
     /// Application factory base object
     /// </summary>
     /// <param name="host"></param>
-    public class ApplicationFactory(IHost host, ConcurrentDictionary<string, IContainer> containers) : IApplicationFactory, IAsyncDisposable
+    public class ApplicationFactory(IHost host, ConcurrentDictionary<string, ContainerActionPair> containers) : IApplicationFactory, IAsyncLifetime
     {
         private Action DisposeActions = () => { };
 
@@ -19,7 +20,7 @@ namespace FluentTesting.Common.Abstraction
         /// <inheritdoc/>
         public IServiceProvider Services => Host.Services;
 
-        public ConcurrentDictionary<string, IContainer> Containers => containers;
+        public ConcurrentDictionary<string, ContainerActionPair> Containers => containers;
 
         /// <inheritdoc/>
         public void AppendDisposeAction(Action disposeAction)
@@ -41,6 +42,14 @@ namespace FluentTesting.Common.Abstraction
             DisposeActions.Invoke();
 
             return ValueTask.CompletedTask;
+        }
+
+        public async ValueTask InitializeAsync()
+        {
+            foreach (var va in containers.Values)
+            {
+                await va.Ensure.Invoke(va.Container);
+            }
         }
     }
 }

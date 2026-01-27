@@ -1,5 +1,6 @@
 ﻿using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
+using FluentTesting.Common.Abstraction;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
@@ -14,7 +15,7 @@ namespace FluentTesting.Common.Interfaces
         /// <summary>
         /// Containers
         /// </summary>
-        public ConcurrentDictionary<string, IContainer> Containers { get; }
+        public ConcurrentDictionary<string, ContainerActionPair> Containers { get; }
 
         /// <summary>
         /// Networks

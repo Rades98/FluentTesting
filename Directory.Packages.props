@@ -25,7 +25,6 @@
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(MicrosoftExtensionsVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="$(MicrosoftExtensionsVersion)" />
     <PackageVersion Include="Moq" Version="4.20.70" />
-    <PackageVersion Include="Nito.AsyncEx" Version="5.1.2" />
     <PackageVersion Include="Confluent.Kafka" Version="2.13.0" />
     <PackageVersion Include="Confluent.SchemaRegistry" Version="2.13.0" />
     <PackageVersion Include="Confluent.SchemaRegistry.Serdes.Avro" Version="2.13.0" />

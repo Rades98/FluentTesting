@@ -12,8 +12,7 @@ namespace FluentTesting.Mongo.Container
         internal const int MongoDbPort = 27017;
 
         internal static IContainer GetMongoContainer(INetwork network, MongoDbOptions mongoDbOptions, bool useProxiedImages)
-            => new ContainerBuilder()
-                .WithImage("mongo:6.0".GetProxiedImagePath(useProxiedImages))
+            => new ContainerBuilder("mongo:6.0".GetProxiedImagePath(useProxiedImages))
                 .WithCleanUp(true)
                 .WithNetwork(network)
                 .WithNetworkAliases("mongo")
@@ -27,8 +26,7 @@ namespace FluentTesting.Mongo.Container
                 .Build();
 
         internal static IContainer GetMongoExpressContainer(INetwork network, bool useProxiedImages)
-            => new ContainerBuilder()
-                .WithImage("mongo-express:1.0.2-18".GetProxiedImagePath(useProxiedImages))
+            => new ContainerBuilder("mongo-express:1.0.2-18".GetProxiedImagePath(useProxiedImages))
                 .WithCleanUp(true)
                 .WithNetwork(network)
                 .WithName($"TestContainers-MongoExpress-{Guid.NewGuid()}")
