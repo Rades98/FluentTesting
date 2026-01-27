@@ -1,5 +1,6 @@
 ﻿using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
+using FluentTesting.Common.Abstraction;
 using FluentTesting.Common.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -17,7 +18,7 @@ namespace FluentTesting.Asp
 	public class AspApplicationFactoryBuilder<Program> : WebApplicationFactory<Program>, IApplicationFactoryBuilder
 		where Program : class
 	{
-		public ConcurrentDictionary<string, IContainer> Containers { get; } = new();
+		public ConcurrentDictionary<string, ContainerActionPair> Containers { get; } = new();
 		public ConcurrentDictionary<string, INetwork> Networks { get; } = new();
 		public ConcurrentBag<Action<ConfigurationBuilder>> Builders { get; } = [];
 
@@ -85,8 +86,8 @@ namespace FluentTesting.Asp
 		{
 			foreach (var container in Containers)
 			{
-				await container.Value.StopAsync().ConfigureAwait(false);
-				await container.Value.DisposeAsync().ConfigureAwait(false);
+				await container.Value.Container.StopAsync().ConfigureAwait(false);
+				await container.Value.Container.DisposeAsync().ConfigureAwait(false);
 			}
 
 			foreach (var network in Networks)

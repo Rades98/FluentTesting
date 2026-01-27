@@ -12,7 +12,7 @@ namespace Samples.AspApp.Tests.Shared;
 /// <summary>
 /// Example of test fixture with custom options
 /// </summary>
-public class TestFixture : ITestFixture
+public class TestFixture : ITestFixture, IAsyncLifetime
 {
     public IApplicationFactory ApplicationFactory { get; }
 
@@ -124,4 +124,8 @@ public class TestFixture : ITestFixture
 
 		INSERT INTO dbo.SomeTableBase(SomeBaseInt, SomeBaseFloat, SomeGuid, SomeDateOnly, SomeTimeOnly, SomeDateTime) VALUES (3, 0.8, 'F0B85BE2-3F18-4E58-9976-0C2D562C7458', '2024-01-09', '10:29:00.0000000', '2024-11-03 14:30:00.0000000');
 	";
+
+    public ValueTask InitializeAsync() => ApplicationFactory.InitializeAsync();
+
+    public ValueTask DisposeAsync() => ApplicationFactory.DisposeAsync();
 }

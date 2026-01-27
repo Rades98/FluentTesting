@@ -1,5 +1,6 @@
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
+using FluentTesting.Common.Abstraction;
 using FluentTesting.Common.Extensions;
 using FluentTesting.Common.Interfaces;
 using FluentTesting.Common.Providers;
@@ -41,8 +42,8 @@ public static class MongoExtensions
             configurationBuilder => configuration.Invoke(
                 configurationBuilder,
                 new MongoContainerSettings(
-                        [MongoContainer.Hostname],
-                        MongoContainer.GetMappedPublicPort(MongoContainerUtils.MongoDbPort),
+                        [MongoContainer.Container.Hostname],
+                        MongoContainer.Container.GetMappedPublicPort(MongoContainerUtils.MongoDbPort),
                         mongoDbOptions.Username,
                         mongoDbOptions.Password,
                         mongoDbOptions.DatabaseName
@@ -56,7 +57,7 @@ public static class MongoExtensions
     /// <summary>
     /// Creates and runs MongoDb container with specified seed.
     /// </summary>
-    static (IContainer MongoContainer, IContainer? MongoClientContainer, INetwork MongoNetwork) CreateMongo(string seed, bool useProxiedImages)
+    static (ContainerActionPair MongoContainer, ContainerActionPair? MongoClientContainer, INetwork MongoNetwork) CreateMongo(string seed, bool useProxiedImages)
     {
         var network = NetworkProvider.GetBasicNetwork();
 
@@ -64,20 +65,27 @@ public static class MongoExtensions
 
         var container = MongoContainerUtils.GetMongoContainer(network, mongoDbOptions, useProxiedImages);
 
-        var result = container.EnsureContainer(cnt => MongoContainerUtils.ExecMongoScriptAsync(cnt, seed));
-
-        if (!string.IsNullOrEmpty(seed) && result.ExitCode != 0)
+        ContainerActionPair mongoContainerPair = new(container, async mongoContainer =>
         {
-            throw new Exception("Mongo seed failed: " + result.Stderr);
-        }
+            var result = await mongoContainer.EnsureContainerAsync(cnt => MongoContainerUtils.ExecMongoScriptAsync(cnt, seed));
+
+            if (!string.IsNullOrEmpty(seed) && result.ExitCode != 0)
+            {
+                throw new Exception("Mongo seed failed: " + result.Stderr);
+            }
+
+            return result;
+        });
+
+        ContainerActionPair? clientContainerPair = null;
 
         if (System.Diagnostics.Debugger.IsAttached && mongoDbOptions.RunAdminTool)
         {
             clientContainer = MongoContainerUtils.GetMongoExpressContainer(network, useProxiedImages);
 
-            clientContainer.EnsureContainer();
+            clientContainerPair = new(clientContainer, cnt => cnt.EnsureContainerAsync());
         }
 
-        return (container, clientContainer, network);
+        return (mongoContainerPair, clientContainerPair, network);
     }
 }

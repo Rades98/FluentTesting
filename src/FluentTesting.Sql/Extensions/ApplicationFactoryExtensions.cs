@@ -357,7 +357,7 @@ namespace FluentTesting.Sql.Extensions
         }
 
         private static IContainer GetSqlContainer(this IApplicationFactory factory)
-          => factory.Containers.First(x => x.Key == SqlOptions.ContainerName).Value;
+          => factory.Containers.First(x => x.Key == SqlOptions.ContainerName).Value.Container;
 
         private static async Task<List<(string ColumnName, string DataType)>> GetMetadataAsync(this IContainer container, string tableName)
         {

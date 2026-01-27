@@ -1,6 +1,7 @@
 ﻿using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
+using FluentTesting.Common.Abstraction;
 using FluentTesting.Common.Extensions;
 using FluentTesting.Common.Interfaces;
 using FluentTesting.Common.Providers;
@@ -40,7 +41,7 @@ public static class RedisExtensions
         builder.Builders.Add(
             configurationBuilder => configuration.Invoke(
                 configurationBuilder,
-                new RedisContainerSettings(RedisContainer.Hostname, RedisContainer.GetMappedPublicPort(RedisPort))
+                new RedisContainerSettings(RedisContainer.Container.Hostname, redisOptions.Port ?? RedisPort)
             )
         );
 
@@ -50,12 +51,11 @@ public static class RedisExtensions
     /// <summary>
     /// Creates and runs Redis container.
     /// </summary>
-    static (IContainer RedisContainer, IContainer? RedisClientContainer, INetwork RedisNetwork) CreateRedis(bool useProxiedImages)
+    static (ContainerActionPair RedisContainer, ContainerActionPair? RedisClientContainer, INetwork RedisNetwork) CreateRedis(bool useProxiedImages)
     {
         var network = NetworkProvider.GetBasicNetwork();
 
-        var container = new ContainerBuilder()
-            .WithImage("redis:7.0".GetProxiedImagePath(useProxiedImages))
+        var container = new ContainerBuilder("redis:7.0".GetProxiedImagePath(useProxiedImages))
             .WithCleanUp(true)
             .WithNetwork(network)
             .WithPortBinding(redisOptions.Port ?? RedisPort, RedisPort)
@@ -66,32 +66,38 @@ public static class RedisExtensions
                 .UntilInternalTcpPortIsAvailable(RedisPort))
             .Build();
 
-        var result = container.EnsureContainer(async container =>
+        ContainerActionPair redisContainerPair = new(container, async cnt =>
         {
-            var results = new List<ExecResult>()
+            var result = await container.EnsureContainerAsync(async container =>
+            {
+                var results = new List<ExecResult>()
             {
                 new("", "", 0)
             };
 
-            foreach (var entry in redisOptions.Seed)
+                foreach (var entry in redisOptions.Seed)
+                {
+                    results.Add(await container.ExecAsync(["/bin/bash", "-c", $"redis-cli SET {entry.Key} '{entry.Value}'"]));
+                }
+
+                return results.Any(x => x.ExitCode != 0) ? results.First(x => x.ExitCode != 0) : results.First();
+            });
+
+            if (result.ExitCode != 0)
             {
-                results.Add(await container.ExecAsync(["/bin/bash", "-c", $"redis-cli SET {entry.Key} '{entry.Value}'"]));
+                throw new Exception("Redis initialisation failed: " + result.Stderr);
             }
 
-            return results.Any(x => x.ExitCode != 0) ? results.First(x => x.ExitCode != 0) : results.First();
-        });
-
-        if (result.ExitCode != 0)
-        {
-            throw new Exception("Redis initialisation failed: " + result.Stderr);
-        }
+            return result;
+        });     
 
         IContainer? clientContainer = null;
 
+        ContainerActionPair? clientContainerPair = null;
+
         if (System.Diagnostics.Debugger.IsAttached && redisOptions.RunAdminTool)
         {
-            clientContainer = new ContainerBuilder()
-            .WithImage("redis/redisinsight:2.56.0".GetProxiedImagePath(useProxiedImages))
+            clientContainer = new ContainerBuilder("redis/redisinsight:2.56.0".GetProxiedImagePath(useProxiedImages))
             .WithCleanUp(true)
             .WithPortBinding(9071, 5540)
             .WithNetwork(network)
@@ -101,9 +107,9 @@ public static class RedisExtensions
             .WithVolumeMount("redisInsight", "/data")
             .Build();
 
-            clientContainer.EnsureContainer();
+            clientContainerPair = new(clientContainer, cnt => cnt.EnsureContainerAsync());
         }
 
-        return (container, clientContainer, network);
+        return (redisContainerPair, clientContainerPair, network);
     }
 }

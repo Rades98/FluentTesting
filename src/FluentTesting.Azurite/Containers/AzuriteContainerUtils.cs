@@ -14,12 +14,11 @@ namespace FluentTesting.Azurite.Containers
 
         internal static IContainer GetAzuriteContainer(INetwork network, AzuriteOptions azuriteOpts, bool useProxiedImages)
         {
-            var containerBuilder = new ContainerBuilder()
+            var containerBuilder = new ContainerBuilder($"azure-storage/azurite:{azuriteOpts.Version}".GetProxiedImagePath(useProxiedImages, "mcr.microsoft.com"))
                     .WithNetwork(network)
                     .WithCleanUp(true)
                     .WithNetworkAliases("azurite")
                     .WithName($"TestContainers-Azurite-{Guid.NewGuid()}")
-                    .WithImage($"azure-storage/azurite:{azuriteOpts.Version}".GetProxiedImagePath(useProxiedImages, "mcr.microsoft.com"))
                     .WithEnvironment("AZURITE_ACCOUNTS", "devstoreaccount1:devstoreaccount1")
                     .WithPortBinding(azuriteOpts.BlobPort ?? BlobPort, BlobPort)
                     .WithPortBinding(azuriteOpts.QueuePort ?? QueuePort, QueuePort)
@@ -45,20 +44,18 @@ namespace FluentTesting.Azurite.Containers
         }
 
         internal static IContainer GetAzureCLIContainer(INetwork network, AzuriteOptions azuriteOpts, bool useProxiedImages)
-            => new ContainerBuilder()
+            => new ContainerBuilder($"azure-cli:{azuriteOpts.AzureCliVersion}".GetProxiedImagePath(useProxiedImages, "mcr.microsoft.com"))
                 .WithNetwork(network)
                 .WithCleanUp(true)
                 .WithName($"AzureCli-{Guid.NewGuid()}")
-                .WithImage($"azure-cli:{azuriteOpts.AzureCliVersion}".GetProxiedImagePath(useProxiedImages, "mcr.microsoft.com"))
                 .WithCommand("/bin/sh", "-c", "while true; do sleep 1000; done")
                 .Build();
 
         internal static IContainer GetAzureExplorerContainer(INetwork network, IContainer azuriteContainer, AzuriteOptions azuriteOpts, bool useProxiedImages)
-            => new ContainerBuilder()
+            => new ContainerBuilder("sebagomez/azurestorageexplorer".GetProxiedImagePath(useProxiedImages))
                     .WithNetwork(network)
                     .DependsOn(azuriteContainer)
                     .WithName($"TestContainers-AzureStorageExplorer-{Guid.NewGuid()}")
-                    .WithImage("sebagomez/azurestorageexplorer".GetProxiedImagePath(useProxiedImages))
                     .WithEnvironment("AZURE_STORAGE_CONNECTIONSTRING", GetConnectionString(azuriteContainer, azuriteOpts, "azurite"))
                     .WithPortBinding(azuriteOpts.GuiPort, 8080)
                     .WithCleanUp(true)
@@ -66,9 +63,9 @@ namespace FluentTesting.Azurite.Containers
 
         internal static string GetConnectionString(this IContainer container, AzuriteOptions azuriteOptions, string? networkAlias = null, bool isInternal = false)
         {
-            var blob = $"http://{networkAlias ?? container.Hostname}:{(isInternal ? BlobPort : container.GetMappedPublicPort(BlobPort))}/{azuriteOptions.DefaultUserName}";
-            var queue = $"http://{networkAlias ?? container.Hostname}:{(isInternal ? QueuePort : container.GetMappedPublicPort(QueuePort))}/{azuriteOptions.DefaultUserName}";
-            var table = $"http://{networkAlias ?? container.Hostname}:{(isInternal ? TablePort : container.GetMappedPublicPort(TablePort))}/{azuriteOptions.DefaultUserName}";
+            var blob = $"http://{networkAlias ?? container.Hostname}:{(isInternal ? BlobPort : azuriteOptions.BlobPort)}/{azuriteOptions.DefaultUserName}";
+            var queue = $"http://{networkAlias ?? container.Hostname}:{(isInternal ? QueuePort : azuriteOptions.QueuePort)}/{azuriteOptions.DefaultUserName}";
+            var table = $"http://{networkAlias ?? container.Hostname}:{(isInternal ? TablePort : azuriteOptions.TablePort)}/{azuriteOptions.DefaultUserName}";
 
             var properties = new Dictionary<string, string>
             {

@@ -1,19 +1,21 @@
 ﻿using DotNet.Testcontainers.Containers;
+using FluentTesting.Common.Abstraction;
 using System.Collections.Concurrent;
+using Xunit;
 
 namespace FluentTesting.Common.Interfaces
 {
     /// <summary>
     /// Application factory interface
     /// </summary>
-    public interface IApplicationFactory
+    public interface IApplicationFactory : IAsyncLifetime
     {
         /// <summary>
         /// Services
         /// </summary>
         IServiceProvider Services { get; }
 
-        public ConcurrentDictionary<string, IContainer> Containers { get; }
+        public ConcurrentDictionary<string, ContainerActionPair> Containers { get; }
 
         /// <summary>
         /// Append dispose action - used to add disposable objects to collection in factory

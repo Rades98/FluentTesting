@@ -1,5 +1,6 @@
 ﻿using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
+using FluentTesting.Common.Abstraction;
 using FluentTesting.Common.Interfaces;
 using FluentTesting.Common.Providers;
 using FluentTesting.RabbitMq.Containers;
@@ -34,7 +35,7 @@ namespace FluentTesting.RabbitMq
 
 
             rabbitSettings = new RabbitMqContainerSettings(RabbitMqOptions.UserName, RabbitMqOptions.Password,
-                        rabbitOpts.DefaultQueueName, "localhost", RabbitMqContainer.GetMappedPublicPort(RabbitMqContainerUtils.RabbitMqPort),
+                        rabbitOpts.DefaultQueueName, "localhost", RabbitMqContainer.Container.GetMappedPublicPort(RabbitMqContainerUtils.RabbitMqPort),
                         [.. rabbitOpts.ConsumerBindings], [.. rabbitOpts.PublisherBindings], $"{rabbitOpts.DefaultQueueName}_dlx");
 
             builder.Builders.Add(confBuilder => configuration.Invoke(confBuilder, rabbitSettings));
@@ -42,7 +43,7 @@ namespace FluentTesting.RabbitMq
             return builder;
         }
 
-        private static (IContainer RabbitMqContainer, INetwork RabbitNetwork) CreateRabbit(IEnumerable<Exchange> consumerBindings,
+        private static (ContainerActionPair RabbitMqContainer, INetwork RabbitNetwork) CreateRabbit(IEnumerable<Exchange> consumerBindings,
             IEnumerable<Exchange> publisherBindings, bool useProxiedImages)
         {
             var network = NetworkProvider.GetBasicNetwork();

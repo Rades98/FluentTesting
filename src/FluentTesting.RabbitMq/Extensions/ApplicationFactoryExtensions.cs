@@ -70,7 +70,7 @@ namespace FluentTesting.RabbitMq.Extensions
             {
                 await Task.Delay(1000, cancellationToken);
 
-                rabbitRes = (await rabbitContainer.Value.ExecAsync(["/bin/bash", "-c", $"rabbitmqadmin -u {RabbitMqOptions.UserName} -p {RabbitMqOptions.Password} get queue={RabbitMqOptions.AppConsumerQueueName} count=1"], cancellationToken));
+                rabbitRes = (await rabbitContainer.Value.Container.ExecAsync(["/bin/bash", "-c", $"rabbitmqadmin -u {RabbitMqOptions.UserName} -p {RabbitMqOptions.Password} get queue={RabbitMqOptions.AppConsumerQueueName} count=1"], cancellationToken));
 
                 if (rabbitRes?.ExitCode == 0)
                 {
@@ -111,7 +111,7 @@ namespace FluentTesting.RabbitMq.Extensions
         private static async Task PublishToRabbit(this IApplicationFactory factory, string exchangeName, string routingKey, string payload, CancellationToken cancellationToken)
         {
             var rabbitContainer = factory.Containers.First(x => x.Key == RabbitMqOptions.ContainerName);
-            var rabbitRes = await rabbitContainer.Value.ExecAsync(["/bin/bash", "-c",
+            var rabbitRes = await rabbitContainer.Value.Container.ExecAsync(["/bin/bash", "-c",
                 $"rabbitmqadmin -u {RabbitMqOptions.UserName} -p {RabbitMqOptions.Password} publish exchange={exchangeName} routing_key={routingKey} payload={payload}"], cancellationToken);
         }
     }

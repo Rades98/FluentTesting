@@ -2,6 +2,7 @@
 using DotNet.Testcontainers.Networks;
 using FluentTesting.Azurite.Containers;
 using FluentTesting.Azurite.Options;
+using FluentTesting.Common.Abstraction;
 using FluentTesting.Common.Extensions;
 using FluentTesting.Common.Interfaces;
 using FluentTesting.Common.Providers;
@@ -34,12 +35,12 @@ namespace FluentTesting.Azurite
 
             builder.Networks.TryAdd(nameof(blobNetwork), blobNetwork);
 
-            builder.Builders.Add(cknfBuilder => configuration.Invoke(cknfBuilder, new(AzuriteContainerUtils.GetConnectionString(azuriteContainer, AzuriteOptions))));
+            builder.Builders.Add(cknfBuilder => configuration.Invoke(cknfBuilder, new(AzuriteContainerUtils.GetConnectionString(azuriteContainer.Container, AzuriteOptions))));
 
             return builder;
         }
 
-        private static (IContainer AzuriteContainer, IContainer AzureCliContainer, INetwork BlobNetwork, IContainer? ClientContainer) CreateBlob(bool useProxiedImages)
+        private static (ContainerActionPair AzuriteContainer, ContainerActionPair AzureCliContainer, INetwork BlobNetwork, ContainerActionPair? ClientContainer) CreateBlob(bool useProxiedImages)
         {
             var network = NetworkProvider.GetBasicNetwork();
 
@@ -47,53 +48,64 @@ namespace FluentTesting.Azurite
 
             var azuriteContainer = AzuriteContainerUtils.GetAzuriteContainer(network, AzuriteOptions, useProxiedImages);
 
-            azuriteContainer.EnsureContainer();
-
             var azureCliContainer = AzuriteContainerUtils.GetAzureCLIContainer(network, AzuriteOptions, useProxiedImages);
 
-            var res = azureCliContainer.EnsureContainer(async container =>
-            {
-                var connectionString = AzuriteContainerUtils.GetConnectionString(azuriteContainer, AzuriteOptions, "azurite", true);
 
-                var results = new List<ExecResult>()
-                {
-                    new("", "", 0)
-                };
-
-                foreach (var containerSeed in AzuriteOptions.BlobSeed)
-                {
-                    results.Add(await container.ExecAsync(["/bin/bash", "-c", $"az storage container create -n '{containerSeed.Name}' --connection-string '{connectionString}'"]));
-
-                    foreach (var file in containerSeed.Files)
-                    {
-                        var fileName = file.Name ?? $"{Path.GetFileName(file.Path)}";
-                        var filePath = $"/blob/{containerSeed.Name}/{Path.GetFileName(file.Path)}";
-
-                        await container.CopyAsync(file.Path, $"/blob/{containerSeed.Name}");
-
-                        var result = await container.ExecAsync(["ls", "-l", $"/blob/{containerSeed.Name}"]);
-
-                        results.Add(await container.ExecAsync(["/bin/bash", "-c", $"az storage blob upload --container-name '{containerSeed.Name}' --name '{fileName}' --file '{filePath}' --connection-string '{connectionString}'"]));
-                    }
-                }
-
-                return results.Any(x => x.ExitCode != 0) ? results.First(x => x.ExitCode != 0) : results.First();
-            });
-
-            if (res.ExitCode != 0)
-            {
-                throw new Exception("Azurite initialisation failed: " + res.Stderr);
-            }
-
+            ContainerActionPair? azureExplorerContainer = null;
 
             if (System.Diagnostics.Debugger.IsAttached && AzuriteOptions.RunAdminTool)
             {
                 clientContainer = AzuriteContainerUtils.GetAzureExplorerContainer(network, azuriteContainer, AzuriteOptions, useProxiedImages);
 
-                clientContainer.EnsureContainer();
+
+                azureExplorerContainer = new(clientContainer, cont => cont.EnsureContainerAsync());
             }
 
-            return (azuriteContainer, azureCliContainer, network, clientContainer);
+            ContainerActionPair azuriteContainerPair = new(azuriteContainer, async cont =>
+            {
+                return await cont.EnsureContainerAsync();
+            });
+
+            ContainerActionPair azuriteCliContainerPair = new(azureCliContainer, async cont =>
+            {
+                var res = await cont.EnsureContainerAsync(async container =>
+                {
+                    var connectionString = AzuriteContainerUtils.GetConnectionString(cont, AzuriteOptions, "azurite", true);
+
+                    var results = new List<ExecResult>()
+                    {
+                        new("", "", 0)
+                    };
+
+                    foreach (var containerSeed in AzuriteOptions.BlobSeed)
+                    {
+                        results.Add(await container.ExecAsync(["/bin/bash", "-c", $"az storage container create -n '{containerSeed.Name}' --connection-string '{connectionString}'"]));
+
+                        foreach (var file in containerSeed.Files)
+                        {
+                            var fileName = file.Name ?? $"{Path.GetFileName(file.Path)}";
+                            var filePath = $"/blob/{containerSeed.Name}/{Path.GetFileName(file.Path)}";
+
+                            await container.CopyAsync(file.Path, $"/blob/{containerSeed.Name}");
+
+                            var result = await container.ExecAsync(["ls", "-l", $"/blob/{containerSeed.Name}"]);
+
+                            results.Add(await container.ExecAsync(["/bin/bash", "-c", $"az storage blob upload --container-name '{containerSeed.Name}' --name '{fileName}' --file '{filePath}' --connection-string '{connectionString}'"]));
+                        }
+                    }
+
+                    return results.Any(x => x.ExitCode != 0) ? results.First(x => x.ExitCode != 0) : results.First();
+                });
+
+                if (res.ExitCode != 0)
+                {
+                    throw new Exception("Azurite initialisation failed: " + res.Stderr);
+                }
+
+                return res;
+            });
+
+            return (azuriteContainerPair, azuriteCliContainerPair, network, azureExplorerContainer);
         }
 
     }

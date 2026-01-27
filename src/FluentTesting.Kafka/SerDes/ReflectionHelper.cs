@@ -19,7 +19,7 @@ namespace FluentTesting.Kafka.SerDes
                 {
                     if (!assembly.IsDynamic)
                     {
-                        IEnumerable<Type> exportedTypes = null;
+                        IEnumerable<Type>? exportedTypes = null;
                         try
                         {
                             exportedTypes = assembly.GetTypes();
@@ -32,7 +32,7 @@ namespace FluentTesting.Kafka.SerDes
                         return exportedTypes.Where(IsSpecificType);
                     }
 
-                    return Enumerable.Empty<Type>();
+                    return [];
                 });
 
         /// <summary>

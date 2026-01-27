@@ -38,9 +38,9 @@ namespace FluentTesting.Azurite.Extensions
       }
 
       private static IContainer GetAzureCliContainer(this IApplicationFactory factory)
-         => factory.Containers.First(x => x.Key == AzuriteOptions.AzureCliContainerName).Value;
+         => factory.Containers.First(x => x.Key == AzuriteOptions.AzureCliContainerName).Value.Container;
 
       private static IContainer GetAzuriteContainer(this IApplicationFactory factory)
-         => factory.Containers.First(x => x.Key == AzuriteOptions.AzureCliContainerName).Value;
+         => factory.Containers.First(x => x.Key == AzuriteOptions.AzureCliContainerName).Value.Container;
    }
 }

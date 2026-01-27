@@ -50,6 +50,6 @@ namespace FluentTesting.Redis.Extensions
 		}
 
 		private static IContainer GetRedisContainer(this IApplicationFactory factory)
-			=> factory.Containers.First(x => x.Key == RedisOptions.ContainerName).Value;
+			=> factory.Containers.First(x => x.Key == RedisOptions.ContainerName).Value.Container;
 	}
 }

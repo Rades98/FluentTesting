@@ -4,6 +4,7 @@ using Confluent.Kafka.SyncOverAsync;
 using Confluent.SchemaRegistry;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
+using FluentTesting.Common.Abstraction;
 using FluentTesting.Common.Extensions;
 using FluentTesting.Common.Interfaces;
 using FluentTesting.Common.Providers;
@@ -56,22 +57,22 @@ namespace FluentTesting.Kafka
 
             builder.Networks.TryAdd(nameof(KafkaNetwork), KafkaNetwork);
 
-            BootstrapServerUri = KafkaContainer.GetBootstrapUri();
-            SchemaRegistryUri = SchemaRegistryContainer.GetSchemaRegistryUri();
+            BootstrapServerUri = KafkaContainer.Container.GetBootstrapUri();
+            SchemaRegistryUri = SchemaRegistryContainer.Container.GetSchemaRegistryUri();
 
             builder.Builders.Add(confBuilder => configuration.Invoke(
                     confBuilder,
                     new(
-                        KafkaContainer.GetBootstrapUri(),
-                        SchemaRegistryContainer.GetSchemaRegistryUri(),
+                        KafkaContainer.Container.GetBootstrapUri(),
+                        SchemaRegistryContainer.Container.GetSchemaRegistryUri(),
                         kafkaOpts)));
 
             builder.AppServices.Add((services, config) => services.Configure<KafkaProducerConfig>(string.Empty, conf =>
             {
-                conf.BootstrapServers = KafkaContainer.GetBootstrapUri();
+                conf.BootstrapServers = KafkaContainer.Container.GetBootstrapUri();
                 conf.SchemaRegistryConfig = new()
                 {
-                    Url = SchemaRegistryContainer.GetSchemaRegistryUri(),
+                    Url = SchemaRegistryContainer.Container.GetSchemaRegistryUri(),
                     MaxCachedSchemas = int.MaxValue,
                 };
                 conf.AvroSerializerConfig = new()
@@ -153,7 +154,7 @@ namespace FluentTesting.Kafka
             };
         }
 
-        private static (IContainer KafkaContainer, IContainer SchemaRegistryContainer, INetwork KafkaNetwork, IContainer? ClientContainer)
+        private static (ContainerActionPair KafkaContainer, ContainerActionPair SchemaRegistryContainer, INetwork KafkaNetwork, ContainerActionPair? ClientContainer)
             CreateKafka(bool useProxiedImages)
         {
             var network = NetworkProvider.GetBasicNetwork();
@@ -163,29 +164,36 @@ namespace FluentTesting.Kafka
             var kafkaContainer = KafkaContainerUtils.GetKafkaContainer(network, kafkaOpts, useProxiedImages);
             var schemaRegistryContainer = KafkaContainerUtils.GetSchemaRegistryContainer(network, kafkaContainer, kafkaOpts, useProxiedImages);
 
-            var script = string.Join(" && ", kafkaOpts.TopicNames
+            ContainerActionPair kafkaContainerPair = new(kafkaContainer, async cnt =>
+            {
+                var script = string.Join(" && ", kafkaOpts.TopicNames
                 .Concat(kafkaOpts.TestConsumerTopicNames)
                 .Distinct()
                 .Select(topicName =>
                     $"../../bin/kafka-topics --bootstrap-server 0.0.0.0:{KafkaContainerUtils.BrokerPort} --topic {topicName} --create --partitions 1 --replication-factor 1"));
 
-            var execResult = kafkaContainer.EnsureContainer(cnt => cnt.ExecAsync(["/bin/bash", "-c", script]));
+                var execResult = await cnt.EnsureContainerAsync(cnt => cnt.ExecAsync(["/bin/bash", "-c", script]));
 
-            if (execResult.ExitCode != 0)
-            {
-                throw new Exception("Kafka topics creation failed", new(execResult.Stderr));
-            }
+                if (execResult.ExitCode != 0)
+                {
+                    throw new Exception("Kafka topics creation failed", new(execResult.Stderr));
+                }
 
-            schemaRegistryContainer.EnsureContainer();
+                return execResult;
+            });
+
+            ContainerActionPair schemaRegContainerPair = new(schemaRegistryContainer, cnt => cnt.EnsureContainerAsync());
+
+            ContainerActionPair? clientContainerPair = null;
 
             if (System.Diagnostics.Debugger.IsAttached && kafkaOpts.RunAdminTool)
             {
                 clientContainer = KafkaContainerUtils.GetAkhqContainer(network, kafkaContainer, useProxiedImages);
 
-                clientContainer.EnsureContainer();
+                clientContainerPair = new(clientContainer, cnt => cnt.EnsureContainerAsync());
             }
 
-            return (kafkaContainer, schemaRegistryContainer, network, clientContainer);
+            return (kafkaContainerPair, schemaRegContainerPair, network, clientContainerPair);
         }
     }
 }

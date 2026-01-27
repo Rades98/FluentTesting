@@ -7,7 +7,6 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
     <PackageReference Include="Microsoft.Extensions.Configuration" />
     <PackageReference Include="Moq" />
-    <PackageReference Include="Nito.AsyncEx" />
     <PackageReference Include="Testcontainers.XunitV3" />
   </ItemGroup>
 

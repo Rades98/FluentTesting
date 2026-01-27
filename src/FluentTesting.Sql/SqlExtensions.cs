@@ -1,6 +1,7 @@
 ﻿using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
+using FluentTesting.Common.Abstraction;
 using FluentTesting.Common.Extensions;
 using FluentTesting.Common.Interfaces;
 using FluentTesting.Common.Providers;
@@ -42,7 +43,7 @@ namespace FluentTesting.Sql
 
             builder.Networks.TryAdd(nameof(SqlNetwork), SqlNetwork);
 
-            builder.Builders.Add(cknfBuilder => configuration.Invoke(cknfBuilder, new(GetConnectionString(SqlContainer))));
+            builder.Builders.Add(cknfBuilder => configuration.Invoke(cknfBuilder, new(GetConnectionString(SqlContainer.Container, SqlOptions.Port ?? MsSqlPort))));
 
             return builder;
         }
@@ -58,22 +59,7 @@ namespace FluentTesting.Sql
             this IApplicationFactoryBuilder builder,
             Action<ConfigurationBuilder, SqlContainerSettings> configuration, Action<SqlOptions>? customOptions = null)
         {
-            customOptions ??= _ => { };
-
-            customOptions.Invoke(SqlOptions);
-
-            var (SqlContainer, SqlClientContainer, SqlNetwork) = CreateSql(string.Empty, builder.UseProxiedImages);
-
-            builder.Containers.TryAdd(SqlOptions.ContainerName, SqlContainer);
-
-            if (SqlClientContainer is not null)
-            {
-                builder.Containers.TryAdd(nameof(SqlClientContainer), SqlClientContainer);
-            }
-
-            builder.Networks.TryAdd(nameof(SqlNetwork), SqlNetwork);
-
-            builder.Builders.Add(cknfBuilder => configuration.Invoke(cknfBuilder, new(GetConnectionString(SqlContainer))));
+            builder.UseSql(string.Empty, configuration, customOptions);
 
             return builder;
         }
@@ -95,7 +81,7 @@ namespace FluentTesting.Sql
                 .ConfigureAwait(false);
         }
 
-        private static (IContainer SqlContainer, IContainer? SqlClientContainer, INetwork SqlNetwork)
+        private static (ContainerActionPair SqlContainer, ContainerActionPair? SqlClientContainer, INetwork SqlNetwork)
             CreateSql(string seed, bool useProxiedImages)
         {
             var network = NetworkProvider.GetBasicNetwork();
@@ -123,71 +109,77 @@ namespace FluentTesting.Sql
 
             var sqlContainer = sqlContainerBuilder.Build();
 
-            var result = sqlContainer.EnsureContainer(async container =>
+            ContainerActionPair sqlContainerPair = new(sqlContainer, async cont =>
             {
-                await container.ExecAsync(["/bin/bash", "-c", $"mkdir -p {SqlOptions.BackupPath}"]);
-
-                if (SqlOptions.Database != "master")
+                var result = await cont.EnsureContainerAsync(async container =>
                 {
-                    var resultCode = -1L;
-                    var maxRetries = SqlOptions.InitWaitStrategy.RetryCount;
-                    ExecResult dbInitResult = new();
+                    await container.ExecAsync(["/bin/bash", "-c", $"mkdir -p {SqlOptions.BackupPath}"]);
 
-                    while (resultCode != 0 && maxRetries > 0)
+                    if (SqlOptions.Database != "master")
                     {
-                        dbInitResult = await container.ExecAsync([
-                        "/opt/mssql-tools18/bin/sqlcmd", "-C", "-b", "-r", "1", "-U",
+                        var resultCode = -1L;
+                        var maxRetries = SqlOptions.InitWaitStrategy.RetryCount;
+                        ExecResult dbInitResult = new();
+
+                        while (resultCode != 0 && maxRetries > 0)
+                        {
+                            dbInitResult = await container.ExecAsync([
+                            "/opt/mssql-tools18/bin/sqlcmd", "-C", "-b", "-r", "1", "-U",
                         SqlOptions.DefaultUsername, "-P", SqlOptions.Password,
                         "-Q", "SELECT 1"]);
 
-                        await Task.Delay(TimeSpan.FromSeconds(SqlOptions.InitWaitStrategy.IntervalSeconds is int interval ? interval : 1));
+                            await Task.Delay(TimeSpan.FromSeconds(SqlOptions.InitWaitStrategy.IntervalSeconds is int interval ? interval : 1));
 
-                        resultCode = dbInitResult.ExitCode ?? -1;
-                        maxRetries--;
-                    }
+                            resultCode = dbInitResult.ExitCode ?? -1;
+                            maxRetries--;
+                        }
 
-                    resultCode = -1L;
-                    maxRetries = SqlOptions.InitWaitStrategy.RetryCount;
+                        resultCode = -1L;
+                        maxRetries = SqlOptions.InitWaitStrategy.RetryCount;
 
-                    while (resultCode != 0 && maxRetries > 0)
-                    {
-                        dbInitResult = await container.ExecAsync([
-                        "/opt/mssql-tools18/bin/sqlcmd", "-C", "-b", "-r", "1", "-U",
+                        while (resultCode != 0 && maxRetries > 0)
+                        {
+                            dbInitResult = await container.ExecAsync([
+                            "/opt/mssql-tools18/bin/sqlcmd", "-C", "-b", "-r", "1", "-U",
                         SqlOptions.DefaultUsername, "-P", SqlOptions.Password,
                         "-Q", $"CREATE DATABASE {SqlOptions.Database}"]);
 
-                        await Task.Delay(TimeSpan.FromSeconds(SqlOptions.InitWaitStrategy.IntervalSeconds is int interval ? interval : 1));
+                            await Task.Delay(TimeSpan.FromSeconds(SqlOptions.InitWaitStrategy.IntervalSeconds is int interval ? interval : 1));
 
-                        resultCode = dbInitResult.ExitCode ?? -1;
-                        maxRetries--;
+                            resultCode = dbInitResult.ExitCode ?? -1;
+                            maxRetries--;
+                        }
+
+                        if (maxRetries < 0 && resultCode != 0)
+                        {
+                            return dbInitResult;
+                        }
                     }
 
-                    if (maxRetries < 0 && resultCode != 0)
+                    if (string.IsNullOrEmpty(seed))
                     {
-                        return dbInitResult;
+                        return new("", "", 0);
                     }
-                }
 
-                if (string.IsNullOrEmpty(seed))
+                    return await container.ExecMsSqlScriptAsync($"USE {SqlOptions.Database}; {seed}");
+                });
+
+
+                if (result.ExitCode != 0)
                 {
-                    return new("", "", 0);
+                    throw new Exception($"Sql initialisation failed: {result.Stderr} {result.Stdout}");
                 }
 
-                return await container.ExecMsSqlScriptAsync($"USE {SqlOptions.Database}; {seed}");
+                return result;
             });
 
-
-            if (result.ExitCode != 0)
-            {
-                throw new Exception($"Sql initialisation failed: {result.Stderr} {result.Stdout}");
-            }
+            ContainerActionPair? clientContainerPair = null;
 
             if (System.Diagnostics.Debugger.IsAttached && SqlOptions.RunAdminTool)
             {
-                clientContainer = new ContainerBuilder()
+                clientContainer = new ContainerBuilder("adminer".GetProxiedImagePath(useProxiedImages))
                     .WithNetwork(network)
                     .WithCleanUp(true)
-                    .WithImage("adminer".GetProxiedImagePath(useProxiedImages))
                     .WithEnvironment("ADMINER_DEFAULT_SERVER", "mssql")
                     .WithEnvironment("ADMINER_DEFAULT_USER", SqlOptions.DefaultUsername)
                     .WithEnvironment("ADMINER_DEFAULT_PASSWORD", SqlOptions.Password)
@@ -196,21 +188,21 @@ namespace FluentTesting.Sql
                     .WithPortBinding(8080, 8080)
                     .Build();
 
-                clientContainer.EnsureContainer();
+                clientContainerPair = new(clientContainer, ct => ct.EnsureContainerAsync());
             }
 
-            return (sqlContainer, clientContainer, network);
+            return (sqlContainerPair, clientContainerPair, network);
         }
 
         /// <summary>
         /// Gets the MsSql connection string.
         /// </summary>
         /// <returns>The MsSql connection string.</returns>
-        private static string GetConnectionString(IContainer container)
+        private static string GetConnectionString(IContainer container, int port)
         {
             var properties = new Dictionary<string, string>
             {
-                { "Server", container.Hostname + "," + container.GetMappedPublicPort(MsSqlPort) },
+                { "Server", container.Hostname + "," + port },
                 { "Database", SqlOptions.Database },
                 { "User Id", SqlOptions.DefaultUsername },
                 { "Password", SqlOptions.Password },
