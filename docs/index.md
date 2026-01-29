@@ -79,3 +79,4 @@ Library providing testing mechanisms to run application in memory with needed th
 | 3.1.1 |  | Added new HttpClient creation support + sql connection cleanup  - (Rabbit still not working tho O:) will be fixed! somehow once |
 | 3.1.2 |  | Hardcoded sql execution params removal |
 | 3.1.3 |  | NewClient fix |
+| 3.1.3 |  | Return result of KillConnectionsAsync + allow getmssqlcontainer and eexc script usage |

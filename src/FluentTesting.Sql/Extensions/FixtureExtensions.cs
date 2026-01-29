@@ -26,7 +26,7 @@ namespace FluentTesting.Sql.Extensions
         /// </summary>
         /// <param name="fixture"></param>
         /// <returns></returns>
-        public static Task KillConnectionsAsync(this ITestFixture fixture)
+        public static Task<ExecResult> KillConnectionsAsync(this ITestFixture fixture)
             => fixture.ApplicationFactory.KillConnectionsAsync();
 
         /// <summary>
