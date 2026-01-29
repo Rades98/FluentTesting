@@ -9,7 +9,7 @@ namespace FluentTesting.Asp
     /// <summary>
     /// ASP Application factory
     /// </summary>
-    public class AspApplicationFactory(IServiceProvider serviceProvider, HttpClient client, ConcurrentDictionary<string, ContainerActionPair> containers, Func<DelegatingHandler[], HttpClient> createClientDelegate, Regex? assertationRegex = null)
+    public class AspApplicationFactory(IServiceProvider serviceProvider, HttpClient client, ConcurrentDictionary<string, ContainerActionPair> containers, Func<HttpClient> createClientDelegate, Regex? assertationRegex = null)
         : IApplicationFactory
     {
         /// <inheritdoc/>
@@ -29,7 +29,7 @@ namespace FluentTesting.Asp
         /// Get http client
         /// </summary>
         /// <returns></returns>
-        public HttpClient GetClient() => createClientDelegate.Invoke([]);
+        public HttpClient GetClient() => createClientDelegate.Invoke();
 
         public ConcurrentDictionary<string, ContainerActionPair> Containers => containers;
 

@@ -111,7 +111,7 @@ namespace FluentTesting.Asp
                 assertationRegex = new(@$".*{projectName.Replace(",", "\\.")}[\\\/]+(.*?)[\\\/](?:(?![\\\/]).)*$", RegexOptions.Compiled);
             }
 
-            return new AspApplicationFactory(Services, CreateDefaultClient(), Containers, (args) => CreateDefaultClient(args), assertationRegex);
+            return new AspApplicationFactory(Services, CreateDefaultClient(), Containers, () => CreateClient(), assertationRegex);
         }
 
         /// <summary>
