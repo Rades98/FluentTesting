@@ -70,7 +70,7 @@ namespace FluentTesting.Sql
         /// <param name="scriptContent">The content of the SQL script to execute.</param>
         /// <param name="ct">Cancellation token.</param>
         /// <returns>Task that completes when the SQL script has been executed.</returns>
-        internal static async Task<ExecResult> ExecMsSqlScriptAsync(this IContainer container, string scriptContent, CancellationToken ct = default)
+        public static async Task<ExecResult> ExecMsSqlScriptAsync(this IContainer container, string scriptContent, CancellationToken ct = default)
         {
             var scriptFilePath = string.Join("/", string.Empty, "tmp", Guid.NewGuid().ToString("D"), Path.GetRandomFileName());
 

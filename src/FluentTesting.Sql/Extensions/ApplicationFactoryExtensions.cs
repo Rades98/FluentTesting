@@ -80,7 +80,7 @@ namespace FluentTesting.Sql.Extensions
         /// </summary>
         /// <param name="factory"></param>
         /// <returns></returns>
-        public static async Task KillConnectionsAsync(this IApplicationFactory factory)
+        public static async Task<ExecResult> KillConnectionsAsync(this IApplicationFactory factory)
         {
             var msSqlContainer = factory.GetSqlContainer();
 
@@ -93,7 +93,7 @@ namespace FluentTesting.Sql.Extensions
 
                     EXEC(@kill);";
 
-            await msSqlContainer.ExecMsSqlScriptAsync(script);
+            return await msSqlContainer.ExecMsSqlScriptAsync(script);
         }
 
 
@@ -376,7 +376,7 @@ namespace FluentTesting.Sql.Extensions
             };
         }
 
-        private static IContainer GetSqlContainer(this IApplicationFactory factory)
+        public static IContainer GetSqlContainer(this IApplicationFactory factory)
           => factory.Containers.First(x => x.Key == SqlOptions.ContainerName).Value.Container;
 
         private static async Task<List<(string ColumnName, string DataType)>> GetMetadataAsync(this IContainer container, string tableName)
