@@ -1,17 +1,15 @@
-﻿using DotNet.Testcontainers.Containers;
-using FluentTesting.Common.Abstraction;
+﻿using FluentTesting.Common.Abstraction;
 using FluentTesting.Common.Interfaces;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using Xunit;
 
 namespace FluentTesting.Asp
 {
     /// <summary>
     /// ASP Application factory
     /// </summary>
-    public class AspApplicationFactory(IServiceProvider serviceProvider, HttpClient client, ConcurrentDictionary<string, ContainerActionPair> containers, Regex? assertationRegex = null)
+    public class AspApplicationFactory(IServiceProvider serviceProvider, HttpClient client, ConcurrentDictionary<string, ContainerActionPair> containers, Func<DelegatingHandler[], HttpClient> createClientDelegate, Regex? assertationRegex = null)
         : IApplicationFactory
     {
         /// <inheritdoc/>
@@ -26,6 +24,12 @@ namespace FluentTesting.Asp
         /// Http client configured with base route of application
         /// </summary>
         public HttpClient Client => client;
+
+        /// <summary>
+        /// Get http client
+        /// </summary>
+        /// <returns></returns>
+        public HttpClient GetClient() => createClientDelegate.Invoke([]);
 
         public ConcurrentDictionary<string, ContainerActionPair> Containers => containers;
 
@@ -45,7 +49,7 @@ namespace FluentTesting.Asp
 
         public async ValueTask InitializeAsync()
         {
-            foreach(var va in containers.Values)
+            foreach (var va in containers.Values)
             {
                 var res = await va.Ensure.Invoke(va.Container);
                 Debug.WriteLine($"[Container Initialized] {va.Container.Name} - {res}");

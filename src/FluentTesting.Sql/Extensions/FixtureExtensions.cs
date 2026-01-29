@@ -22,6 +22,14 @@ namespace FluentTesting.Sql.Extensions
           => fixture.ApplicationFactory.RestoreMsSqlDatabasesAsync();
 
         /// <summary>
+        /// Kill sql connections
+        /// </summary>
+        /// <param name="fixture"></param>
+        /// <returns></returns>
+        public static Task KillConnectionsAsync(this ITestFixture fixture)
+            => fixture.ApplicationFactory.KillConnectionsAsync();
+
+        /// <summary>
         /// Get object from sql - note that there is no mapping mechanism, so result will be mapped to object via JSON deserialization, 
         /// in case that primitive mapping provided in this package is not working for your scenario, use <see cref="GetRawMsSqlObjectAsync"/>
         /// and handle mapping mechanism yourself

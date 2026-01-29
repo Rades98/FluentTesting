@@ -1,8 +1,6 @@
-﻿using DotNet.Testcontainers.Containers;
-using FluentTesting.Common.Interfaces;
+﻿using FluentTesting.Common.Interfaces;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Concurrent;
-using Xunit;
 
 namespace FluentTesting.Common.Abstraction
 {
@@ -10,7 +8,7 @@ namespace FluentTesting.Common.Abstraction
     /// Application factory base object
     /// </summary>
     /// <param name="host"></param>
-    public class ApplicationFactory(IHost host, ConcurrentDictionary<string, ContainerActionPair> containers) : IApplicationFactory, IAsyncLifetime
+    public class ApplicationFactory(IHost host, ConcurrentDictionary<string, ContainerActionPair> containers) : IApplicationFactory
     {
         private Action DisposeActions = () => { };
 

@@ -1,14 +1,12 @@
-﻿using DotNet.Testcontainers.Containers;
-using FluentTesting.Common.Abstraction;
+﻿using FluentTesting.Common.Abstraction;
 using System.Collections.Concurrent;
-using Xunit;
 
 namespace FluentTesting.Common.Interfaces
 {
     /// <summary>
     /// Application factory interface
     /// </summary>
-    public interface IApplicationFactory : IAsyncLifetime
+    public interface IApplicationFactory
     {
         /// <summary>
         /// Services
@@ -22,5 +20,9 @@ namespace FluentTesting.Common.Interfaces
         /// </summary>
         /// <param name="disposeAction">dispose action</param>
         void AppendDisposeAction(Action disposeAction);
+
+        public ValueTask DisposeAsync();
+
+        public ValueTask InitializeAsync();
     }
 }
