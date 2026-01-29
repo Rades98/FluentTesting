@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Xunit;
 
 namespace FluentTesting.Sql.Extensions
 {
@@ -56,8 +55,6 @@ namespace FluentTesting.Sql.Extensions
 
             var execResults = new List<ExecResult>();
 
-
-
             foreach (var database in dbNames)
             {
                 execResults.Add(await msSqlContainer.ExecMsSqlScriptAsync(@$"
@@ -96,10 +93,7 @@ namespace FluentTesting.Sql.Extensions
 
                     EXEC(@kill);";
 
-            var scriptFilePath = string.Join("/", string.Empty, "tmp", Guid.NewGuid().ToString("D"), Path.GetRandomFileName());
-
-            await msSqlContainer.CopyAsync(Encoding.Default.GetBytes(script), scriptFilePath);
-            await msSqlContainer.ExecAsync(["/opt/mssql-tools18/bin/sqlcmd", "-C", "-b", "-r", "1", "-U", "sa", "-P", "re!GXz-qta8XWV50u{7sZk!", "-i", scriptFilePath], TestContext.Current.CancellationToken);
+            await msSqlContainer.ExecMsSqlScriptAsync(script);
         }
 
 
