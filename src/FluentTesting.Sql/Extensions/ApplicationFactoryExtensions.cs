@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Xunit;
 
 namespace FluentTesting.Sql.Extensions
 {
@@ -76,6 +77,31 @@ namespace FluentTesting.Sql.Extensions
 
             return execResults.FirstOrDefault();
         }
+
+        /// <summary>
+        /// Kill sql connections
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <returns></returns>
+        public static async Task KillConnectionsAsync(this IApplicationFactory factory)
+        {
+            var msSqlContainer = factory.GetSqlContainer();
+
+            var script = @$"
+                    DECLARE @kill varchar(8000) = '';
+                    SELECT @kill = @kill + 'KILL ' + CAST(session_id AS varchar(5)) + ';'
+                    FROM sys.dm_exec_sessions
+                    WHERE database_id = DB_ID('Issod')
+                      AND session_id <> @@SPID;
+
+                    EXEC(@kill);";
+
+            var scriptFilePath = string.Join("/", string.Empty, "tmp", Guid.NewGuid().ToString("D"), Path.GetRandomFileName());
+
+            await msSqlContainer.CopyAsync(Encoding.Default.GetBytes(script), scriptFilePath);
+            await msSqlContainer.ExecAsync(["/opt/mssql-tools18/bin/sqlcmd", "-C", "-b", "-r", "1", "-U", "sa", "-P", "re!GXz-qta8XWV50u{7sZk!", "-i", scriptFilePath], TestContext.Current.CancellationToken);
+        }
+
 
         /// <summary>
         /// Get raw result from sql

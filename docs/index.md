@@ -76,3 +76,4 @@ Library providing testing mechanisms to run application in memory with needed th
 | 3.0.0 |  | Major release - switched to .NET 10, updated dependencies (Rabbit not working tho O:) will be fixed! )|
 | 3.0.1 |  |  |
 | 3.1.0 |  | Fixed async lifetime handling - (Rabbit still not working tho O:) will be fixed! somehow once |
+| 3.1.1 |  | Added new HttpClient creation support + sql connection cleanup  - (Rabbit still not working tho O:) will be fixed! somehow once |

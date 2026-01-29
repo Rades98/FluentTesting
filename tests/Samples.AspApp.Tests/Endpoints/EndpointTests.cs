@@ -3,27 +3,33 @@ using Samples.AspApp.Tests.Shared;
 
 namespace Samples.AspApp.Tests.Endpoints
 {
-	[Collection("AspTestFixture")]
-	public class EndpointTests(TestFixture fixture)
-	{
-		[Fact]
-		public async Task AuthorizedEndpoint_Should_ReturnOk()
-		{
-			var res = await fixture.Client.GetAsUserAsync("auth", 1);
+    [Collection("AspTestFixture")]
+    public class EndpointTests(TestFixture fixture)
+    {
+        [Fact]
+        public async Task AuthorizedEndpoint_Should_ReturnOk()
+        {
+            var res = await fixture.Client.GetAsUserAsync("auth", 1);
 
-			res.AssertStatusCode(System.Net.HttpStatusCode.OK);
+            res.AssertStatusCode(System.Net.HttpStatusCode.OK);
 
-			await fixture.AssertJsonResponseAsync(res, "AssertAuthJson.json");
-		}
+            await fixture.AssertJsonResponseAsync(res, "AssertAuthJson.json");
 
-		[Fact]
-		public async Task AnonymousEndpoint_Should_ReturnOk()
-		{
-			var res = await fixture.Client.GetAsync("anonym");
+            var client = fixture.ApplicationFactory.GetClient();
 
-			res.AssertStatusCode(System.Net.HttpStatusCode.OK);
+            var res2 = await client.GetAsUserAsync("auth", 1);
 
-			await fixture.AssertJsonResponseAsync(res, "AssertJson.json");
-		}
-	}
+            res2.AssertStatusCode(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task AnonymousEndpoint_Should_ReturnOk()
+        {
+            var res = await fixture.Client.GetAsync("anonym");
+
+            res.AssertStatusCode(System.Net.HttpStatusCode.OK);
+
+            await fixture.AssertJsonResponseAsync(res, "AssertJson.json");
+        }
+    }
 }
