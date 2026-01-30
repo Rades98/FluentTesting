@@ -22,5 +22,13 @@ namespace FluentTesting.Asp.Extensions
         /// <returns></returns>
         public static HttpClient GetClient(this IApplicationFactory factory)
             => factory.AsAspFactory().Client;
+
+        /// <summary>
+        /// Get http client from ASP factory
+        /// </summary>
+        /// <param name="factory">application factory</param>
+        /// <returns></returns>
+        public static HttpClient GetNewClient(this IApplicationFactory factory)
+            => factory.AsAspFactory().GetNewClient();
     }
 }

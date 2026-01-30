@@ -15,7 +15,7 @@ namespace Samples.AspApp.Tests.Endpoints
 
             await fixture.AssertJsonResponseAsync(res, "AssertAuthJson.json");
 
-            var client = fixture.ApplicationFactory.GetClient();
+            var client = fixture.ApplicationFactory.GetNewClient();
 
             var res2 = await client.GetAsUserAsync("auth", 1);
 

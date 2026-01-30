@@ -29,7 +29,7 @@ namespace FluentTesting.Asp
         /// Get http client
         /// </summary>
         /// <returns></returns>
-        public HttpClient GetClient() => createClientDelegate.Invoke();
+        public HttpClient GetNewClient() => createClientDelegate.Invoke();
 
         public ConcurrentDictionary<string, ContainerActionPair> Containers => containers;
 
